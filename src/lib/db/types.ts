@@ -35,6 +35,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["properties"]["Insert"]>;
+        Relationships: [];
       };
       rooms: {
         Row: {
@@ -56,6 +57,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["rooms"]["Insert"]>;
+        Relationships: [];
       };
       beds: {
         Row: {
@@ -71,6 +73,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["beds"]["Insert"]>;
+        Relationships: [];
       };
       tenants: {
         Row: {
@@ -108,6 +111,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["tenants"]["Insert"]>;
+        Relationships: [];
       };
       tenancies: {
         Row: {
@@ -137,6 +141,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["tenancies"]["Insert"]>;
+        Relationships: [];
       };
       payments: {
         Row: {
@@ -156,6 +161,7 @@ export interface Database {
           paid_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["payments"]["Insert"]>;
+        Relationships: [];
       };
       charges: {
         Row: {
@@ -173,6 +179,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["charges"]["Insert"]>;
+        Relationships: [];
       };
       broadcasts: {
         Row: {
@@ -192,6 +199,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["broadcasts"]["Insert"]>;
+        Relationships: [];
       };
       messages: {
         Row: {
@@ -219,6 +227,7 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["messages"]["Insert"]>;
+        Relationships: [];
       };
       events: {
         Row: {
@@ -236,7 +245,12 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["events"]["Insert"]>;
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 }
