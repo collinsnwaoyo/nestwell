@@ -6,6 +6,7 @@ import { StatusChip } from "@/components/status-chip";
 import { Sheet } from "@/components/ui/sheet";
 import type { BedDetail } from "@/lib/db/queries";
 import { AddTenantForm } from "./add-tenant-form";
+import { PushReminderButton } from "./push-reminder-button";
 import { RecordPaymentButton } from "./record-payment-button";
 
 function formatDate(iso: string) {
@@ -50,7 +51,14 @@ export function TenantDrawer({
               {bed.status !== "paid" && <StatusChip status={bed.status} />}
             </div>
 
-            {bed.tenancyId && <RecordPaymentButton tenancyId={bed.tenancyId} />}
+            {bed.tenancyId && (
+              <div className="flex flex-col gap-2">
+                <RecordPaymentButton tenancyId={bed.tenancyId} />
+                {(bed.status === "due_soon" || bed.status === "due_today" || bed.status === "overdue") && (
+                  <PushReminderButton tenancyId={bed.tenancyId} />
+                )}
+              </div>
+            )}
 
             <dl className="grid grid-cols-2 gap-3 text-sm">
               <div>

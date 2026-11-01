@@ -25,6 +25,7 @@ import {
   GRACE_DAYS,
   MAX_UPLOAD_BYTES,
   MESSAGE_TEMPLATES,
+  PAYMENT_ACCOUNT_DETAILS,
   ROOM_TYPE_DEFAULTS,
   TENANT_DOCS_BUCKET,
 } from "../src/config/rules";
@@ -202,6 +203,7 @@ async function seedTenancy(
   bedId: string,
   rent: number,
   reminderMode: ReminderMode,
+  roomName: string,
   seed: TenantSeed,
 ) {
   const tenant = await insertTenant({
@@ -317,13 +319,14 @@ async function seedTenancy(
       body = fillTemplate(MESSAGE_TEMPLATES.dueToday, {
         firstName,
         amount: naira(rent),
+        accountDetails: PAYMENT_ACCOUNT_DETAILS,
       });
     } else if (type === "due_soon") {
       template = "due_soon";
       body = fillTemplate(MESSAGE_TEMPLATES.dueSoon, {
         firstName,
         amount: naira(rent),
-        room: "",
+        room: roomName,
         dueDate: isoDate(nextOccurrence),
       });
     } else {
@@ -473,7 +476,7 @@ async function main() {
 
   console.log("Seeding tenants and tenancies...");
 
-  await seedTenancy(lekkiStudioBed.id, RENT_BY_TYPE.studio, "manual", {
+  await seedTenancy(lekkiStudioBed.id, RENT_BY_TYPE.studio, "manual", "Studio", {
     fullName: "Tolulope Adebayo",
     occupation: "Software Engineer",
     nextOfKinName: "Bukola Adebayo",
@@ -484,7 +487,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(yabaSingleBed.id, RENT_BY_TYPE.single, "manual", {
+  await seedTenancy(yabaSingleBed.id, RENT_BY_TYPE.single, "manual", "Self-contained room", {
     fullName: "Babatunde Lawal",
     occupation: "Marketing Executive",
     nextOfKinName: "Rasheed Lawal",
@@ -496,7 +499,7 @@ async function main() {
     currentMessage: { type: "due_today", status: "opened" },
   });
 
-  await seedTenancy(surulereTripleA.id, RENT_BY_TYPE.triple, "manual", {
+  await seedTenancy(surulereTripleA.id, RENT_BY_TYPE.triple, "manual", "Triple room", {
     fullName: "Ifeoma Nwosu",
     occupation: "Nurse",
     nextOfKinName: "Chidera Nwosu",
@@ -507,7 +510,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(surulereTripleB.id, RENT_BY_TYPE.triple, "manual", {
+  await seedTenancy(surulereTripleB.id, RENT_BY_TYPE.triple, "manual", "Triple room", {
     fullName: "Halima Bello",
     occupation: "Graphic Designer",
     nextOfKinName: "Amina Bello",
@@ -522,7 +525,7 @@ async function main() {
   // surulereTripleC stays vacant.
   void surulereTripleC;
 
-  await seedTenancy(surulereSharedA.id, RENT_BY_TYPE.shared, "manual", {
+  await seedTenancy(surulereSharedA.id, RENT_BY_TYPE.shared, "manual", "Shared room", {
     fullName: "Kelechi Eze",
     occupation: "Civil Engineer",
     nextOfKinName: "Ugochi Eze",
@@ -533,7 +536,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(surulereSharedB.id, RENT_BY_TYPE.shared, "manual", {
+  await seedTenancy(surulereSharedB.id, RENT_BY_TYPE.shared, "manual", "Shared room", {
     fullName: "Damilola Ogunleye",
     occupation: "University Student",
     nextOfKinName: "Adeola Ogunleye",
@@ -545,7 +548,7 @@ async function main() {
     currentMessage: { type: "due_soon", status: "ready" },
   });
 
-  await seedTenancy(surulereSingleBed.id, RENT_BY_TYPE.single, "manual", {
+  await seedTenancy(surulereSingleBed.id, RENT_BY_TYPE.single, "manual", "Single room", {
     fullName: "Emeka Obi",
     occupation: "Logistics Manager",
     nextOfKinName: "Ngozi Obi",
@@ -558,7 +561,7 @@ async function main() {
     moveOutInDays: 14,
   });
 
-  await seedTenancy(ikotaSharedA.id, RENT_BY_TYPE.shared, "auto", {
+  await seedTenancy(ikotaSharedA.id, RENT_BY_TYPE.shared, "auto", "Shared room", {
     fullName: "Zainab Yusuf",
     occupation: "Accountant",
     nextOfKinName: "Fatima Yusuf",
@@ -569,7 +572,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(ikotaSharedB.id, RENT_BY_TYPE.shared, "auto", {
+  await seedTenancy(ikotaSharedB.id, RENT_BY_TYPE.shared, "auto", "Shared room", {
     fullName: "Funmilayo Ajayi",
     occupation: "Teacher",
     nextOfKinName: "Olumide Ajayi",

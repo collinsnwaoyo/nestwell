@@ -17,6 +17,9 @@ export const ROOM_TYPE_DEFAULTS: Record<RoomType, { beds: number; rentPerBed: nu
 
 export const DEFAULT_DEPOSIT = 100_000;
 
+/** Fictional, for demo reminder messages only. */
+export const PAYMENT_ACCOUNT_DETAILS = "Nestwell Properties — GTBank 0123456789";
+
 export const TENANT_DOCS_BUCKET = "tenant-docs";
 export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // 5MB, per the PRD's public-demo abuse limit
 export const ALLOWED_UPLOAD_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
