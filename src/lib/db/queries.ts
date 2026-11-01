@@ -143,6 +143,7 @@ export interface BedDetail {
   id: string;
   label: string;
   status: RentStatus;
+  tenancyId: string | null;
   tenant: {
     fullName: string;
     phone: string;
@@ -291,6 +292,7 @@ export async function getPropertyDetail(
           id: bed.id,
           label: bed.label,
           status: "vacant",
+          tenancyId: null,
           tenant: null,
           tenancyStatus: null,
           moveIn: null,
@@ -315,6 +317,7 @@ export async function getPropertyDetail(
         id: bed.id,
         label: bed.label,
         status,
+        tenancyId: tenancy.id,
         tenant: tenant
           ? {
               fullName: tenant.full_name,

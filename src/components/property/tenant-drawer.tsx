@@ -6,6 +6,7 @@ import { StatusChip } from "@/components/status-chip";
 import { Sheet } from "@/components/ui/sheet";
 import type { BedDetail } from "@/lib/db/queries";
 import { AddTenantForm } from "./add-tenant-form";
+import { RecordPaymentButton } from "./record-payment-button";
 
 function formatDate(iso: string) {
   return format(new Date(iso), "d MMM yyyy");
@@ -48,6 +49,8 @@ export function TenantDrawer({
               </div>
               {bed.status !== "paid" && <StatusChip status={bed.status} />}
             </div>
+
+            {bed.tenancyId && <RecordPaymentButton tenancyId={bed.tenancyId} />}
 
             <dl className="grid grid-cols-2 gap-3 text-sm">
               <div>
