@@ -25,13 +25,14 @@ export function PropertyRooms({ propertyId, rooms }: { propertyId: string; rooms
       ) : (
         <div className="flex flex-col gap-3">
           {rooms.map((room) => (
-            <RoomCard key={room.id} room={room} onSelectBed={setSelectedBedId} />
+            <RoomCard key={room.id} room={room} propertyId={propertyId} onSelectBed={setSelectedBedId} />
           ))}
         </div>
       )}
 
       <TenantDrawer
         bed={selected?.bed ?? null}
+        propertyId={propertyId}
         roomName={selected?.room.name ?? ""}
         rentPerBed={selected?.room.rentPerBed ?? 0}
         onClose={() => setSelectedBedId(null)}

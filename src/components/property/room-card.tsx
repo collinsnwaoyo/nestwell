@@ -2,6 +2,7 @@ import { cn } from "cn";
 import { formatNaira } from "@/lib/domain";
 import type { RoomDetail } from "@/lib/db/queries";
 import { BedTile } from "./bed-tile";
+import { EditRoomButton } from "./edit-room-button";
 
 const ROOM_TYPE_LABELS: Record<RoomDetail["type"], string> = {
   triple: "Triple",
@@ -12,9 +13,11 @@ const ROOM_TYPE_LABELS: Record<RoomDetail["type"], string> = {
 
 export function RoomCard({
   room,
+  propertyId,
   onSelectBed,
 }: {
   room: RoomDetail;
+  propertyId: string;
   onSelectBed: (bedId: string) => void;
 }) {
   return (
@@ -26,16 +29,19 @@ export function RoomCard({
             {ROOM_TYPE_LABELS[room.type]} · {formatNaira(room.rentPerBed)}/bed
           </p>
         </div>
-        <span
-          className={cn(
-            "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium",
-            room.reminderMode === "auto"
-              ? "bg-primary/10 text-primary"
-              : "border border-border/80 text-muted-foreground",
-          )}
-        >
-          {room.reminderMode === "auto" ? "Auto" : "Manual"}
-        </span>
+        <div className="flex shrink-0 items-center gap-1">
+          <span
+            className={cn(
+              "rounded-full px-2.5 py-1 text-xs font-medium",
+              room.reminderMode === "auto"
+                ? "bg-primary/10 text-primary"
+                : "border border-border/80 text-muted-foreground",
+            )}
+          >
+            {room.reminderMode === "auto" ? "Auto" : "Manual"}
+          </span>
+          <EditRoomButton room={room} propertyId={propertyId} />
+        </div>
       </div>
 
       <div className="mt-3 flex flex-wrap gap-2">

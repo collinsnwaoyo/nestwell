@@ -1,12 +1,15 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { Pencil } from "lucide-react";
 import { formatNaira } from "@/lib/domain";
 import { StatusChip } from "@/components/status-chip";
 import { Sheet } from "@/components/ui/sheet";
 import type { BedDetail } from "@/lib/db/queries";
 import { AddTenantForm } from "./add-tenant-form";
 import { CheckOutButton } from "./check-out-button";
+import { EditTenantForm } from "./edit-tenant-form";
 import { IssueNoticeButton } from "./issue-notice-button";
 import { PushReminderButton } from "./push-reminder-button";
 import { RecordPaymentButton } from "./record-payment-button";
@@ -17,15 +20,23 @@ function formatDate(iso: string) {
 
 export function TenantDrawer({
   bed,
+  propertyId,
   roomName,
   rentPerBed,
   onClose,
 }: {
   bed: BedDetail | null;
+  propertyId: string;
   roomName: string;
   rentPerBed: number;
   onClose: () => void;
 }) {
+  const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    if (!bed) setEditing(false);
+  }, [bed]);
+
   return (
     <Sheet
       open={bed !== null}
@@ -35,10 +46,25 @@ export function TenantDrawer({
     >
       {bed && !bed.tenant ? (
         <AddTenantForm bedId={bed.id} rentPerBed={rentPerBed} onDone={onClose} />
+      ) : bed && bed.tenant && editing ? (
+        <EditTenantForm
+          tenant={bed.tenant}
+          propertyId={propertyId}
+          onDone={() => setEditing(false)}
+          onCancel={() => setEditing(false)}
+        />
       ) : (
         bed &&
         bed.tenant && (
           <div className="flex flex-col gap-5">
+            <button
+              type="button"
+              onClick={() => setEditing(true)}
+              className="flex items-center gap-1.5 self-start text-sm text-muted-foreground hover:text-foreground"
+            >
+              <Pencil className="size-3.5" /> Edit tenant
+            </button>
+
             {!bed.tenant.verified && (
               <div className="rounded-xl bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-700 dark:text-amber-300">
                 Verification pending — documents haven&apos;t been checked yet.

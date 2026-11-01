@@ -145,6 +145,7 @@ export interface BedDetail {
   status: RentStatus;
   tenancyId: string | null;
   tenant: {
+    id: string;
     fullName: string;
     phone: string;
     email: string;
@@ -324,6 +325,7 @@ export async function getPropertyDetail(
         tenancyId: tenancy.id,
         tenant: tenant
           ? {
+              id: tenant.id,
               fullName: tenant.full_name,
               phone: tenant.phone,
               email: tenant.email,
