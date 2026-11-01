@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 // Self-hosted (not next/font/google) so the build never depends on
@@ -25,6 +26,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${manrope.variable} font-sans antialiased`}>
         {children}
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            classNames: {
+              toast: "rounded-2xl! border! border-border! bg-background! text-foreground! shadow-lg!",
+            },
+          }}
+        />
       </body>
     </html>
   );
