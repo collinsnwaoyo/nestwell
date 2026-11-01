@@ -6,6 +6,7 @@ import { StatusChip } from "@/components/status-chip";
 import { Sheet } from "@/components/ui/sheet";
 import type { BedDetail } from "@/lib/db/queries";
 import { AddTenantForm } from "./add-tenant-form";
+import { CheckOutButton } from "./check-out-button";
 import { IssueNoticeButton } from "./issue-notice-button";
 import { PushReminderButton } from "./push-reminder-button";
 import { RecordPaymentButton } from "./record-payment-button";
@@ -66,6 +67,9 @@ export function TenantDrawer({
                   <PushReminderButton tenancyId={bed.tenancyId} />
                 )}
                 {bed.tenancyStatus === "active" && <IssueNoticeButton tenancyId={bed.tenancyId} />}
+                {(bed.tenancyStatus === "active" || bed.tenancyStatus === "notice") && (
+                  <CheckOutButton tenancyId={bed.tenancyId} defaultMoveOut={bed.moveOut} />
+                )}
               </div>
             )}
 

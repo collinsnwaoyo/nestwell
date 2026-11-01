@@ -10,6 +10,7 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 
 import { createClient } from "@supabase/supabase-js";
+import { format } from "date-fns";
 import type { Database } from "../src/lib/db/types";
 import {
   dueDateForOccurrence,
@@ -356,8 +357,8 @@ async function seedTenancy(
   if (seed.status === "notice") {
     const noticeBody = fillTemplate(MESSAGE_TEMPLATES.notice, {
       firstName,
-      room: "",
-      date: noticeMoveOut ?? "",
+      room: roomName,
+      date: noticeMoveOut ? format(new Date(noticeMoveOut), "d MMM yyyy") : "",
       reason: seed.noticeReason ?? "",
     });
 
