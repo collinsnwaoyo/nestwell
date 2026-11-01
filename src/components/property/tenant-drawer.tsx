@@ -7,6 +7,7 @@ import { formatNaira } from "@/lib/domain";
 import { StatusChip } from "@/components/status-chip";
 import { Sheet } from "@/components/ui/sheet";
 import type { BedDetail } from "@/lib/db/queries";
+import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 import { AddTenantForm } from "./add-tenant-form";
 import { CheckOutButton } from "./check-out-button";
 import { EditTenantForm } from "./edit-tenant-form";
@@ -96,6 +97,12 @@ export function TenantDrawer({
                 {(bed.tenancyStatus === "active" || bed.tenancyStatus === "notice") && (
                   <CheckOutButton tenancyId={bed.tenancyId} defaultMoveOut={bed.moveOut} />
                 )}
+                <BroadcastComposer
+                  scopeType="tenant"
+                  scopeId={bed.tenancyId}
+                  scopeLabel={bed.tenant.fullName}
+                  triggerClassName="w-fit gap-1.5 rounded-full"
+                />
               </div>
             )}
 

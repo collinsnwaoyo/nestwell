@@ -1,6 +1,7 @@
 import { formatNaira, getGreeting } from "@/lib/domain";
 import { getDashboardData } from "@/lib/db/queries";
 import { PropertyCard } from "@/components/property-card";
+import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,14 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-8 sm:px-8">
-      <p className="text-sm text-muted-foreground">{greeting}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">{greeting}</p>
+        <BroadcastComposer
+          scopeType="portfolio"
+          scopeId={null}
+          scopeLabel={`Whole portfolio, ${data.bedsFilled} tenant${data.bedsFilled === 1 ? "" : "s"}`}
+        />
+      </div>
 
       <div className="mt-3">
         <p className="text-sm text-muted-foreground">Expected revenue this month</p>

@@ -1,4 +1,4 @@
-import type { RoomType } from "@/lib/db/types";
+import type { BroadcastTemplate, RoomType } from "@/lib/db/types";
 
 export const TIMEZONE = "Africa/Lagos";
 
@@ -38,3 +38,21 @@ export const MESSAGE_TEMPLATES = {
 } as const;
 
 export type MessageTemplateKey = keyof typeof MESSAGE_TEMPLATES;
+
+export const BROADCAST_TEMPLATES: Record<Exclude<BroadcastTemplate, "blank">, string> = {
+  rent_increase:
+    "Hi {firstName}, rent for {room} at {property} will increase from {rent} to {newRent}, effective {effectiveDate}. Thank you for your understanding.",
+  maintenance:
+    "Hi {firstName}, we'll be carrying out maintenance work at {property} on {effectiveDate}. Sorry for any inconvenience.",
+  house_rules:
+    "Hi {firstName}, a quick reminder of house rules at {property}: please keep common areas clean and be considerate of other residents. Thanks for your cooperation.",
+  general: "Hi {firstName}, this is a quick update from Nestwell regarding {property}.",
+};
+
+export const BROADCAST_TEMPLATE_LABELS: Record<BroadcastTemplate, string> = {
+  rent_increase: "Rent increase",
+  maintenance: "Maintenance / plumbing work",
+  house_rules: "House rules reminder",
+  general: "General update",
+  blank: "Blank message",
+};

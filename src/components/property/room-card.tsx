@@ -1,5 +1,6 @@
 import { cn } from "cn";
 import { formatNaira } from "@/lib/domain";
+import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 import type { RoomDetail } from "@/lib/db/queries";
 import { BedTile } from "./bed-tile";
 import { EditRoomButton } from "./edit-room-button";
@@ -20,6 +21,8 @@ export function RoomCard({
   propertyId: string;
   onSelectBed: (bedId: string) => void;
 }) {
+  const tenantCount = room.beds.filter((bed) => bed.tenant).length;
+
   return (
     <div className="rounded-[20px] bg-muted/50 p-4">
       <div className="flex items-start justify-between gap-3">
@@ -40,6 +43,13 @@ export function RoomCard({
           >
             {room.reminderMode === "auto" ? "Auto" : "Manual"}
           </span>
+          <BroadcastComposer
+            scopeType="room"
+            scopeId={room.id}
+            scopeLabel={`${room.name}, ${tenantCount} tenant${tenantCount === 1 ? "" : "s"}`}
+            iconOnly
+            triggerClassName="rounded-full p-1.5 size-7 text-muted-foreground hover:bg-background hover:text-foreground"
+          />
           <EditRoomButton room={room} propertyId={propertyId} />
         </div>
       </div>

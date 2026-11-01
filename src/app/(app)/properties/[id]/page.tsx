@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Building2 } from "lucide-react";
 import { getPropertyDetail } from "@/lib/db/queries";
+import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 import { EditPropertyButton } from "@/components/property/edit-property-button";
 import { PropertyRooms } from "@/components/property/property-rooms";
 
@@ -10,6 +11,11 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
   const { id } = await params;
   const property = await getPropertyDetail(id);
   if (!property) notFound();
+
+  const tenantCount = property.rooms.reduce(
+    (sum, room) => sum + room.beds.filter((bed) => bed.tenant).length,
+    0,
+  );
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-8 sm:px-8">
@@ -28,6 +34,14 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
           name={property.name}
           area={property.area}
           address={property.address}
+        />
+      </div>
+
+      <div className="mt-4">
+        <BroadcastComposer
+          scopeType="property"
+          scopeId={property.id}
+          scopeLabel={`${property.name}, ${tenantCount} tenant${tenantCount === 1 ? "" : "s"}`}
         />
       </div>
 
