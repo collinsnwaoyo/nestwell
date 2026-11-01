@@ -270,8 +270,8 @@ async function seedTenancy(
     const receiptBody = fillTemplate(MESSAGE_TEMPLATES.receipt, {
       firstName,
       amount: naira(rent),
-      month: periodMonth,
-      nextDue: isoDate(nextDue),
+      month: format(dueDate, "MMMM yyyy"),
+      nextDue: format(new Date(nextDue), "d MMM yyyy"),
     });
 
     await insertMessage({
@@ -328,7 +328,7 @@ async function seedTenancy(
         firstName,
         amount: naira(rent),
         room: roomName,
-        dueDate: isoDate(nextOccurrence),
+        dueDate: format(new Date(nextOccurrence), "d MMM yyyy"),
       });
     } else {
       const unpaid = unpaidPeriods[0];

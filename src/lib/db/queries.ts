@@ -371,3 +371,88 @@ export async function getPropertyDetail(
     rooms: roomDetails,
   };
 }
+
+export interface MessageRow {
+  id: string;
+  recipientName: string;
+  phone: string;
+  propertyId: string | null;
+  propertyName: string | null;
+  roomName: string | null;
+  template: string;
+  body: string;
+  trigger: Database["public"]["Tables"]["messages"]["Row"]["trigger"];
+  status: Database["public"]["Tables"]["messages"]["Row"]["status"];
+  createdAt: string;
+  waLink: string;
+}
+
+export async function getMessages(): Promise<MessageRow[]> {
+  const supabase = getSupabaseClient();
+
+  const messagesRes = await supabase.from("messages").select("*").order("created_at", { ascending: false });
+  if (messagesRes.error) throw new Error(messagesRes.error.message);
+  const messages = messagesRes.data ?? [];
+
+  const tenancyIds = [...new Set(messages.map((m) => m.tenancy_id).filter((id): id is string => !!id))];
+  const tenanciesRes = tenancyIds.length
+    ? await supabase.from("tenancies").select("id, tenant_id, bed_id").in("id", tenancyIds)
+    : { data: [], error: null };
+  if (tenanciesRes.error) throw new Error(tenanciesRes.error.message);
+  const tenancies = tenanciesRes.data ?? [];
+
+  const tenantIds = [...new Set(tenancies.map((t) => t.tenant_id))];
+  const bedIds = [...new Set(tenancies.map((t) => t.bed_id))];
+
+  const [tenantsRes, bedsRes] = await Promise.all([
+    tenantIds.length
+      ? supabase.from("tenants").select("id, full_name").in("id", tenantIds)
+      : Promise.resolve({ data: [], error: null }),
+    bedIds.length
+      ? supabase.from("beds").select("id, room_id").in("id", bedIds)
+      : Promise.resolve({ data: [], error: null }),
+  ]);
+  if (tenantsRes.error) throw new Error(tenantsRes.error.message);
+  if (bedsRes.error) throw new Error(bedsRes.error.message);
+
+  const roomIds = [...new Set((bedsRes.data ?? []).map((b) => b.room_id))];
+  const roomsRes = roomIds.length
+    ? await supabase.from("rooms").select("id, name, property_id").in("id", roomIds)
+    : { data: [], error: null };
+  if (roomsRes.error) throw new Error(roomsRes.error.message);
+
+  const propertyIds = [...new Set((roomsRes.data ?? []).map((r) => r.property_id))];
+  const propertiesRes = propertyIds.length
+    ? await supabase.from("properties").select("id, name").in("id", propertyIds)
+    : { data: [], error: null };
+  if (propertiesRes.error) throw new Error(propertiesRes.error.message);
+
+  const tenancyById = new Map(tenancies.map((t) => [t.id, t]));
+  const tenantById = new Map((tenantsRes.data ?? []).map((t) => [t.id, t]));
+  const bedById = new Map((bedsRes.data ?? []).map((b) => [b.id, b]));
+  const roomById = new Map((roomsRes.data ?? []).map((r) => [r.id, r]));
+  const propertyById = new Map((propertiesRes.data ?? []).map((p) => [p.id, p]));
+
+  return messages.map((message): MessageRow => {
+    const tenancy = message.tenancy_id ? tenancyById.get(message.tenancy_id) : undefined;
+    const tenant = tenancy ? tenantById.get(tenancy.tenant_id) : undefined;
+    const bed = tenancy ? bedById.get(tenancy.bed_id) : undefined;
+    const room = bed ? roomById.get(bed.room_id) : undefined;
+    const property = room ? propertyById.get(room.property_id) : undefined;
+
+    return {
+      id: message.id,
+      recipientName: tenant?.full_name ?? "Portfolio broadcast",
+      phone: message.phone,
+      propertyId: property?.id ?? null,
+      propertyName: property?.name ?? null,
+      roomName: room?.name ?? null,
+      template: message.template,
+      body: message.body,
+      trigger: message.trigger,
+      status: message.status,
+      createdAt: message.created_at,
+      waLink: message.wa_link,
+    };
+  });
+}
