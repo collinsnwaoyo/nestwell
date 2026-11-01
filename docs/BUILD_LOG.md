@@ -43,6 +43,28 @@ How Nestwell was built with Claude Code. One entry per working session, newest a
 - Not done yet: `/properties` (the properties list) and `/messages` are still placeholder stubs; all write actions are day 2.
 - Commits: scaffold, domain logic, schema + client, seed script, welcome screen + app shell, dashboard, property view.
 
+## Session 2, 2 November 2026: day 2 — every write action, messages, broadcasts, reminder job
+
+- Goal: day 2 of the build plan — add property/room, onboarding with uploads, record payment, notice and check-out, messages, broadcasts, reminder job, auto/manual toggle, deploy.
+- What I asked Claude Code to do: run through all of day 2 in one sitting rather than stopping after each step, same build-and-verify discipline as day 1.
+- What it built, step by step, each committed and verified live before moving on:
+  - Shared infra: toast notifications (sonner) and a reusable bottom-sheet/panel component (`Sheet`) that every form below uses.
+  - Add property and add room, with bed/rent defaults by room type (`src/config/rules.ts`).
+  - Tenant onboarding: guided form with the three required uploads (passport photo, driver's licence, one government ID) to a new private `tenant-docs` Storage bucket (created and emptied by `seed.ts`), 5MB/JPEG-PNG-WEBP-PDF limits, tenant starts "Verification pending".
+  - Record payment (transfer/cash, one tap) with a WhatsApp receipt.
+  - Push reminder, issue notice, check out (deposit refund/partial/kept) — each composes its WhatsApp message from the same shared templates and a reusable `WhatsAppSendButton` that tracks ready → opened → marked sent honestly.
+  - Edit tenant/room/property, with delete blocked (clear message, not a raw DB error) whenever tenancy history exists for that room or property.
+  - `/messages`: the real WhatsApp outbox, filterable by property/tenant/type/trigger.
+  - Broadcasts at portfolio, property, room and tenant scope: template picker with merge-field preview, untick-anyone recipient list, then a step-through send queue (Open WhatsApp, Next) matching the PRD's one-chat-at-a-time flow.
+  - Daily reminder job for Auto rooms (`/api/cron/reminders`, `vercel.json` at 08:00 UTC) plus a "Run today's reminders" button for demoing without waiting for the cron; dedupes against anything already sent today for that tenancy.
+- What went wrong and how it was fixed:
+  - Found three places in `seed.ts` where a message template's merge field was left blank or unformatted (`{room}` empty in the due-soon and notice messages, raw ISO dates instead of "d MMM yyyy" in due-soon and every receipt) — pre-existing gaps from day 1 that only became visible once the Messages page could show the whole history at once. Fixed all of them and threaded the room name through `seedTenancy`.
+  - A manual-mode room's reminder-mode pill blending into its own card background came back once more on the edit-room pill until the outlined style was applied there too.
+  - No other real bugs; the domain logic from day 1 (balance, due-date, status) held up correctly through every new action without changes.
+- Decisions: deletion is blocked by an upfront "does any tenancy exist for this room/property" check rather than the schema's `ON DELETE RESTRICT`, so the operator always gets a clear message instead of a raw foreign-key error — this is slightly stricter than the PRD's literal "no active tenancies" (it also blocks on checked-out history), which is what the schema's RESTRICT constraints actually allow without a migration.
+- Not done yet: deploy (needs my own GitHub and Vercel accounts — see below). Day 3: reset job and button, demo banner, mobile pass, dark mode, empty states, README.
+- Commits: toasts + sheet, add property/room, storage bucket + seed dedupe, tenant onboarding, record payment, push reminder (+ seed fix), issue notice, check out (+ seed fix), edit tenant/room/property, messages page (+ seed fixes), broadcasts, reminder job.
+
 ## Ideas (not in this build)
 
 -
