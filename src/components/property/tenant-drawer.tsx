@@ -5,6 +5,7 @@ import { formatNaira } from "@/lib/domain";
 import { StatusChip } from "@/components/status-chip";
 import { Sheet } from "@/components/ui/sheet";
 import type { BedDetail } from "@/lib/db/queries";
+import { AddTenantForm } from "./add-tenant-form";
 
 function formatDate(iso: string) {
   return format(new Date(iso), "d MMM yyyy");
@@ -13,27 +14,33 @@ function formatDate(iso: string) {
 export function TenantDrawer({
   bed,
   roomName,
+  rentPerBed,
   onClose,
 }: {
   bed: BedDetail | null;
   roomName: string;
+  rentPerBed: number;
   onClose: () => void;
 }) {
   return (
     <Sheet
       open={bed !== null}
       onClose={onClose}
-      title={bed?.tenant ? bed.tenant.fullName : "Vacant bed"}
+      title={bed?.tenant ? bed.tenant.fullName : "Add tenant"}
       description={bed && `${roomName} · ${bed.label}`}
     >
       {bed && !bed.tenant ? (
-        <p className="text-sm text-muted-foreground">
-          No one lives here right now. Add a tenant to start a tenancy on this bed.
-        </p>
+        <AddTenantForm bedId={bed.id} rentPerBed={rentPerBed} onDone={onClose} />
       ) : (
         bed &&
         bed.tenant && (
           <div className="flex flex-col gap-5">
+            {!bed.tenant.verified && (
+              <div className="rounded-xl bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-700 dark:text-amber-300">
+                Verification pending — documents haven&apos;t been checked yet.
+              </div>
+            )}
+
             <div className="flex items-center justify-between rounded-[20px] bg-muted/50 p-4">
               <div>
                 <p className="text-sm text-muted-foreground">Balance</p>

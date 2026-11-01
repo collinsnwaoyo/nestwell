@@ -33,6 +33,7 @@ export function PropertyRooms({ propertyId, rooms }: { propertyId: string; rooms
       <TenantDrawer
         bed={selected?.bed ?? null}
         roomName={selected?.room.name ?? ""}
+        rentPerBed={selected?.room.rentPerBed ?? 0}
         onClose={() => setSelectedBedId(null)}
       />
     </>

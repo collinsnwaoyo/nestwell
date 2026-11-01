@@ -152,6 +152,7 @@ export interface BedDetail {
     nextOfKinRelation: string;
     nextOfKinPhone: string;
     emergencyContact: string;
+    verified: boolean;
   } | null;
   tenancyStatus: Database["public"]["Tables"]["tenancies"]["Row"]["status"] | null;
   moveIn: string | null;
@@ -324,6 +325,7 @@ export async function getPropertyDetail(
               nextOfKinRelation: tenant.next_of_kin_relation,
               nextOfKinPhone: tenant.next_of_kin_phone,
               emergencyContact: tenant.emergency_contact,
+              verified: tenant.verified,
             }
           : null,
         tenancyStatus: tenancy.status,
