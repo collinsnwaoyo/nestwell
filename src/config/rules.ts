@@ -1,9 +1,19 @@
+import type { RoomType } from "@/lib/db/types";
+
 export const TIMEZONE = "Africa/Lagos";
 
 export const GRACE_DAYS = 3;
 export const LATE_FEE_AMOUNT = 10_000;
 export const REMINDER_DAYS_BEFORE_DUE = 3;
 export const REMINDER_SEND_HOUR = 9; // 9:00am Lagos time
+
+/** Bed count and default rent/bed for a new room, by type. Either can be overridden per room. */
+export const ROOM_TYPE_DEFAULTS: Record<RoomType, { beds: number; rentPerBed: number }> = {
+  triple: { beds: 3, rentPerBed: 140_000 },
+  shared: { beds: 2, rentPerBed: 180_000 },
+  single: { beds: 1, rentPerBed: 280_000 },
+  studio: { beds: 1, rentPerBed: 450_000 },
+};
 
 export const MESSAGE_TEMPLATES = {
   dueSoon:

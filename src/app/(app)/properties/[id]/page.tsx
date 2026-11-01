@@ -25,8 +25,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
       </div>
 
       <div className="mt-8">
-        <h2 className="mb-3 text-sm font-medium text-muted-foreground">Rooms</h2>
-        <PropertyRooms rooms={property.rooms} />
+        <PropertyRooms propertyId={property.id} rooms={property.rooms} />
       </div>
     </div>
   );
