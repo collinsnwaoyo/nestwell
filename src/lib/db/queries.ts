@@ -158,6 +158,8 @@ export interface BedDetail {
   tenancyStatus: Database["public"]["Tables"]["tenancies"]["Row"]["status"] | null;
   moveIn: string | null;
   nextDueDate: string | null;
+  noticeReason: string | null;
+  moveOut: string | null;
   rent: number | null;
   balance: number;
   payments: { id: string; periodMonth: string; amount: number; method: string; paidAt: string }[];
@@ -297,6 +299,8 @@ export async function getPropertyDetail(
           tenancyStatus: null,
           moveIn: null,
           nextDueDate: null,
+          noticeReason: null,
+          moveOut: null,
           rent: null,
           balance: 0,
           payments: [],
@@ -334,6 +338,8 @@ export async function getPropertyDetail(
         tenancyStatus: tenancy.status,
         moveIn: tenancy.move_in,
         nextDueDate: nextDueDate.toISOString(),
+        noticeReason: tenancy.notice_reason,
+        moveOut: tenancy.move_out,
         rent: tenancy.rent,
         balance,
         payments: tenancyPayments.map((payment) => ({

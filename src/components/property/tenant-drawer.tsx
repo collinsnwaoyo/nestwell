@@ -6,6 +6,7 @@ import { StatusChip } from "@/components/status-chip";
 import { Sheet } from "@/components/ui/sheet";
 import type { BedDetail } from "@/lib/db/queries";
 import { AddTenantForm } from "./add-tenant-form";
+import { IssueNoticeButton } from "./issue-notice-button";
 import { PushReminderButton } from "./push-reminder-button";
 import { RecordPaymentButton } from "./record-payment-button";
 
@@ -51,12 +52,20 @@ export function TenantDrawer({
               {bed.status !== "paid" && <StatusChip status={bed.status} />}
             </div>
 
+            {bed.tenancyStatus === "notice" && (
+              <div className="rounded-xl bg-purple-500/10 px-3 py-2 text-xs text-purple-700 dark:text-purple-300">
+                <p className="font-medium">On notice — move out by {bed.moveOut && formatDate(bed.moveOut)}</p>
+                {bed.noticeReason && <p className="mt-0.5">{bed.noticeReason}</p>}
+              </div>
+            )}
+
             {bed.tenancyId && (
               <div className="flex flex-col gap-2">
                 <RecordPaymentButton tenancyId={bed.tenancyId} />
                 {(bed.status === "due_soon" || bed.status === "due_today" || bed.status === "overdue") && (
                   <PushReminderButton tenancyId={bed.tenancyId} />
                 )}
+                {bed.tenancyStatus === "active" && <IssueNoticeButton tenancyId={bed.tenancyId} />}
               </div>
             )}
 
