@@ -1,5 +1,6 @@
 import { getMessages } from "@/lib/db/queries";
 import { MessagesList } from "@/components/messages/messages-list";
+import { RunRemindersButton } from "@/components/messages/run-reminders-button";
 
 export const dynamic = "force-dynamic";
 
@@ -8,7 +9,10 @@ export default async function MessagesPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-8 sm:px-8">
-      <h1 className="text-xl font-semibold">Messages</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold">Messages</h1>
+        <RunRemindersButton />
+      </div>
 
       <div className="mt-6">
         {messages.length === 0 ? (
