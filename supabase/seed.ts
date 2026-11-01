@@ -19,7 +19,15 @@ import {
   lateFeeChargeAmount,
   fillTemplate,
 } from "../src/lib/domain";
-import { GRACE_DAYS, MESSAGE_TEMPLATES } from "../src/config/rules";
+import {
+  ALLOWED_UPLOAD_MIME_TYPES,
+  DEFAULT_DEPOSIT,
+  GRACE_DAYS,
+  MAX_UPLOAD_BYTES,
+  MESSAGE_TEMPLATES,
+  ROOM_TYPE_DEFAULTS,
+  TENANT_DOCS_BUCKET,
+} from "../src/config/rules";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -39,14 +47,12 @@ const supabase = createClient<Database>(supabaseUrl, serviceRoleKey, {
 const PHONE = "+2347025762759";
 const PHONE_DIGITS = "2347025762759";
 
-const RENT_BY_TYPE: Record<Database["public"]["Tables"]["rooms"]["Row"]["type"], number> = {
-  triple: 140_000,
-  shared: 180_000,
-  single: 280_000,
-  studio: 450_000,
-};
+const RENT_BY_TYPE: Record<Database["public"]["Tables"]["rooms"]["Row"]["type"], number> =
+  Object.fromEntries(
+    Object.entries(ROOM_TYPE_DEFAULTS).map(([type, defaults]) => [type, defaults.rentPerBed]),
+  ) as Record<Database["public"]["Tables"]["rooms"]["Row"]["type"], number>;
 
-const DEPOSIT = 100_000;
+const DEPOSIT = DEFAULT_DEPOSIT;
 const today = new Date();
 
 function waLink(body: string): string {
@@ -80,6 +86,45 @@ async function clearDatabase() {
   for (const table of tables) {
     const { error } = await supabase.from(table).delete().not("id", "is", null);
     if (error) throw new Error(`Failed to clear ${table}: ${error.message}`);
+  }
+}
+
+// --- Storage ---------------------------------------------------------------
+
+/**
+ * The tenant-docs bucket holds onboarding uploads (photo, licence, gov ID).
+ * Private, server-only access. Created on first run; emptied on every reset
+ * along with the tables, per the PRD's nightly-reset behaviour.
+ */
+async function resetTenantDocsBucket() {
+  const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+  if (listError) throw new Error(`storage.listBuckets: ${listError.message}`);
+
+  if (!buckets?.some((bucket) => bucket.name === TENANT_DOCS_BUCKET)) {
+    const { error: createError } = await supabase.storage.createBucket(TENANT_DOCS_BUCKET, {
+      public: false,
+      fileSizeLimit: MAX_UPLOAD_BYTES,
+      allowedMimeTypes: ALLOWED_UPLOAD_MIME_TYPES,
+    });
+    if (createError) throw new Error(`storage.createBucket: ${createError.message}`);
+    return;
+  }
+
+  const { data: folders, error: listFoldersError } = await supabase.storage
+    .from(TENANT_DOCS_BUCKET)
+    .list();
+  if (listFoldersError) throw new Error(`storage.list: ${listFoldersError.message}`);
+
+  for (const folder of folders ?? []) {
+    const { data: files, error: listFilesError } = await supabase.storage
+      .from(TENANT_DOCS_BUCKET)
+      .list(folder.name);
+    if (listFilesError) throw new Error(`storage.list: ${listFilesError.message}`);
+    if (!files?.length) continue;
+
+    const paths = files.map((file) => `${folder.name}/${file.name}`);
+    const { error: removeError } = await supabase.storage.from(TENANT_DOCS_BUCKET).remove(paths);
+    if (removeError) throw new Error(`storage.remove: ${removeError.message}`);
   }
 }
 
@@ -336,6 +381,9 @@ async function seedTenancy(
 async function main() {
   console.log("Clearing existing data...");
   await clearDatabase();
+
+  console.log("Resetting tenant-docs storage bucket...");
+  await resetTenantDocsBucket();
 
   console.log("Seeding properties, rooms and beds...");
 

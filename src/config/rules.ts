@@ -15,6 +15,12 @@ export const ROOM_TYPE_DEFAULTS: Record<RoomType, { beds: number; rentPerBed: nu
   studio: { beds: 1, rentPerBed: 450_000 },
 };
 
+export const DEFAULT_DEPOSIT = 100_000;
+
+export const TENANT_DOCS_BUCKET = "tenant-docs";
+export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // 5MB, per the PRD's public-demo abuse limit
+export const ALLOWED_UPLOAD_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+
 export const MESSAGE_TEMPLATES = {
   dueSoon:
     "Hi {firstName}, a reminder that your Nestwell rent of {amount} for {room} is due on {dueDate}. Thank you!",
