@@ -57,7 +57,7 @@ export function TenantPanelContent({
 
             {!bed.tenant.verified && (
               <div className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs text-muted-foreground">
-                <span className="rounded-md bg-amber-500/10 px-2 py-0.5 font-medium text-amber-300">Unverified</span>
+                <span className="rounded-md bg-amber-500/10 px-2 py-0.5 font-medium text-amber-700 dark:text-amber-300">Unverified</span>
                 Documents haven&apos;t been checked yet.
               </div>
             )}

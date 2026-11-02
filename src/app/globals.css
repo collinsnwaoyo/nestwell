@@ -69,43 +69,46 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Light is the default theme. Black and white: colour is reserved for status chips,
+   chart lines and the small brand mark. White cards sit on a pale grey page, so cards
+   stay borderless; the sidebar is a step darker than the page, as in the dark theme. */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --brand: oklch(0.55 0.15 142);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.511 0.262 276.966);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.511 0.262 276.966);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --background: oklch(0.968 0.002 260);
+  --foreground: oklch(0.18 0.004 260);
+  --brand: oklch(0.56 0.15 142);
+  --card: oklch(0.997 0.001 260);
+  --card-foreground: oklch(0.18 0.004 260);
+  --popover: oklch(0.997 0.001 260);
+  --popover-foreground: oklch(0.18 0.004 260);
+  --primary: oklch(0.2 0.004 260);
+  --primary-foreground: oklch(0.985 0.001 260);
+  --secondary: oklch(0.94 0.003 260);
+  --secondary-foreground: oklch(0.2 0.004 260);
+  --muted: oklch(0.94 0.003 260);
+  --muted-foreground: oklch(0.5 0.008 260);
+  --accent: oklch(0.945 0.003 260);
+  --accent-foreground: oklch(0.2 0.004 260);
+  --destructive: oklch(0.56 0.21 27);
+  --border: oklch(0.2 0.01 260 / 9%);
+  --input: oklch(0.2 0.01 260 / 14%);
+  --ring: oklch(0.45 0.005 260);
+  --chart-1: oklch(0.6 0.15 150);
+  --chart-2: oklch(0.64 0.15 62);
+  --chart-3: oklch(0.55 0.15 255);
+  --chart-4: oklch(0.55 0.16 300);
+  --chart-5: oklch(0.6 0 0);
   --radius: 0.5rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.511 0.262 276.966);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.511 0.262 276.966);
+  --sidebar: oklch(0.945 0.003 260);
+  --sidebar-foreground: oklch(0.18 0.004 260);
+  --sidebar-primary: oklch(0.56 0.15 142);
+  --sidebar-primary-foreground: oklch(0.985 0.001 260);
+  --sidebar-accent: oklch(0.92 0.003 260);
+  --sidebar-accent-foreground: oklch(0.2 0.004 260);
+  --sidebar-border: oklch(0.2 0.01 260 / 9%);
+  --sidebar-ring: oklch(0.45 0.005 260);
 }
 
-/* Black and white. Colour is reserved for status chips, chart lines and the small brand mark. */
+/* The original dark theme, kept for a later theme switch. */
 .dark {
   --background: oklch(0.155 0.002 260);
   --foreground: oklch(0.97 0 0);

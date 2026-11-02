@@ -1,19 +1,19 @@
 ---
 name: Nestwell
-description: Rent and occupancy manager for a fictional Lagos co-living operator. Black and white, Luma-style, colour only where it carries meaning.
+description: Rent and occupancy manager for a fictional Lagos co-living operator. Black and white, Luma-style, light by default, colour only where it carries meaning.
 colors:
-  ink-black: "oklch(0.155 0.002 260)"
-  panel-graphite: "oklch(0.212 0.003 260)"
-  sidebar-graphite: "oklch(0.19 0.003 260)"
-  raised-graphite: "oklch(0.255 0.003 260)"
-  paper-white: "oklch(0.97 0 0)"
-  ash-grey: "oklch(0.66 0.005 260)"
-  hairline: "oklch(1 0 0 / 7%)"
-  envato-green: "oklch(0.72 0.16 142)"
-  chart-green: "oklch(0.74 0.15 150)"
-  chart-amber: "oklch(0.78 0.14 70)"
-  chart-blue: "oklch(0.68 0.13 250)"
-  chart-violet: "oklch(0.70 0.13 300)"
+  page-grey: "oklch(0.968 0.002 260)"
+  card-white: "oklch(0.997 0.001 260)"
+  sidebar-grey: "oklch(0.945 0.003 260)"
+  raised-grey: "oklch(0.945 0.003 260)"
+  ink: "oklch(0.18 0.004 260)"
+  ash-grey: "oklch(0.5 0.008 260)"
+  hairline: "oklch(0.2 0.01 260 / 9%)"
+  envato-green: "oklch(0.56 0.15 142)"
+  chart-green: "oklch(0.6 0.15 150)"
+  chart-amber: "oklch(0.64 0.15 62)"
+  chart-blue: "oklch(0.55 0.15 255)"
+  chart-violet: "oklch(0.55 0.16 300)"
 typography:
   display:
     fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
@@ -48,18 +48,18 @@ rounded:
   lg: "10px"
 components:
   card:
-    backgroundColor: "{colors.panel-graphite}"
-    textColor: "{colors.paper-white}"
+    backgroundColor: "{colors.card-white}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.lg}"
     padding: "16px"
   button-primary:
-    backgroundColor: "{colors.paper-white}"
-    textColor: "{colors.ink-black}"
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.card-white}"
     rounded: "{rounded.md}"
     padding: "8px 16px"
   button-outline:
-    backgroundColor: "{colors.ink-black}"
-    textColor: "{colors.paper-white}"
+    backgroundColor: "{colors.page-grey}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.md}"
     padding: "8px 16px"
 ---
@@ -70,14 +70,14 @@ components:
 
 **Creative North Star: "The Quiet Ledger"**
 
-The home dashboard is the reference board for every page. It follows Luma's product UI: near-black page, graphite cards with no borders, a lighter sidebar, bold white headings, grey supporting text, and almost no colour. The interface is black and white so that the few coloured things carry meaning: a status tag says something is wrong, a chart line says which way a number is moving.
+The home dashboard is the reference board for every page. It follows Luma's product UI: a pale grey page, white cards with no borders, a slightly darker sidebar, bold near-black headings, grey supporting text, and almost no colour. Light is the default theme; the original dark theme is kept under `.dark` in `globals.css` for a later theme switch, with the same rules. The interface is black and white so that the few coloured things carry meaning: a status tag says something is wrong, a chart line says which way a number is moving.
 
 This system rejects the project's starting point (Revolut-style glowing hero numbers, pill buttons, soft shadows) and also the first pivot attempt (a green-tinted surface with coloured icon badges on every card), which read as too colourful.
 
 **Key Characteristics:**
 - Black and white surfaces; colour on status tags, chart lines and the small brand mark only.
 - Sections separated by a hairline rule, each with a bold title and an optional right-hand aside (a date, a "+ Create").
-- Borderless graphite cards on a near-black page; depth comes from one lightness step.
+- Borderless white cards on a pale grey page; depth comes from one lightness step.
 - Detail views open in a push-aside side panel on desktop, a bottom sheet on mobile.
 
 ## 2. Colors
@@ -85,22 +85,22 @@ This system rejects the project's starting point (Revolut-style glowing hero num
 Neutral greys with the faintest cool cast, so the page reads as black and white rather than tinted.
 
 ### Primary
-- **Envato Green** (`oklch(0.72 0.16 142)`): the brand mark. Used for the logo square, the active nav item, and switches that are on. Never on buttons, cards or text blocks.
+- **Envato Green** (`oklch(0.56 0.15 142)`): the brand mark. Used for the logo square, the active nav item, and switches that are on. Never on buttons, cards or text blocks.
 
 ### Secondary (chart lines and glance figures only)
-- **Chart Green** (`oklch(0.74 0.15 150)`): money coming in (Revenue).
-- **Chart Amber** (`oklch(0.78 0.14 70)`): money coming due (Payments due).
-- **Chart Blue** (`oklch(0.68 0.13 250)`): occupancy (Vacant beds).
-- **Chart Violet** (`oklch(0.70 0.13 300)`): portfolio size (Properties, rent roll).
+- **Chart Green** (`oklch(0.6 0.15 150)`): money coming in (Revenue).
+- **Chart Amber** (`oklch(0.64 0.15 62)`): money coming due (Payments due).
+- **Chart Blue** (`oklch(0.55 0.15 255)`): occupancy (Vacant beds).
+- **Chart Violet** (`oklch(0.55 0.16 300)`): portfolio size (Properties, rent roll).
 
-### Neutral
-- **Ink Black** (`oklch(0.155 0.002 260)`): page background.
-- **Sidebar Graphite** (`oklch(0.19 0.003 260)`): the sidebar, a step lighter than the page.
-- **Panel Graphite** (`oklch(0.212 0.003 260)`): cards, list containers, the side panel.
-- **Raised Graphite** (`oklch(0.255 0.003 260)`): hover and selected rows, muted fills.
-- **Paper White** (`oklch(0.97 0 0)`): primary text and the primary button.
-- **Ash Grey** (`oklch(0.66 0.005 260)`): captions, labels, secondary text, faded corner icons.
-- **Hairline** (`oklch(1 0 0 / 7%)`): section rules and dividers between list rows.
+### Neutral (light theme)
+- **Page Grey** (`oklch(0.968 0.002 260)`): page background.
+- **Sidebar Grey** (`oklch(0.945 0.003 260)`): the sidebar, a step darker than the page.
+- **Card White** (`oklch(0.997 0.001 260)`): cards, list containers, the side panel. Never pure white.
+- **Raised Grey** (`oklch(0.945 0.003 260)`): hover and selected rows, muted fills, rows inside a panel.
+- **Ink** (`oklch(0.18 0.004 260)`): primary text and the primary button.
+- **Ash Grey** (`oklch(0.5 0.008 260)`): captions, labels, secondary text, faded corner icons.
+- **Hairline** (`oklch(0.2 0.01 260 / 9%)`): section rules and dividers between list rows.
 
 ### Status tags
 Paid green, Due soon / Due today amber, Overdue red, Notice issued purple, Vacant grey. Each is a small rounded tag with a 10 to 15% fill of its colour and full-strength text. These are the loudest colour on any screen.
@@ -108,7 +108,7 @@ Paid green, Due soon / Due today amber, Overdue red, Notice issued purple, Vacan
 ### Named Rules
 **The Tags Speak Rule.** Status colour lives only on labelled tags. A row, tile, card or banner is never filled with a status colour; put a tag inside it instead.
 
-**The Black and White Rule.** If colour appears anywhere other than a tag, a chart line, a glance figure or the brand mark, remove it. Primary buttons are white, not green.
+**The Black and White Rule.** If colour appears anywhere other than a tag, a chart line, a glance figure or the brand mark, remove it. Primary buttons are ink (white in the dark theme), not green.
 
 ## 3. Typography
 
@@ -122,13 +122,13 @@ Paid green, Due soon / Due today amber, Overdue red, Notice issued purple, Vacan
 - **Caption** (400, 12px): card captions ("Last 30 days"), axis labels, column headers.
 
 ### Named Rules
-**The Two-Tone Greeting Rule.** The greeting is two lines at the same size: "Good morning," in Ash Grey regular, the name in Paper White bold.
+**The Two-Tone Greeting Rule.** The greeting is two lines at the same size: "Good morning," in Ash Grey regular, the name in Ink bold.
 
 **The Tabular Money Rule.** Every ₦ amount and count uses tabular figures.
 
 ## 4. Elevation
 
-Flat. No shadows anywhere. Depth is the lightness step from page to card (or sidebar), and hairline rules between sections and rows. Hover raises a row or card one more step to Raised Graphite.
+Flat. No shadows anywhere. Depth is the lightness step from page to card (or sidebar), and hairline rules between sections and rows. Hover raises a row or card one more step to Raised Grey.
 
 ## 5. Components
 
@@ -136,27 +136,27 @@ Flat. No shadows anywhere. Depth is the lightness step from page to card (or sid
 A hairline rule on top, then a Section-weight title with an optional aside on the right (date, "+ Create", "View all"). Sections are spaced 32px apart.
 
 ### Glance card (signature)
-Graphite card, no border, 16px padding. Top left: title and a one-line caption. Top right: the figure in its chart colour, regular weight, 24px. Below: a sparkline in the same colour over a dashed baseline, then three axis captions (start, what the line measures, end). Four of them in a 2×2 grid on desktop, stacked on mobile.
+White card, no border, 16px padding. Top left: title and a one-line caption. Top right: the figure in its chart colour, regular weight, 24px. Below: a sparkline in the same colour over a dashed baseline, then three axis captions (start, what the line measures, end). Four of them in a 2×2 grid on desktop, stacked on mobile.
 
 ### Quick action card
-Short graphite card (64px tall): bold label with a grey arrow, and a large faded grey icon (48px, 30% opacity, thin stroke) clipped into the bottom-right corner. 2×2 grid at every width. Each opens a side panel or the composer.
+Short white card (64px tall): bold label on one line with a grey arrow (arrow hidden on phones), and a large faded grey icon (48px, 30% opacity, thin stroke) clipped into the bottom-right corner. 2×2 grid at every width. Send message, Record payment, View overdue, Add a tenant. Each opens a side panel or the composer.
 
 ### List container (properties, rooms)
-One graphite card holding rows separated by hairlines. Desktop shows a caption-sized column header row. No icons on rows; a grey chevron on the right. Properties list puts beds available first.
+One white card holding rows separated by hairlines. Desktop shows a caption-sized column header row. No icons on rows; a grey chevron on the right. Properties list puts beds available first.
 
 ### Buttons
-- **Primary:** Paper White fill, Ink Black text, 8px radius.
-- **Outline:** transparent with a hairline border, white text. Used for most actions, including Issue notice and Check out.
+- **Primary:** Ink fill, white text, 8px radius.
+- **Outline:** transparent with a hairline border, ink text. Used for most actions, including Issue notice and Check out.
 - **Destructive:** red, only on the final confirm step of a destructive action.
 
 ### Side Panel
-On desktop (≥1024px) a right-hand panel sits beside the page and pushes the main column narrower; it never covers the page. Panel Graphite, hairline left edge, sticky header with a close button, Escape closes, one open at a time. Below 1024px it becomes a bottom sheet. Pages can open it from the URL (`?bed=`).
+On desktop (≥1024px) a right-hand panel sits beside the page and pushes the main column narrower; it never covers the page. Card White, hairline left edge, sticky header with a close button, Escape closes, one open at a time. Below 1024px it becomes a bottom sheet. Pages can open it from the URL (`?bed=`).
 
 ### Room card
 Room name and "N beds · ₦X/bed" header; one row per bed with the label, tenant's full name, status tag and chevron; vacant beds read "+ Add tenant". Footer: a labelled switch, "Reminders: Automatic / Manual", with a one-line explanation.
 
 ### Navigation
-Sidebar Graphite background, 15px medium labels with 20px outline icons, active item in Envato Green (no fill), disabled items faded with a lock. Owner initial and name at the bottom. Mobile uses a bottom tab bar.
+Sidebar Grey background, 15px medium labels with 20px outline icons, active item in Envato Green (no fill), disabled items faded with a lock. Owner initial and name at the bottom. Mobile uses a bottom tab bar.
 
 ## 6. Do's and Don'ts
 

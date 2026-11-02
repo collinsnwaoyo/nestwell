@@ -81,6 +81,23 @@ How Nestwell was built with Claude Code. One entry per working session, newest a
 - Decisions: property editing moves to Settings (not in this demo); the server actions stay for then. Glance Revenue shows money collected in the last 30 days rather than a calendar month, so the line doesn't dip at the start of each month.
 - Commits: dashboard trial, icon pass, side panel + property page, Luma board.
 
+## Session 4, 2 November 2026: speed, Record payment, light mode
+
+- Goal: clicking between pages felt slow; Record payment matters more than Add a room as a quick action; switch to light mode.
+- What I asked Claude Code to do: make navigation smoother, swap the quick action, then (mid-task) move the whole app to light.
+- What it built:
+  - Measured first: each Supabase round trip from here costs ~210ms, and the property page made six of them one after another (messages page five). Rewrote both queries to fetch in parallel: property page 2 rounds, messages 1. Warm dev times went from 2.2s to 0.9s (property) and 1.7s to 0.6s (messages); a production build serves every page in 0.3 to 0.5s.
+  - `loading.tsx` skeletons for Home, Properties, a property and Messages, so a click shows the page outline in ~40ms instead of freezing until the server answers.
+  - Record payment quick action replaces Add a room (Add a room stays in each property's Configure rooms): every current tenant, soonest due first, with amount and status tag; pick one, choose Transfer or Cash, then send the WhatsApp receipt.
+  - Light theme as the default: pale grey page, white borderless cards, ink primary buttons, darker chart colours for contrast. The dark tokens stay under `.dark` for a later switch. `DESIGN.md` updated.
+- What went wrong and how it was fixed:
+  - After recording, the panel re-read fresh data and showed next month's period and a Paid-in-advance status. Fixed by keeping a snapshot of the chosen tenant and flipping the tag to Paid on success.
+  - The switch knob and the Unverified tag were hard-coded for dark mode; fixed for both themes.
+  - "Record payment" wrapped to two lines in the half-width card on phones; the arrow now hides below 640px.
+- Decisions: fetch small lookup tables (beds, tenancies, rooms) portfolio-wide rather than chaining dependent queries; at this portfolio size one parallel round beats several narrow ones. On Vercel, put the functions in the same region as the Supabase project to cut each round trip further.
+- Not done yet: seed dates are still pinned to July 2026 (Babatunde shows Overdue instead of Due today).
+- Commits: perf + skeletons, record payment quick action, light mode.
+
 ## Ideas (not in this build)
 
 -
