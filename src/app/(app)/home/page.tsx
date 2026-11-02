@@ -68,7 +68,7 @@ export default async function HomePage() {
 
         <Section title="Quick actions">
           <QuickActions
-            properties={data.properties.map(({ id, name }) => ({ id, name }))}
+            payable={data.payable}
             overdue={data.overdue}
             vacantBeds={data.vacantBeds}
             tenantCount={data.bedsFilled}

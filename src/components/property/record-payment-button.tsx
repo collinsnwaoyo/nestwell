@@ -9,10 +9,19 @@ import { WhatsAppSendButton } from "@/components/whatsapp-send-button";
 import { recordPayment, type RecordPaymentResult } from "@/lib/actions/payments";
 import type { PaymentMethod } from "@/lib/db/types";
 
-export function RecordPaymentButton({ tenancyId }: { tenancyId: string }) {
+/** `startChoosing` skips the first tap, for places where the tenant was just picked. */
+export function RecordPaymentButton({
+  tenancyId,
+  startChoosing = false,
+  onRecorded,
+}: {
+  tenancyId: string;
+  startChoosing?: boolean;
+  onRecorded?: () => void;
+}) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [choosing, setChoosing] = useState(false);
+  const [choosing, setChoosing] = useState(startChoosing);
   const [result, setResult] = useState<RecordPaymentResult | null>(null);
 
   function record(method: PaymentMethod) {
@@ -24,6 +33,7 @@ export function RecordPaymentButton({ tenancyId }: { tenancyId: string }) {
       }
       setChoosing(false);
       if (outcome.data) setResult(outcome.data);
+      onRecorded?.();
       toast.success("Payment recorded");
       router.refresh();
     });
