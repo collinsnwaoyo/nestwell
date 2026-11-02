@@ -20,4 +20,21 @@ describe("fillTemplate", () => {
       "Hi Collins, {mystery}",
     );
   });
+
+  it("doesn't double the full stop when a value already ends a sentence", () => {
+    const result = fillTemplate(MESSAGE_TEMPLATES.notice, {
+      firstName: "Emeka",
+      room: "Single room",
+      date: "16 Nov 2026",
+      reason: "Rent more than 30 days overdue after repeated follow-up.",
+    });
+    expect(result).toBe(
+      "Hi Emeka, this is formal notice to vacate Single room by 16 Nov 2026. Reason: Rent more than 30 days overdue after repeated follow-up.",
+    );
+    expect(fillTemplate("Reason: {reason}.", { reason: "Damage to the room" })).toBe("Reason: Damage to the room.");
+  });
+
+  it("templates contain no em dashes", () => {
+    for (const template of Object.values(MESSAGE_TEMPLATES)) expect(template).not.toContain("—");
+  });
 });

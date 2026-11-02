@@ -489,6 +489,8 @@ export interface MessageRow {
   trigger: Database["public"]["Tables"]["messages"]["Row"]["trigger"];
   status: Database["public"]["Tables"]["messages"]["Row"]["status"];
   createdAt: string;
+  /** When it was marked sent, if it has been (falls back to creation for seeded history). */
+  sentAt: string | null;
   waLink: string;
 }
 
@@ -496,15 +498,16 @@ export async function getMessages(): Promise<MessageRow[]> {
   const supabase = getSupabaseClient();
 
   // One parallel round instead of a chain of lookups: the lookup tables are small.
-  const [messagesRes, tenanciesRes, tenantsRes, bedsRes, roomsRes, propertiesRes] = await Promise.all([
+  const [messagesRes, tenanciesRes, tenantsRes, bedsRes, roomsRes, propertiesRes, sentEventsRes] = await Promise.all([
     supabase.from("messages").select("*").order("created_at", { ascending: false }),
     supabase.from("tenancies").select("id, tenant_id, bed_id"),
     supabase.from("tenants").select("id, full_name"),
     supabase.from("beds").select("id, room_id"),
     supabase.from("rooms").select("id, name, property_id"),
     supabase.from("properties").select("id, name"),
+    supabase.from("events").select("payload, created_at").eq("type", "message_marked_sent"),
   ]);
-  for (const res of [messagesRes, tenanciesRes, tenantsRes, bedsRes, roomsRes, propertiesRes]) {
+  for (const res of [messagesRes, tenanciesRes, tenantsRes, bedsRes, roomsRes, propertiesRes, sentEventsRes]) {
     if (res.error) throw new Error(res.error.message);
   }
   const messages = messagesRes.data ?? [];
@@ -514,6 +517,9 @@ export async function getMessages(): Promise<MessageRow[]> {
   const bedById = new Map((bedsRes.data ?? []).map((b) => [b.id, b]));
   const roomById = new Map((roomsRes.data ?? []).map((r) => [r.id, r]));
   const propertyById = new Map((propertiesRes.data ?? []).map((p) => [p.id, p]));
+  const sentAtById = new Map(
+    (sentEventsRes.data ?? []).map((event) => [String(event.payload.message_id), event.created_at]),
+  );
 
   return messages.map((message): MessageRow => {
     const tenancy = message.tenancy_id ? tenancyById.get(message.tenancy_id) : undefined;
@@ -534,6 +540,7 @@ export async function getMessages(): Promise<MessageRow[]> {
       trigger: message.trigger,
       status: message.status,
       createdAt: message.created_at,
+      sentAt: message.status === "marked_sent" ? (sentAtById.get(message.id) ?? message.created_at) : null,
       waLink: message.wa_link,
     };
   });

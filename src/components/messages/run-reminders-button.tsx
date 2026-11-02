@@ -25,8 +25,8 @@ export function RunRemindersButton() {
   }
 
   return (
-    <Button type="button" variant="secondary" disabled={pending} onClick={handleClick} className="gap-1.5">
-      <Zap className="size-4" /> {pending ? "Running…" : "Run today's reminders"}
+    <Button type="button" disabled={pending} onClick={handleClick}>
+      <Zap aria-hidden /> {pending ? "Running…" : "Run today's reminders"}
     </Button>
   );
 }

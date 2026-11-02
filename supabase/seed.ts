@@ -216,7 +216,7 @@ async function seedTenancy(
     next_of_kin_name: seed.nextOfKinName,
     next_of_kin_relation: seed.nextOfKinRelation,
     next_of_kin_phone: PHONE,
-    emergency_contact: `${seed.emergencyContact} — ${PHONE}`,
+    emergency_contact: `${seed.emergencyContact}, ${PHONE}`,
     verified: true,
   });
 
