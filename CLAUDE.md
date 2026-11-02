@@ -57,10 +57,10 @@ docs/                    PRD.md, BUILD_LOG.md
 
 ## Seed data
 
-- Follow the property, room and tenant tables in the PRD exactly: 4 properties, 11 beds, 9 occupied, ₦2,010,000 monthly rent roll.
+- Follow the property, room and tenant tables in the PRD exactly: 4 properties named by area and layout (Lekki studio, Yaba studio (Akoka side), Surulere 3-bedroom, Ikota 2-bedroom), 11 beds, 9 occupied, ₦1,370,000 monthly rent roll.
 - Every phone number in the seed (tenant, next of kin, emergency contact) is `+2347025762759`.
 - Seeded documents are obvious placeholder images marked "SAMPLE". Never generate anything that looks like a real ID.
-- Generate dates relative to today so the story always holds: Babatunde Lawal due today, Damilola Ogunleye due in 3 days, Halima Bello overdue with a late fee, Emeka Obi on notice, Ikota shared room on automatic.
+- Generate dates relative to today so the story always holds: Babatunde Lawal due today, Damilola Ogunleye due in 3 days, Halima Bello overdue with a late fee, Emeka Obi on notice, Ikota double room on automatic.
 - About four months of payment and message history per tenant.
 
 ## UI rules
@@ -70,7 +70,7 @@ docs/                    PRD.md, BUILD_LOG.md
 - Status colours only on labelled chips, never on whole tiles or cards.
 - Font: Inter (self-hosted in `public/fonts`). Tabular figures for amounts.
 - Mobile first. It must work at 375px wide, with a bottom tab bar on mobile and a sidebar on desktop.
-- Sidebar: Home, Properties and Messages are live. Tenants, Payments, Payment history, Reports and Settings are visible but disabled, with a lock icon and a "Not in this demo" tooltip.
+- Sidebar: Home, Properties and Messages are live. Tenants, Payment history, Reports and Settings are visible but disabled under "In the full version", with an "Available in the full version" tooltip.
 - The welcome screen at `/` has no login fields, just the note and a Continue button. After Continue, the greeting is "Good morning / afternoon / evening, Collins" in Lagos time.
 - Every action ends in a toast. Every empty state has a next action.
 

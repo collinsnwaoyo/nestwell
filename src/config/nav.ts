@@ -7,7 +7,6 @@ import {
   MessageCircle,
   Settings,
   Users,
-  Wallet,
 } from "lucide-react";
 
 export interface NavItem {
@@ -26,7 +25,6 @@ export const LIVE_NAV_ITEMS: NavItem[] = [
 
 export const DISABLED_NAV_ITEMS: NavItem[] = [
   { label: "Tenants", href: "/tenants", icon: Users, disabled: true },
-  { label: "Payments", href: "/payments", icon: Wallet, disabled: true },
   { label: "Payment history", href: "/payment-history", icon: History, disabled: true },
   { label: "Reports", href: "/reports", icon: BarChart3, disabled: true },
   { label: "Settings", href: "/settings", icon: Settings, disabled: true },
