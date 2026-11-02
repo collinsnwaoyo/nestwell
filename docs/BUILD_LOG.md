@@ -129,6 +129,7 @@ How Nestwell was built with Claude Code. One entry per working session, newest a
 - What went wrong and how it was fixed: the old rents were Lekki-level everywhere (₦280,000 for a Yaba self-contain against a market of about ₦100,000 to ₦150,000 a month furnished). Needs attention lowercased whole labels ("due 5 nov"); now only the first letter.
 - Decisions: most Lagos rent is paid yearly upfront, so annual listings were only a floor; pay-monthly rooms are furnished and serviced and run two to three times the annual rate divided by twelve, which is the market this product is for. Names follow the actual layouts (Surulere has three rooms, Ikota two). Late fee (₦10,000) and caution deposit (₦100,000) are unchanged; ₦100,000 caution matches most listings.
 - Commits: names and rents, locked menu, welcome screen.
+- Follow-up, same session: market rents were the wrong lens. This is a business that leases units a year upfront, furnishes them and covers power, internet and cleaning, so rent has to be cost-plus. Added `supabase/pricing.ts` (lease plus 20% fees, furnishing over 36 months, bills, at 90% occupancy and a 20% margin, with a sharer discount per bed) and tests; the seed now takes rents from it. Rents: Lekki studio ₦795,000; Yaba ₦425,000; Surulere ₦170,000 / ₦215,000 / ₦285,000; Ikota ₦365,000 / ₦490,000. Rent roll ₦3,005,000. The welcome copy now says what the business is: monthly rentals, furnished, bills covered.
 
 ## Ideas (not in this build)
 

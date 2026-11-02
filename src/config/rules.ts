@@ -8,16 +8,16 @@ export const REMINDER_DAYS_BEFORE_DUE = 3;
 export const REMINDER_SEND_HOUR = 9; // 9:00am Lagos time
 
 /**
- * Bed count and default monthly rent/bed for a new room, by type. Either can be
- * overridden per room, since area matters more than type (a Lekki room costs
- * about double a Surulere one). Defaults sit mid-market for furnished,
- * pay-monthly rooms in Lagos, October 2026.
+ * Bed count and default monthly rent/bed for a new room, by type: furnished,
+ * bills included, paid monthly. Either can be overridden per room, since the
+ * lease behind a room drives its price more than its type does (see the
+ * pricing model in supabase/pricing.ts). Defaults sit mid-portfolio.
  */
 export const ROOM_TYPE_DEFAULTS: Record<RoomType, { beds: number; rentPerBed: number }> = {
-  triple: { beds: 3, rentPerBed: 65_000 },
-  shared: { beds: 2, rentPerBed: 85_000 },
-  single: { beds: 1, rentPerBed: 150_000 },
-  studio: { beds: 1, rentPerBed: 400_000 },
+  triple: { beds: 3, rentPerBed: 170_000 },
+  shared: { beds: 2, rentPerBed: 250_000 },
+  single: { beds: 1, rentPerBed: 350_000 },
+  studio: { beds: 1, rentPerBed: 650_000 },
 };
 
 export const DEFAULT_DEPOSIT = 100_000;

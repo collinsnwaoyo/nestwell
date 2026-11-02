@@ -1,5 +1,5 @@
 // Demo seed data for Nestwell, matching docs/PRD.md: 4 properties,
-// 11 beds, 9 occupied, ₦1,370,000 monthly rent roll. Dates are generated
+// 11 beds, 9 occupied, ₦3,005,000 monthly rent roll. Dates are generated
 // relative to today so the story always holds (see PRD "Public demo").
 //
 // Payment/charge history is computed with the real domain logic (not
@@ -21,6 +21,7 @@ import {
   fillTemplate,
   moveInForNextDue,
 } from "../src/lib/domain";
+import { priceRooms, UNITS } from "./pricing";
 import { STORY, type StoryTenant } from "./story";
 import {
   ALLOWED_UPLOAD_MIME_TYPES,
@@ -50,18 +51,22 @@ const supabase = createClient<Database>(supabaseUrl, serviceRoleKey, {
 const PHONE = "+2347025762759";
 const PHONE_DIGITS = "2347025762759";
 
-// Monthly rent per bed. Benchmarked against furnished, pay-monthly listings in
-// each area in October 2026 (pay-monthly rooms run about two to three times the
-// annual rate / 12, since most Lagos rent is paid a year upfront). See the PRD.
+// Monthly rent per bed, all bills included, from the cost-plus model in
+// supabase/pricing.ts (lease, furnishing and services, at 90% occupancy and a
+// 20% margin).
+const lekkiRent = priceRooms(UNITS.lekki);
+const yabaRent = priceRooms(UNITS.yaba);
+const surulereRent = priceRooms(UNITS.surulere);
+const ikotaRent = priceRooms(UNITS.ikota);
 const RENT = {
-  lekkiStudio: 500_000,
-  yabaRoom: 150_000,
-  surulereTriple: 65_000,
-  surulereDouble: 85_000,
-  surulereSingle: 120_000,
-  ikotaDouble: 150_000,
-  ikotaSingle: 250_000,
-} as const;
+  lekkiStudio: lekkiRent.studio,
+  yabaRoom: yabaRent.selfCon,
+  surulereTriple: surulereRent.triple,
+  surulereDouble: surulereRent.double,
+  surulereSingle: surulereRent.single,
+  ikotaDouble: ikotaRent.double,
+  ikotaSingle: ikotaRent.single,
+};
 
 const DEPOSIT = DEFAULT_DEPOSIT;
 const today = new Date();

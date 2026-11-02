@@ -27,23 +27,37 @@ Nestwell runs four properties in Lagos, two of them on the Lekki axis, with 11 b
 
 | Property | Area | Layout | Rooms and monthly rent per bed |
 | --- | --- | --- | --- |
-| Lekki studio | Lekki Phase 1 | Studio | 1 studio, ₦500,000 |
-| Yaba studio (Akoka side) | Akoka, Yaba | Self-contained room, one tenant | 1 single, ₦150,000 |
-| Surulere 3-bedroom | Surulere | 3-bedroom flat | 1 triple, ₦65,000; 1 double, ₦85,000; 1 single, ₦120,000 |
-| Ikota 2-bedroom | Ikota GRA | 2-bedroom flat | 1 double, ₦150,000; 1 single, ₦250,000 |
+| Lekki studio | Lekki Phase 1 | Studio | 1 studio, ₦795,000 |
+| Yaba studio (Akoka side) | Akoka, Yaba | Self-contained room, one tenant | 1 single, ₦425,000 |
+| Surulere 3-bedroom | Surulere | 3-bedroom flat | 1 triple, ₦170,000; 1 double, ₦215,000; 1 single, ₦285,000 |
+| Ikota 2-bedroom | Ikota GRA | 2-bedroom flat | 1 double, ₦365,000; 1 single, ₦490,000 |
 
 Properties are named the way an owner talks about them (area and layout), not with a brand prefix.
 
-Rents are benchmarked against furnished, pay-monthly listings in each area in October 2026 (Nigeria Property Centre's monthly-rent filters, PropertyPro, Jiji and Flatmate). Most Lagos rent is paid a year upfront; rooms you can pay for monthly are furnished and serviced, and run about two to three times the annual rate divided by twelve. Points of reference: furnished studios around Lekki and Chevron at ₦400,000 to ₦600,000 a month; furnished rooms in Lekki shared apartments at ₦450,000 to ₦600,000 plus service charge; Ikota shared rooms at ₦1.2M to ₦2.5M a year unfurnished; Akoka self-contains at ₦1.2M to ₦1.3M a year and furnished bed spaces from ₦100,000 a month; Surulere shared rooms at ₦350,000 to ₦600,000 a year per person.
+### Pricing
 
-Room types and their default monthly rent for a new room. Area matters more than type, so each room can override it.
+The business leases each unit from a landlord a year upfront, furnishes it, and lets it room by room (or bed by bed) month to month with power, internet, cleaning and maintenance covered. Tenants just move in and pay monthly. Rent is cost-plus, computed by `supabase/pricing.ts`:
+
+- Monthly cost = annual lease plus 20% agency and legal fees, divided by 12; plus furnishing written off over 36 months; plus the bills the business covers.
+- Price per bed = monthly cost ÷ 90% occupancy ÷ (1 − 20% margin), split across beds with a sharer discount (a bed in a double is 0.75 of a private room, in a triple 0.6), rounded to ₦5,000.
+
+| Unit | Lease / year | Furnishing | Bills / month | Monthly cost |
+| --- | --- | --- | --- | --- |
+| Lekki studio | ₦3,000,000 | ₦3,000,000 | ₦190,000 | ₦573,000 |
+| Yaba studio (Akoka side) | ₦1,300,000 | ₦2,000,000 | ₦120,000 | ₦306,000 |
+| Surulere 3-bedroom | ₦4,000,000 | ₦5,000,000 | ₦345,000 | ₦884,000 |
+| Ikota 2-bedroom | ₦4,500,000 | ₦4,500,000 | ₦305,000 | ₦880,000 |
+
+Inputs are October 2026 figures: leases from annual listings (Akoka self-contains about ₦1.2M to ₦1.3M; Lekki Phase 1 studios ₦2.5M to ₦3.5M; Ikota flats from Nigeria Property Centre and PropertyPro), bills at Band A power tariffs plus internet, cleaning and estate charges. The results sit inside the market for furnished, bills-included monthly rooms: Lekki and Ikota rooms of that kind list at ₦500,000 to ₦800,000 a month including power and service.
+
+Room-type defaults for a new room (furnished, bills included), overridable per room:
 
 | Room type | Beds | Default rent / bed / month |
 | --- | --- | --- |
-| Triple | 3 | ₦65,000 |
-| Double | 2 | ₦85,000 |
-| Single | 1 | ₦150,000 |
-| Studio | 1 | ₦400,000 |
+| Triple | 3 | ₦170,000 |
+| Double | 2 | ₦250,000 |
+| Single | 1 | ₦350,000 |
+| Studio | 1 | ₦650,000 |
 
 Seeded tenants, with about four months of payment and message history each. Statuses are as of the demo date (today).
 
@@ -61,7 +75,7 @@ Seeded tenants, with about four months of payment and message history each. Stat
 | Funmilayo Ajayi | Ikota, double bed 2 | Paid up | |
 | (empty) | Ikota, single | Vacant room | Vacancy at room level |
 
-That's 9 of 11 beds occupied and ₦1,370,000 of monthly rent roll. Seeded tenants get obviously fake sample documents. Every phone number in the seed (tenants, next of kin, emergency contacts) is Collins's own WhatsApp number, +234 702 576 2759 (stored as +2347025762759, used in links as wa.me/2347025762759), so any message a visitor sends from the demo lands with him.
+That's 9 of 11 beds occupied and ₦3,005,000 of monthly rent roll. Seeded tenants get obviously fake sample documents. Every phone number in the seed (tenants, next of kin, emergency contacts) is Collins's own WhatsApp number, +234 702 576 2759 (stored as +2347025762759, used in links as wa.me/2347025762759), so any message a visitor sends from the demo lands with him.
 
 ## Core model
 
@@ -83,7 +97,7 @@ Everything hangs off one chain, property to room to bed to tenancy. Balances and
 The link opens on a single welcome screen that sits where a login would. It frames the product as Collins's own tool, opened up for the viewer.
 
 - Layout: the Nestwell mark, a short note and one Continue button. No email or password fields.
-- Copy: "Hi there." then "I built this tool to run my own rental properties in Lagos. I've opened up a demo copy so you can look around." A meta line: "The data resets every night." Button: "Continue". Beside the copy, a small preview of the demo's own rent status (three seeded tenants and the rent roll).
+- Copy: "Hi there." then "I built this tool to run my own monthly rental properties in Lagos: furnished rooms with power, internet and cleaning covered, so tenants just move in and pay month to month. I've opened up a demo copy so you can look around." A meta line: "The data resets every night." Button: "Continue". Beside the copy, a small preview of the demo's own rent status (three seeded tenants and the rent roll).
 - Continue opens the app on the dashboard, signed in as Collins. There's no real authentication behind it.
 - The welcome screen is only shown on first visit in a browser session; a small "About this demo" link in the sidebar brings it back.
 
@@ -94,7 +108,7 @@ There are two levels of navigation, portfolio then property, plus the actions th
 ### Dashboard (home)
 
 - Greeting at the top: "Good morning, Collins" (changes with the time of day in Lagos).
-- A summary strip under it with three numbers: Properties (4), Tenants (9 of 11 beds filled), and Expected revenue this month (₦1,370,000, with collected so far shown beneath it).
+- A summary strip under it with three numbers: Properties (4), Tenants (9 of 11 beds filled), and Expected revenue this month (₦3,005,000, with collected so far shown beneath it).
 - Below that, one card per property: photo, name, area, beds filled (e.g. 5 of 6), amount owed, and a status chip if anyone is overdue or on notice. Clicking a card opens the property.
 - No filters or search. With four properties they add clutter, not value.
 
@@ -250,7 +264,7 @@ Three days, with the deployed link live by the end of day 2 and day 3 for polish
 
 Acceptance checks before sharing the link:
 
-- [ ] Dashboard numbers match a hand count of the seed (4 properties, 9 of 11 beds, expected revenue ₦1,370,000), and Continue on the welcome screen lands on "Good morning, Collins".
+- [ ] Dashboard numbers match a hand count of the seed (4 properties, 9 of 11 beds, expected revenue ₦3,005,000), and Continue on the welcome screen lands on "Good morning, Collins".
 - [ ] Onboarding blocks submission without both documents and a valid +234 number.
 - [ ] Recording a payment moves the due date forward one month and clears the status.
 - [ ] Switching a room to Automatic and pressing "Run today's reminders" creates the right messages in the outbox.

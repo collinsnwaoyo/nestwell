@@ -11,9 +11,9 @@ import { hasSeenWelcome, markWelcomeSeen } from "@/lib/welcome";
 
 // A glimpse of the demo's own story: the same tenants and amounts you'll find inside.
 const PREVIEW: { initials: string; name: string; place: string; amount: string; status: RentStatus }[] = [
-  { initials: "TA", name: "Tolulope Adebayo", place: "Lekki studio", amount: "₦500,000", status: "paid" },
-  { initials: "BL", name: "Babatunde Lawal", place: "Yaba studio (Akoka side)", amount: "₦150,000", status: "due_today" },
-  { initials: "HB", name: "Halima Bello", place: "Surulere 3-bedroom", amount: "₦75,000", status: "overdue" },
+  { initials: "TA", name: "Tolulope Adebayo", place: "Lekki studio", amount: "₦795,000", status: "paid" },
+  { initials: "BL", name: "Babatunde Lawal", place: "Yaba studio (Akoka side)", amount: "₦425,000", status: "due_today" },
+  { initials: "HB", name: "Halima Bello", place: "Surulere 3-bedroom", amount: "₦180,000", status: "overdue" },
 ];
 
 function rise(index: number) {
@@ -52,8 +52,9 @@ export default function WelcomePage() {
             Hi there.
           </h1>
           <p className="mt-4 max-w-md animate-rise-in text-[16px] leading-[26px] text-muted-foreground" style={rise(2)}>
-            I built this tool to run my own rental properties in Lagos. I&apos;ve opened up a demo copy so you can look
-            around.
+            I built this tool to run my own monthly rental properties in Lagos: furnished rooms with power, internet and
+            cleaning covered, so tenants just move in and pay month to month. I&apos;ve opened up a demo copy so you can
+            look around.
           </p>
 
           <div className="mt-8 flex animate-rise-in flex-wrap items-center gap-x-5 gap-y-3" style={rise(3)}>
@@ -78,7 +79,7 @@ export default function WelcomePage() {
           <div className="flex items-baseline justify-between border-b border-border px-5 py-4">
             <div>
               <p className="text-meta-style">Monthly rent roll</p>
-              <p className="text-stat-sm font-semibold tabular-nums">₦1,370,000</p>
+              <p className="text-stat-sm font-semibold tabular-nums">₦3,005,000</p>
             </div>
             <p className="text-meta-style">4 properties, 9 of 11 beds</p>
           </div>
