@@ -19,7 +19,9 @@ import {
   lateFeesOwed,
   lateFeeChargeAmount,
   fillTemplate,
+  moveInForNextDue,
 } from "../src/lib/domain";
+import { STORY, type StoryTenant } from "./story";
 import {
   ALLOWED_UPLOAD_MIME_TYPES,
   DEFAULT_DEPOSIT,
@@ -187,13 +189,12 @@ async function insertEvent(row: Database["public"]["Tables"]["events"]["Insert"]
 type ReminderMode = Database["public"]["Tables"]["rooms"]["Row"]["reminder_mode"];
 
 interface TenantSeed {
-  fullName: string;
+  /** Also picks the tenant's place in the story (supabase/story.ts). */
+  fullName: StoryTenant;
   occupation: string;
   nextOfKinName: string;
   nextOfKinRelation: string;
   emergencyContact: string;
-  moveInDay: number;
-  paymentsCount: number;
   status: "active" | "notice";
   noticeReason?: string;
   moveOutInDays?: number;
@@ -219,8 +220,11 @@ async function seedTenancy(
     verified: true,
   });
 
-  const moveIn = new Date(Date.UTC(2026, 6, seed.moveInDay)); // July 2026, ~4 months of history
-  const moveInIso = isoDate(moveIn);
+  // Work back from where the story needs this tenant today to a move-in date
+  // about four months ago, so statuses hold whichever day the seed runs.
+  const beat = STORY[seed.fullName];
+  const { moveIn, paymentsCount } = moveInForNextDue(today, beat.nextDueInDays, beat.paidMonths);
+  const moveInIso = moveIn;
 
   const noticeMoveOut = seed.moveOutInDays
     ? isoDate(new Date(today.getTime() + seed.moveOutInDays * 24 * 60 * 60 * 1000))
@@ -246,7 +250,7 @@ async function seedTenancy(
   const firstName = seed.fullName.split(" ")[0];
 
   // Paid periods: occurrences 0..paymentsCount-1, one payment + receipt each.
-  for (let i = 0; i < seed.paymentsCount; i++) {
+  for (let i = 0; i < paymentsCount; i++) {
     const dueDate = dueDateForOccurrence(moveIn, i);
     const paidAt = new Date(dueDate);
     const periodMonth = isoDate(dueDate);
@@ -287,7 +291,7 @@ async function seedTenancy(
   }
 
   // Unpaid periods so far: apply late fees past grace (mirrors the cron job).
-  const unpaidPeriods = getUnpaidPeriods(moveIn, today, seed.paymentsCount);
+  const unpaidPeriods = getUnpaidPeriods(moveIn, today, paymentsCount);
   const lateFeeCount = lateFeesOwed(unpaidPeriods, 0);
   for (let i = 0; i < lateFeeCount; i++) {
     const period = unpaidPeriods[i];
@@ -311,7 +315,7 @@ async function seedTenancy(
   // Current reminder matching the tenant's headline status.
   if (seed.currentMessage) {
     const { type, status } = seed.currentMessage;
-    const nextOccurrence = dueDateForOccurrence(moveIn, seed.paymentsCount);
+    const nextOccurrence = dueDateForOccurrence(moveIn, paymentsCount);
     let body: string;
     let template: string;
 
@@ -483,8 +487,6 @@ async function main() {
     nextOfKinName: "Bukola Adebayo",
     nextOfKinRelation: "Sister",
     emergencyContact: "Bukola Adebayo",
-    moveInDay: 15,
-    paymentsCount: 4,
     status: "active",
   });
 
@@ -494,8 +496,6 @@ async function main() {
     nextOfKinName: "Rasheed Lawal",
     nextOfKinRelation: "Brother",
     emergencyContact: "Rasheed Lawal",
-    moveInDay: 1,
-    paymentsCount: 4,
     status: "active",
     currentMessage: { type: "due_today", status: "opened" },
   });
@@ -506,8 +506,6 @@ async function main() {
     nextOfKinName: "Chidera Nwosu",
     nextOfKinRelation: "Mother",
     emergencyContact: "Chidera Nwosu",
-    moveInDay: 10,
-    paymentsCount: 4,
     status: "active",
   });
 
@@ -517,8 +515,6 @@ async function main() {
     nextOfKinName: "Amina Bello",
     nextOfKinRelation: "Sister",
     emergencyContact: "Amina Bello",
-    moveInDay: 20,
-    paymentsCount: 3,
     status: "active",
     currentMessage: { type: "overdue", status: "opened" },
   });
@@ -532,8 +528,6 @@ async function main() {
     nextOfKinName: "Ugochi Eze",
     nextOfKinRelation: "Wife",
     emergencyContact: "Ugochi Eze",
-    moveInDay: 12,
-    paymentsCount: 4,
     status: "active",
   });
 
@@ -543,8 +537,6 @@ async function main() {
     nextOfKinName: "Adeola Ogunleye",
     nextOfKinRelation: "Father",
     emergencyContact: "Adeola Ogunleye",
-    moveInDay: 4,
-    paymentsCount: 4,
     status: "active",
     currentMessage: { type: "due_soon", status: "ready" },
   });
@@ -555,8 +547,6 @@ async function main() {
     nextOfKinName: "Ngozi Obi",
     nextOfKinRelation: "Sister",
     emergencyContact: "Ngozi Obi",
-    moveInDay: 8,
-    paymentsCount: 2,
     status: "notice",
     noticeReason: "Rent more than 30 days overdue after repeated follow-up.",
     moveOutInDays: 14,
@@ -568,8 +558,6 @@ async function main() {
     nextOfKinName: "Fatima Yusuf",
     nextOfKinRelation: "Mother",
     emergencyContact: "Fatima Yusuf",
-    moveInDay: 18,
-    paymentsCount: 4,
     status: "active",
   });
 
@@ -579,8 +567,6 @@ async function main() {
     nextOfKinName: "Olumide Ajayi",
     nextOfKinRelation: "Brother",
     emergencyContact: "Olumide Ajayi",
-    moveInDay: 25,
-    paymentsCount: 4,
     status: "active",
   });
 

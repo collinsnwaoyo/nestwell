@@ -65,7 +65,7 @@ docs/                    PRD.md, BUILD_LOG.md
 
 ## UI rules
 
-- The visual system lives in `DESIGN.md` (and `PRODUCT.md` for intent). It supersedes the original Revolut-style direction: Luma-style black and white, dark-mode-first, Inter, borderless graphite cards, no shadows. The home dashboard is the reference board for every page.
+- The visual system lives in `DESIGN.md` (and `PRODUCT.md` for intent). It supersedes the original Revolut-style direction: Luma-style black and white, light by default (dark tokens kept for a later switch), Inter, borderless cards, no shadows. The home dashboard is the reference board for every page.
 - Detail views (tenant, Configure rooms) open in the push-aside side panel on desktop and a bottom sheet on mobile.
 - Status colours only on labelled chips, never on whole tiles or cards.
 - Font: Inter (self-hosted in `public/fonts`). Tabular figures for amounts.

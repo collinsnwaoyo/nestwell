@@ -95,8 +95,8 @@ How Nestwell was built with Claude Code. One entry per working session, newest a
   - The switch knob and the Unverified tag were hard-coded for dark mode; fixed for both themes.
   - "Record payment" wrapped to two lines in the half-width card on phones; the arrow now hides below 640px.
 - Decisions: fetch small lookup tables (beds, tenancies, rooms) portfolio-wide rather than chaining dependent queries; at this portfolio size one parallel round beats several narrow ones. On Vercel, put the functions in the same region as the Supabase project to cut each round trip further.
-- Not done yet: seed dates are still pinned to July 2026 (Babatunde shows Overdue instead of Due today).
-- Commits: perf + skeletons, record payment quick action, light mode.
+- Seed dates fixed: `seed.ts` pinned every move-in to July 2026, so the story only held on one date. Each tenant's place in the story now lives in `supabase/story.ts` as "next unpaid rent is N days from today" plus months paid, and `moveInForNextDue` works back to a move-in date (trying a neighbouring month count when a month-end makes an exact date impossible). `supabase/story.test.ts` checks every tenant's status, Halima's single late fee and Emeka's 30+ days behind on every day of 2026 and 2027.
+- Commits: perf + skeletons, record payment quick action, light mode, relative seed dates.
 
 ## Ideas (not in this build)
 
