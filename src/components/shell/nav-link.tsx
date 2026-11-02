@@ -26,7 +26,7 @@ export function NavLink({ item, tooltipSide = "right", variant = "sidebar" }: Na
           disabled
           aria-disabled
           className={cn(
-            "flex cursor-not-allowed items-center gap-3 rounded-full text-muted-foreground/60 outline-none",
+            "flex cursor-not-allowed items-center gap-3 rounded-md text-muted-foreground/60 outline-none",
             variant === "sidebar" && "w-full px-3 py-2 text-sm font-medium",
             variant === "bottom-bar" && "flex-col gap-1 px-2 py-1 text-[11px] font-medium",
           )}
@@ -56,13 +56,11 @@ export function NavLink({ item, tooltipSide = "right", variant = "sidebar" }: Na
     <Link
       href={item.href}
       className={cn(
-        "flex items-center gap-3 rounded-full font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+        "flex items-center gap-3 rounded-md font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
         variant === "sidebar" &&
           cn(
             "w-full px-3 py-2 text-sm",
-            active
-              ? "bg-primary/10 text-primary"
-              : "text-foreground/80 hover:bg-muted hover:text-foreground",
+            active ? "text-primary" : "text-foreground/80 hover:bg-muted hover:text-foreground",
           ),
         variant === "bottom-bar" &&
           cn(

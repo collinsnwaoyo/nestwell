@@ -10,6 +10,9 @@ colors:
   moss-muted: "oklch(0.65 0.01 142)"
   hairline: "oklch(1 0 0 / 8%)"
   alert-red: "oklch(0.704 0.191 22.216)"
+  icon-blue: "oklch(0.62 0.14 245)"
+  icon-amber: "oklch(0.75 0.15 75)"
+  icon-violet: "oklch(0.62 0.16 300)"
 typography:
   display:
     fontFamily: "Manrope, system-ui, sans-serif"
@@ -67,10 +70,17 @@ This system explicitly rejects the project's own starting point: oversized glowi
 
 ## 2. Colors
 
-A tinted-neutral dark base (never pure black) with a single olive-leaning green accent carrying all emphasis. Status colors (paid / due / overdue / notice) stay confined to chips — they are information, not atmosphere.
+A tinted-neutral dark base (never pure black) with one accent carrying every *action*, plus a small fixed set of categorical icon-badge tints that carry *information architecture* — the same move Fireflies/Luma-grade dashboards make: a flat dark shell stays quiet, but each category of thing (a property, a person, a dollar amount) gets its own small flat icon-badge color so the eye can sort a dense screen at a glance. Status colors (paid / due / overdue / notice) stay confined to chips — they are information, not atmosphere.
 
 ### Primary
-- **Envato Green** (`oklch(0.64 0.145 142)`, ≈ `#5fa33c`): the one accent. Primary buttons, active/selected states, the single figure on the dashboard that should read as "good news" (collected revenue), icon badges. Flat fill, no glow, no gradient.
+- **Envato Green** (`oklch(0.64 0.145 142)`, ≈ `#5fa33c`): every primary action and active/selected state (buttons, active nav item, the "collected" revenue figure). Flat fill, no glow, no gradient. This is the only color that means "do this" or "this is selected."
+
+### Secondary (categorical icon badges — not interchangeable with Primary)
+- **Icon Blue** (`oklch(0.62 0.14 245)`, ≈ `#3f7fd6`): the Properties category badge.
+- **Icon Amber** (`oklch(0.75 0.15 75)`, ≈ `#d6a23f`): the Tenants/people category badge.
+- **Icon Violet** (`oklch(0.62 0.16 300)`, ≈ `#a855c7`): reserved for a third category badge as the system grows (e.g. a Messages/Broadcasts icon tint).
+
+Each category badge is a 10–15% opacity fill of its color behind a solid-color icon — flat, same mechanism as a status chip, never a gradient or glow. A badge color never appears on text or as a page-level wash; it lives only inside its icon badge.
 
 ### Neutral
 - **Night Charcoal** (`oklch(0.16 0.006 142)`, ≈ `#15190f`): page background. Barely green-tinted, not a true `#000`.
@@ -82,7 +92,9 @@ A tinted-neutral dark base (never pure black) with a single olive-leaning green 
 ### Named Rules
 **The Flat Ledger Rule.** No `box-shadow` carries visual weight anywhere in this system. Depth is one lightness step (background → panel) plus a 1px hairline border. If it needs a shadow to read as a card, the contrast step is wrong, not the shadow.
 
-**The One Voice Rule.** Envato Green appears on primary actions, one hero metric, and status-chip fills only. If more than roughly a third of a screen is green, pull it back — its rarity is what makes it read as a decision, not decoration.
+**The One Voice Rule.** Envato Green appears on primary actions, the one hero metric (collected revenue), and status-chip fills only. If more than roughly a third of a screen is green, pull it back — its rarity is what makes it read as a decision, not decoration. Categorical icon-badge colors (Blue, Amber, Violet) are not exceptions to this rule and not substitutes for it — they do a different job (sorting categories), never "do this."
+
+**The Icon-Forward Rule.** Every stat card, quick-action row, and nav item carries a small icon — a flat dark panel with no icon reads as unfinished, not minimal. Pair every label with a 16–20px icon in its category color.
 
 ## 3. Typography
 
@@ -92,13 +104,17 @@ A tinted-neutral dark base (never pure black) with a single olive-leaning green 
 **Character:** A single geometric-leaning grotesque sans used at every scale — no serif, no mono accent. Hierarchy comes from size and weight, not from mixing families.
 
 ### Hierarchy
-- **Display** (700, `clamp(1.75rem, 4vw, 2.5rem)`, 1.1): the "Good morning, Collins" greeting — the single largest, most dominant line on the dashboard.
-- **Title** (600, 1.5rem, 1.2): section headings ("Properties"), card values that need to anchor a stat card.
-- **Body** (400, 0.9375rem, 1.5): list rows, descriptions, secondary copy.
-- **Label** (500, 0.8125rem, 1.3): stat-card captions, chip text, muted metadata lines.
+- **Display** (700, `clamp(1.5rem, 4vw, 2rem)`, 1.15): the owner's name in the greeting — the single largest, most dominant line on the dashboard.
+- **Title** (600, 1.0625rem, 1.3): section headings ("Properties", "Quick actions"), rendered in full foreground color, not muted — they're structure, not metadata.
+- **Body** (400, 0.9375rem, 1.5): list rows, descriptions, secondary copy, stat-card values.
+- **Label** (500, 0.8125rem, 1.3): stat-card captions, chip text, muted metadata lines, the small "Good morning," lead-in above the greeting's name.
 
 ### Named Rules
 **The Tabular Money Rule.** Every Naira figure and every numeric count renders with `font-variant-numeric: tabular-nums`, no exceptions, so columns of figures stay scannable.
+
+**The Two-Tier Greeting Rule.** The dashboard greeting is never one flat line. A small muted Label-scale lead-in ("Good morning,") sits above a bold Display-scale name on its own line — the contrast between those two steps is what makes the page feel designed instead of templated.
+
+**The Loud Section Header Rule.** Section headers ("Properties", "Quick actions") are Title-scale and full-foreground, never small-and-muted — muted headers were read as "unfinished," not "minimal."
 
 ## 4. Elevation
 
@@ -125,14 +141,18 @@ Flat by default, everywhere. There is no shadow vocabulary in this system — de
 - **Shadow Strategy:** none (see Elevation). The lightness step is the only depth cue.
 - **Border:** 1px Hairline.
 - **Internal Padding:** 20px.
+- **Icon badge:** every stat card leads with a small (size-9/10) rounded-square icon badge in its category color (Blue/Amber/Primary-Green) at 10–15% fill, icon solid in the same hue — see The Icon-Forward Rule.
 - **Equal-hierarchy rule:** the three dashboard stat cards (Properties, Tenants, Revenue) render at identical size, weight, and type scale. None is allowed to dominate the others — that imbalance is exactly what's being corrected.
+
+### Quick Action Row
+- A horizontal list of navigational shortcuts to real, existing pages (not invented features): icon badge in category color, label, trailing chevron. Flat Slate Panel row, Hairline border, hover shifts to Accent background. Mirrors the "Quick Start" / "Quick Actions" pattern from the Fireflies/Luma references — concrete entry points, not decoration.
 
 ### Inputs / Fields
 - **Style:** Slate Panel background, Hairline border, 8px radius.
 - **Focus:** border shifts to Envato Green at full opacity; no glow.
 
 ### Navigation
-- Sidebar/tab bar keep their current structural role; restyle to Night Charcoal background with Hairline dividers and Envato Green for the active-item indicator (flat fill or left-edge accent via background tint, never a decorative colored stripe).
+- Sidebar/tab bar keep their current structural role; restyle to Night Charcoal background with Hairline dividers. Active item: Envato Green on the icon and label text only, no background fill — matching the Luma reference (colored text/icon reads as "selected" without needing a pill). Inactive: muted foreground, hover shifts to a flat Slate Panel background.
 
 ## 6. Do's and Don'ts
 
@@ -141,6 +161,8 @@ Flat by default, everywhere. There is no shadow vocabulary in this system — de
 - **Do** keep Envato Green confined to primary actions, the one hero metric, and chip fills.
 - **Do** render every stat card (Properties, Tenants, Revenue) at the same visual weight — no single card may be larger or bolder than its siblings.
 - **Do** use tabular figures on every Naira amount and count.
+- **Do** give every stat card, quick action, and nav item an icon in a category color — flat and minimal is not the same as bare.
+- **Do** split the greeting into a muted Label lead-in and a bold Display name on two lines.
 
 ### Don't:
 - **Don't** reintroduce Revolut-style softness: no oversized glowing hero numbers, no heavy pill/bubble chrome, no soft drop-shadow bloom.
@@ -149,3 +171,5 @@ Flat by default, everywhere. There is no shadow vocabulary in this system — de
 - **Don't** build rows of identical icon+heading+text filler cards — every card on screen should carry a specific, real number.
 - **Don't** reach for a modal/bottom-sheet as the first answer for tenant/room detail (the team is moving toward a push-aside side panel instead); treat overlay sheets as a fallback, not the default.
 - **Don't** use `border-left`/`border-right` as a colored accent stripe on any card, row, or chip.
+- **Don't** leave a stat card, quick action, or nav item icon-less — bare text-only cards read as a wireframe, not a finished product.
+- **Don't** render section headers as small muted caption text — they're Title-scale, full-foreground.
