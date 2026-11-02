@@ -138,6 +138,10 @@
   --radius-xl: var(--radius);
 
   /* type scale: size / line-height / weight / tracking */
+  /* Welcome screen only. */
+  --text-hero: 44px;
+  --text-hero--line-height: 48px;
+  --text-hero--letter-spacing: -0.03em;
   --text-display: 28px;
   --text-display--line-height: 34px;
   --text-display--letter-spacing: -0.02em;
@@ -214,6 +218,12 @@ html[data-intro] [data-intro-hide] {
     opacity: 0;
     transform: translateY(4px);
   }
+}
+
+/* The welcome screen's text and preview rise in, staggered via --row. */
+@utility animate-rise-in {
+  animation: row-in var(--dur-3) var(--ease-out) backwards;
+  animation-delay: calc(var(--row, 0) * 60ms);
 }
 
 @utility animate-row-in {

@@ -117,6 +117,19 @@ How Nestwell was built with Claude Code. One entry per working session, newest a
 - Decisions: kept Inter self-hosted by hand rather than via next/font, since next/font can't keep the latin/latin-ext unicode-range split that puts ₦ in Inter. Home stacks below 1280px (the Home section of the brief) while the property page keeps its rail from 1024px (the layout section). Marking a message opened or sent now writes an event, which also gives Sent its timestamp. Record payment's Undo removes the payment and receipt and logs a payment_undone event. Dark mode tokens were dropped; the brief is light only.
 - Commits: tokens, frame and navigation, components, Home, property page, Messages, motion and contrast, docs.
 
+## Session 6, 2 November 2026: real names, real rents, welcome screen
+
+- Goal: make the demo read like someone's actual portfolio, and give the welcome screen more presence.
+- What I asked Claude Code to do: rename properties the way an owner would, research what pay-monthly rooms actually cost in these areas around October 2026 and use that, drop Payments from the locked menu, and rework the welcome screen with new copy.
+- What it built:
+  - Properties renamed by area and layout: Lekki studio, Yaba studio (Akoka side), Surulere 3-bedroom, Ikota 2-bedroom.
+  - Rents set per room from listings (Nigeria Property Centre's monthly filters, PropertyPro, Jiji, Flatmate): Lekki studio ₦500,000; Yaba ₦150,000; Surulere ₦65,000 / ₦85,000 / ₦120,000 per bed (triple, double, single); Ikota ₦150,000 per bed in the double, ₦250,000 for the single. Rent roll is now ₦1,370,000. Room-type defaults moved to mid-market mainland values.
+  - Locked menu is Tenants, Payment history, Reports, Settings.
+  - Welcome screen: "Hi there." headline, new copy ("I built this tool..."), a nightly-reset note, and a small preview card of today's rent status built from the seeded tenants.
+- What went wrong and how it was fixed: the old rents were Lekki-level everywhere (₦280,000 for a Yaba self-contain against a market of about ₦100,000 to ₦150,000 a month furnished). Needs attention lowercased whole labels ("due 5 nov"); now only the first letter.
+- Decisions: most Lagos rent is paid yearly upfront, so annual listings were only a floor; pay-monthly rooms are furnished and serviced and run two to three times the annual rate divided by twelve, which is the market this product is for. Names follow the actual layouts (Surulere has three rooms, Ikota two). Late fee (₦10,000) and caution deposit (₦100,000) are unchanged; ₦100,000 caution matches most listings.
+- Commits: names and rents, locked menu, welcome screen.
+
 ## Ideas (not in this build)
 
 -
