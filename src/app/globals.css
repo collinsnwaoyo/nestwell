@@ -53,6 +53,12 @@
   --info: oklch(0.55 0.11 250);
   --info-bg: oklch(0.96 0.025 250);
   --neutral-bg: oklch(0.94 0.005 150);
+  /* Small text on the tinted backgrounds above (pills, chips). A step darker than
+     the tone so it clears 4.5:1; the tones stay for fills, icons and large numbers. */
+  --positive-text: oklch(0.51 0.13 150);
+  --warning-text: oklch(0.53 0.13 70);
+  --danger-text: oklch(0.54 0.17 27);
+  --info-text: oklch(0.53 0.11 250);
 
   --focus-ring: oklch(0.55 0.11 250 / 0.45);
   --scrim: oklch(0.2 0.01 150 / 0.18);
@@ -119,6 +125,10 @@
   --color-info: var(--info);
   --color-info-bg: var(--info-bg);
   --color-neutral-bg: var(--neutral-bg);
+  --color-positive-text: var(--positive-text);
+  --color-warning-text: var(--warning-text);
+  --color-danger-text: var(--danger-text);
+  --color-info-text: var(--info-text);
   --color-scrim: var(--scrim);
 
   /* radius: 6 for controls and pills, 10 for cards, tables and panels */
@@ -196,6 +206,19 @@
 /* First Home visit of the session: hold animated values back until they count up. */
 html[data-intro] [data-intro-hide] {
   opacity: 0;
+}
+
+/* First render of a list: rows rise 4px and fade in, 30ms apart (set --row on each, first 8 only). */
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@utility animate-row-in {
+  animation: row-in var(--dur-2) var(--ease-out) backwards;
+  animation-delay: calc(var(--row, 0) * 30ms);
 }
 
 /* Skeletons: a static block whose opacity breathes between 0.6 and 1. No shimmer. */

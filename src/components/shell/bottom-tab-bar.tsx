@@ -58,8 +58,8 @@ export function BottomTabBar() {
           {DISABLED_NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             return (
-              <li key={item.href} className="flex min-h-11 items-center gap-3 text-faint">
-                <Icon aria-hidden className="size-5" strokeWidth={1.75} />
+              <li key={item.href} className="flex min-h-11 items-center gap-3 text-muted-foreground">
+                <Icon aria-hidden className="size-5 text-faint" strokeWidth={1.75} />
                 <span className="flex-1">{item.label}</span>
               </li>
             );

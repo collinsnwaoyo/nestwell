@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
+import { MotionProvider } from "@/components/motion-provider";
 import { INTRO_SCRIPT } from "@/lib/intro";
 import "./globals.css";
 
@@ -26,7 +27,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         <Toaster
           position="bottom-right"
           duration={4000}

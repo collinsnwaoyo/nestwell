@@ -118,7 +118,7 @@ export function TenantPanelContent({
 
       {bed.tenancyStatus === "notice" && (
         <div className="flex flex-col gap-1.5 rounded-lg bg-danger-bg px-4 py-3">
-          <p className="flex items-center gap-1.5 font-medium text-danger">
+          <p className="flex items-center gap-1.5 font-medium text-danger-text">
             <AlertTriangle aria-hidden className="size-4" /> Notice issued, move out by{" "}
             {bed.moveOut && formatDate(bed.moveOut)}
           </p>

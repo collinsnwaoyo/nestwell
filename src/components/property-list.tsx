@@ -35,12 +35,13 @@ export function PropertyList({ properties }: { properties: PropertySummary[] }) 
         <span className="text-right">Rent roll</span>
       </TableHeader>
       <TableBody>
-        {sorted.map((property) => {
+        {sorted.map((property, index) => {
           const free = property.bedsTotal - property.bedsFilled;
           const occupancy = `${property.bedsFilled} of ${property.bedsTotal} beds`;
           return (
             <TableRowLink
               key={property.id}
+              index={index}
               href={`/properties/${property.id}`}
               columns={COLUMNS}
               label={`${property.name}, ${property.area}. ${occupancy}${free > 0 ? `, ${free} free` : ""}. Rent roll ${formatNaira(property.rentRoll)}`}

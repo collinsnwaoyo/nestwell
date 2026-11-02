@@ -10,10 +10,10 @@ import type { MessageStatus } from "@/lib/db/types";
 export type PillTone = "positive" | "warning" | "danger" | "info" | "neutral";
 
 const TONE_CLASSES: Record<PillTone, string> = {
-  positive: "bg-positive-bg text-positive",
-  warning: "bg-warning-bg text-warning",
-  danger: "bg-danger-bg text-danger",
-  info: "bg-info-bg text-info",
+  positive: "bg-positive-bg text-positive-text",
+  warning: "bg-warning-bg text-warning-text",
+  danger: "bg-danger-bg text-danger-text",
+  info: "bg-info-bg text-info-text",
   neutral: "bg-neutral-bg text-muted-foreground",
 };
 

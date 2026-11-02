@@ -39,15 +39,18 @@ export function TableRowLink({
   columns,
   children,
   label,
+  index,
 }: {
   href: string;
   columns: string;
   children: ReactNode;
   /** Accessible name for the whole row. */
   label: string;
+  /** Position in the list; the first eight stagger in on first render. */
+  index: number;
 }) {
   return (
-    <li>
+    <li className={index < 8 ? "animate-row-in" : undefined} style={{ "--row": index } as React.CSSProperties}>
       <Link
         href={href}
         aria-label={label}

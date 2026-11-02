@@ -37,8 +37,12 @@ export function NeedsAttention({ items }: { items: AttentionItem[] }) {
 
   return (
     <ul className="divide-y divide-border rounded-lg border border-border bg-surface shadow-1">
-      {items.map((item) => (
-        <li key={item.key} className="flex gap-3 px-4 py-3">
+      {items.map((item, index) => (
+        <li
+          key={item.key}
+          className="flex animate-row-in gap-3 px-4 py-3"
+          style={{ "--row": index } as React.CSSProperties}
+        >
           <span
             aria-hidden
             className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-sunk text-meta font-semibold text-muted-foreground"
