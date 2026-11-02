@@ -4,7 +4,7 @@ A rent and occupancy manager for a small Lagos co-living business: furnished roo
 
 It's a working portfolio prototype, built with [Claude Code](https://claude.com/claude-code), presented as the tool I use to run my own properties and opened up as a demo.
 
-**Live demo:** _link coming once it's deployed_
+**Live demo:** [nestwell-mocha.vercel.app](https://nestwell-mocha.vercel.app). No sign-up; the data resets every night.
 
 ## What you can do
 
