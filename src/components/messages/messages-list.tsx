@@ -77,7 +77,7 @@ export function MessagesList({ messages }: { messages: MessageRowData[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No messages match these filters.</p>
+        <p className="text-muted-foreground">No messages match these filters.</p>
       ) : (
         <div className="flex flex-col gap-2">
           {filtered.map((message) => (

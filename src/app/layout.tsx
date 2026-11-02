@@ -26,10 +26,17 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         {children}
         <Toaster
-          position="top-center"
+          position="bottom-right"
+          duration={4000}
+          offset={20}
+          mobileOffset={{ bottom: "calc(env(safe-area-inset-bottom) + 76px)" }}
           toastOptions={{
             classNames: {
-              toast: "rounded-lg! border! border-border! bg-card! text-foreground!",
+              toast: "rounded-lg! border! border-border! bg-surface! text-foreground! shadow-2! font-sans! text-body!",
+              description: "text-muted-foreground!",
+              actionButton: "bg-primary! text-primary-foreground! rounded-md! font-medium!",
+              success: "[&_[data-icon]]:text-positive!",
+              error: "[&_[data-icon]]:text-danger!",
             },
           }}
         />

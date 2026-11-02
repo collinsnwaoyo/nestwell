@@ -170,7 +170,7 @@ export function BroadcastComposer({
       ) : (
         <Button
           type="button"
-          variant="outline"
+          variant="secondary"
           onClick={() => setOpen(true)}
           aria-label={iconOnly ? triggerLabel : undefined}
           className={triggerClassName ?? "gap-1.5"}
@@ -186,24 +186,24 @@ export function BroadcastComposer({
       >
         {queue ? (
           <div className="flex flex-col gap-4">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground">
               {queueIndex + 1} of {queue.length}
             </p>
-            <div className="rounded-lg bg-muted/50 p-4">
+            <div className="rounded-lg bg-surface-sunk p-4">
               <p className="font-medium">{queue[queueIndex].recipientName}</p>
-              <p className="mt-2 text-sm">{queue[queueIndex].body}</p>
+              <p className="mt-2">{queue[queueIndex].body}</p>
             </div>
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={handleOpenCurrent} className="rounded-md">
+              <Button type="button" variant="secondary" onClick={handleOpenCurrent}>
                 Open WhatsApp
               </Button>
-              <Button type="button" disabled={!queueOpened} onClick={handleNext} className="rounded-md">
+              <Button type="button" disabled={!queueOpened} onClick={handleNext}>
                 {queueIndex + 1 < queue.length ? "Next" : "Done"}
               </Button>
             </div>
           </div>
         ) : loading ? (
-          <p className="text-sm text-muted-foreground">Loading recipients…</p>
+          <p className="text-muted-foreground">Loading recipients…</p>
         ) : (
           <div className="flex flex-col gap-4">
             <FormField label="Template" htmlFor="broadcast-template">
@@ -260,26 +260,26 @@ export function BroadcastComposer({
 
             {firstIncluded && (
               <div>
-                <p className="mb-1.5 text-sm font-medium text-muted-foreground">Preview — {firstIncluded.fullName}</p>
-                <div className="rounded-lg bg-muted/50 p-3 text-sm">{previewFor(firstIncluded)}</div>
+                <p className="mb-1.5 text-h3 font-semibold">Preview for {firstIncluded.fullName}</p>
+                <div className="rounded-lg bg-surface-sunk p-3">{previewFor(firstIncluded)}</div>
               </div>
             )}
 
             <div>
-              <p className="mb-2 text-sm font-medium text-muted-foreground">
+              <p className="mb-2 text-h3 font-semibold">
                 Recipients ({included.size} of {recipients?.length ?? 0})
               </p>
               {!recipients || recipients.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No tenants in this scope.</p>
+                <p className="text-muted-foreground">No tenants in this scope.</p>
               ) : (
                 <div className="flex max-h-48 flex-col gap-1.5 overflow-y-auto">
                   {recipients.map((recipient) => (
-                    <label key={recipient.tenancyId} className="flex items-center gap-2 text-sm">
+                    <label key={recipient.tenancyId} className="flex items-center gap-2">
                       <input
                         type="checkbox"
                         checked={included.has(recipient.tenancyId)}
                         onChange={() => toggleIncluded(recipient.tenancyId)}
-                        className="size-4 rounded border-input"
+                        className="size-4 rounded-sm accent-positive"
                       />
                       {recipient.fullName}
                     </label>
@@ -288,9 +288,9 @@ export function BroadcastComposer({
               )}
             </div>
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <p className="text-danger">{error}</p>}
 
-            <Button type="button" disabled={sending || included.size === 0} onClick={handleSend} className="rounded-md">
+            <Button type="button" disabled={sending || included.size === 0} onClick={handleSend}>
               {sending ? "Sending…" : `Send to ${included.size}`}
             </Button>
           </div>

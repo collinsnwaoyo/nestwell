@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Settings2 } from "lucide-react";
+import { Pencil, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/shell/page";
 import { Drawer } from "@/components/ui/drawer";
@@ -30,8 +30,13 @@ export function PropertyRooms({
   /** Opens that bed's panel on arrival, e.g. from a dashboard quick action. */
   initialBedId?: string;
 }) {
-  const [panel, setPanel] = useState<Panel>(initialBedId ? { kind: "bed", bedId: initialBedId } : null);
-  const close = useCallback(() => setPanel(null), []);
+  const [panel, setPanelState] = useState<Panel>(initialBedId ? { kind: "bed", bedId: initialBedId } : null);
+  const [editing, setEditing] = useState(false);
+  const setPanel = useCallback((next: Panel) => {
+    setPanelState(next);
+    setEditing(false);
+  }, []);
+  const close = useCallback(() => setPanel(null), [setPanel]);
 
   const tenantCount = rooms.reduce((sum, room) => sum + room.beds.filter((bed) => bed.tenant).length, 0);
   const selected =
@@ -58,7 +63,7 @@ export function PropertyRooms({
           triggerLabel="Send message"
           triggerClassName={ACTION_CLASS}
         />
-        <Button type="button" variant="outline" onClick={() => setPanel({ kind: "configure" })} className={ACTION_CLASS}>
+        <Button type="button" variant="secondary" onClick={() => setPanel({ kind: "configure" })} className={ACTION_CLASS}>
           <Settings2 className="size-4" /> Configure rooms
         </Button>
           </>
@@ -70,7 +75,7 @@ export function PropertyRooms({
       {rooms.length === 0 ? (
         <div className="rounded-lg border border-dashed border-border p-6 text-center">
           <p className="text-sm text-muted-foreground">No rooms yet.</p>
-          <Button type="button" variant="outline" onClick={() => setPanel({ kind: "configure" })} className="mt-3">
+          <Button type="button" variant="secondary" onClick={() => setPanel({ kind: "configure" })} className="mt-3">
             Add the first room
           </Button>
         </div>
@@ -88,7 +93,20 @@ export function PropertyRooms({
         </div>
       )}
 
-      <Drawer open={panel !== null} onClose={close} title={title} description={description}>
+      <Drawer
+        open={panel !== null}
+        onClose={close}
+        title={title}
+        description={description}
+        tall={panel?.kind === "bed"}
+        actions={
+          selected?.bed.tenant && !editing ? (
+            <Button type="button" variant="ghost" onClick={() => setEditing(true)}>
+              <Pencil aria-hidden /> Edit
+            </Button>
+          ) : undefined
+        }
+      >
         {panel?.kind === "configure" && <ConfigureRooms propertyId={propertyId} rooms={rooms} />}
         {selected && (
           <TenantPanelContent
@@ -96,6 +114,8 @@ export function PropertyRooms({
             bed={selected.bed}
             propertyId={propertyId}
             rentPerBed={selected.room.rentPerBed}
+            editing={editing}
+            onEditingChange={setEditing}
             onClose={close}
           />
         )}

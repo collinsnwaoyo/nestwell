@@ -152,13 +152,13 @@ export function QuickActions({
                 key={paying.tenancyId}
                 tenancyId={paying.tenancyId}
                 startChoosing
-                onRecorded={() => setRecorded(true)}
+                onRecordedChange={setRecorded}
               />
             </div>
           ) : payable.length === 0 ? (
             <div className="flex flex-col items-start gap-3">
               <p className="text-sm text-muted-foreground">No tenants yet. Fill a vacant bed first.</p>
-              <Button type="button" variant="outline" onClick={() => setPanel("add-tenant")}>
+              <Button type="button" variant="secondary" onClick={() => setPanel("add-tenant")}>
                 Add a tenant
               </Button>
             </div>
@@ -218,7 +218,7 @@ export function QuickActions({
               <p className="text-sm text-muted-foreground">
                 Every bed is filled. Add a room from a property&apos;s Configure rooms.
               </p>
-              <Link href="/properties" className={buttonVariants({ variant: "outline" })}>
+              <Link href="/properties" className={buttonVariants({ variant: "secondary" })}>
                 Go to properties
               </Link>
             </div>

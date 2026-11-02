@@ -82,8 +82,8 @@ export function AddPropertyButton() {
               required
             />
           </FormField>
-          {error && <p className="text-sm text-destructive">{error}</p>}
-          <Button type="submit" disabled={pending} className="mt-2 rounded-md">
+          {error && <p className="text-danger">{error}</p>}
+          <Button type="submit" disabled={pending} className="mt-2">
             {pending ? "Adding…" : "Add property"}
           </Button>
         </form>

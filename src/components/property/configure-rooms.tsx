@@ -29,24 +29,24 @@ export function ConfigureRooms({ propertyId, rooms }: { propertyId: string; room
   return (
     <div className="flex flex-col gap-3">
       {rooms.length === 0 && editing !== "new" && (
-        <p className="text-sm text-muted-foreground">No rooms yet. Add the first one below.</p>
+        <p className="text-muted-foreground">No rooms yet. Add the first one below.</p>
       )}
 
       {rooms.map((room) =>
         editing === room.id ? (
           <EditRoomForm key={room.id} room={room} propertyId={propertyId} onDone={() => setEditing(null)} />
         ) : (
-          <div key={room.id} className="flex items-center gap-3 rounded-lg border border-border bg-background p-4">
+          <div key={room.id} className="flex items-center gap-3 rounded-lg bg-surface-sunk p-4">
             <div className="min-w-0 flex-1">
               <p className="truncate font-medium">{room.name}</p>
-              <p className="truncate text-sm text-muted-foreground tabular-nums">
+              <p className="truncate text-muted-foreground tabular-nums">
                 {bedCountLabel(room.beds.length)} · {formatNaira(room.rentPerBed)}/bed
               </p>
             </div>
             <Button
               type="button"
               variant="ghost"
-              size="sm"
+              size="compact"
               onClick={() => setEditing(room.id)}
               className="gap-1.5"
             >
@@ -59,7 +59,7 @@ export function ConfigureRooms({ propertyId, rooms }: { propertyId: string; room
       {editing === "new" ? (
         <AddRoomForm propertyId={propertyId} onDone={() => setEditing(null)} />
       ) : (
-        <Button type="button" variant="outline" onClick={() => setEditing("new")} className="gap-1.5 self-start">
+        <Button type="button" variant="secondary" onClick={() => setEditing("new")} className="gap-1.5 self-start">
           <Plus /> Add room
         </Button>
       )}
@@ -98,7 +98,7 @@ export function AddRoomForm({ propertyId, onDone }: { propertyId: string; onDone
   const beds = ROOM_TYPE_DEFAULTS[type].beds;
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-lg border border-border bg-background p-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-lg bg-surface-sunk p-4">
       <p className="font-medium">New room</p>
       <FormField label="Name" htmlFor="room-name">
         <input
@@ -146,7 +146,7 @@ export function AddRoomForm({ propertyId, onDone }: { propertyId: string; onDone
           <option value="auto">Automatic</option>
         </select>
       </FormField>
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-danger">{error}</p>}
       <div className="flex gap-2">
         <Button type="submit" disabled={pending}>
           {pending ? "Adding…" : "Add room"}
@@ -199,7 +199,7 @@ function EditRoomForm({ room, propertyId, onDone }: { room: RoomDetail; property
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-lg border border-border bg-background p-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-lg bg-surface-sunk p-4">
       <FormField label="Name" htmlFor={`edit-room-name-${room.id}`}>
         <input
           id={`edit-room-name-${room.id}`}
@@ -221,7 +221,7 @@ function EditRoomForm({ room, propertyId, onDone }: { room: RoomDetail; property
         />
       </FormField>
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-danger">{error}</p>}
 
       <div className="flex items-center justify-between gap-2">
         <div className="flex gap-2">
@@ -232,7 +232,7 @@ function EditRoomForm({ room, propertyId, onDone }: { room: RoomDetail; property
             Cancel
           </Button>
         </div>
-        <Button type="button" variant="ghost" disabled={pending} onClick={handleDelete} className="text-destructive">
+        <Button type="button" variant="ghost" disabled={pending} onClick={handleDelete} className="text-danger">
           Delete room
         </Button>
       </div>

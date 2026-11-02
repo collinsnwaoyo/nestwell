@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { format } from "date-fns";
-import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { FormField, inputClass } from "@/components/ui/form";
@@ -16,15 +15,17 @@ const DEPOSIT_OPTIONS: { value: DepositOutcome; label: string }[] = [
   { value: "kept", label: "Keep deposit" },
 ];
 
-export function CheckOutButton({
+/** Inline check-out confirmation inside the tenant drawer, not a modal. */
+export function CheckOutForm({
   tenancyId,
   defaultMoveOut,
+  onCancel,
 }: {
   tenancyId: string;
   defaultMoveOut?: string | null;
+  onCancel: () => void;
 }) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const [moveOut, setMoveOut] = useState(
     defaultMoveOut ? defaultMoveOut.slice(0, 10) : format(new Date(), "yyyy-MM-dd"),
@@ -40,21 +41,14 @@ export function CheckOutButton({
         setError(outcome.error);
         return;
       }
-      toast.success("Tenant checked out — bed is now vacant");
+      toast.success("Tenant checked out. The bed is now vacant.");
       router.refresh();
     });
   }
 
-  if (!open) {
-    return (
-      <Button type="button" variant="outline" onClick={() => setOpen(true)} className="gap-1.5">
-        <LogOut className="size-4" /> Check out
-      </Button>
-    );
-  }
-
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-border p-3">
+    <div className="flex flex-col gap-4 rounded-lg bg-surface-sunk p-4">
+      <p className="font-semibold">Check out</p>
       <FormField label="Move-out date" htmlFor="checkout-move-out">
         <input
           id="checkout-move-out"
@@ -91,12 +85,12 @@ export function CheckOutButton({
           />
         </FormField>
       )}
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-danger">{error}</p>}
       <div className="flex gap-2">
-        <Button type="button" variant="destructive" disabled={pending} onClick={submit} className="rounded-md">
+        <Button type="button" variant="destructive" disabled={pending} onClick={submit}>
           {pending ? "Checking out…" : "Confirm check-out"}
         </Button>
-        <Button type="button" variant="ghost" onClick={() => setOpen(false)} className="rounded-md">
+        <Button type="button" variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
       </div>

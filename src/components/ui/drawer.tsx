@@ -12,6 +12,19 @@ const EASE_OUT = [0.25, 1, 0.5, 1] as const;
 const EASE_OUT_X = [0.16, 1, 0.3, 1] as const;
 const EASE_IN_OUT = [0.65, 0, 0.35, 1] as const;
 
+// Safari doesn't focus buttons on click, so remember the last control pressed
+// to hand focus back to it when the drawer closes.
+let lastPressed: HTMLElement | null = null;
+if (typeof document !== "undefined") {
+  document.addEventListener(
+    "pointerdown",
+    (event) => {
+      lastPressed = (event.target as HTMLElement).closest<HTMLElement>("button, a, [tabindex]");
+    },
+    true,
+  );
+}
+
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -51,7 +64,8 @@ export function Drawer({
 
   useEffect(() => {
     if (!open) return;
-    const opener = document.activeElement as HTMLElement | null;
+    const active = document.activeElement as HTMLElement | null;
+    const opener = active && active !== document.body ? active : lastPressed;
     const root = document.documentElement;
     const previousOverflow = root.style.overflow;
     root.style.overflow = "hidden";

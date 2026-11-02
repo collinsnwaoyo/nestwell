@@ -102,3 +102,34 @@ export async function recordPayment(
 
   return { data: { paymentId: payment.id, messageId: message.id, waLink } };
 }
+
+/**
+ * Undo straight after recording (from the toast). Removes the payment and
+ * its unsent receipt; the events log keeps both the recording and the undo.
+ */
+export async function undoPayment(paymentId: string, messageId: string): Promise<ActionResult<null>> {
+  const supabase = getSupabaseClient();
+
+  const { data: payment, error: paymentError } = await supabase
+    .from("payments")
+    .select("tenancy_id, amount, period_month")
+    .eq("id", paymentId)
+    .maybeSingle();
+  if (paymentError) return { error: paymentError.message };
+  if (!payment) return { error: "That payment has already been removed." };
+
+  const { error: messageError } = await supabase.from("messages").delete().eq("id", messageId);
+  if (messageError) return { error: messageError.message };
+  const { error: deleteError } = await supabase.from("payments").delete().eq("id", paymentId);
+  if (deleteError) return { error: deleteError.message };
+
+  const { error: eventError } = await supabase.from("events").insert({
+    tenancy_id: payment.tenancy_id,
+    type: "payment_undone",
+    payload: { payment_id: paymentId, amount: payment.amount, period_month: payment.period_month },
+  });
+  if (eventError) return { error: eventError.message };
+
+  revalidatePath("/", "layout");
+  return { data: null };
+}

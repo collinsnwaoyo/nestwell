@@ -41,7 +41,7 @@ export function AddTenantForm({
         setError(result.error);
         return;
       }
-      toast.success("Tenant added — verification pending");
+      toast.success("Tenant added. Verification pending.");
       onDone();
       router.refresh();
     });
@@ -65,7 +65,7 @@ export function AddTenantForm({
       </div>
 
       <div className="flex flex-col gap-4 border-t border-border pt-5">
-        <h3 className="text-sm font-medium text-muted-foreground">Next of kin</h3>
+        <h3 className="text-h3 font-semibold">Next of kin</h3>
         <FormField label="Name" htmlFor="nextOfKinName">
           <input id="nextOfKinName" name="nextOfKinName" className={inputClass} required />
         </FormField>
@@ -80,14 +80,14 @@ export function AddTenantForm({
             id="emergencyContact"
             name="emergencyContact"
             className={inputClass}
-            placeholder="Amina Bello — +2348012345678"
+            placeholder="Amina Bello, +2348012345678"
             required
           />
         </FormField>
       </div>
 
       <div className="flex flex-col gap-4 border-t border-border pt-5">
-        <h3 className="text-sm font-medium text-muted-foreground">Documents</h3>
+        <h3 className="text-h3 font-semibold">Documents</h3>
         <FormField label="Passport photo" htmlFor="photo">
           <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" className={fileInputClass} required />
         </FormField>
@@ -120,13 +120,13 @@ export function AddTenantForm({
             required
           />
         </FormField>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-meta-style">
           Demo only, please don&apos;t upload real ID documents. 5MB max, images or PDF.
         </p>
       </div>
 
       <div className="flex flex-col gap-4 border-t border-border pt-5">
-        <h3 className="text-sm font-medium text-muted-foreground">Tenancy</h3>
+        <h3 className="text-h3 font-semibold">Tenancy</h3>
         <FormField label="Move-in date" htmlFor="moveIn">
           <input
             id="moveIn"
@@ -153,9 +153,9 @@ export function AddTenantForm({
         </FormField>
       </div>
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-danger">{error}</p>}
 
-      <Button type="submit" disabled={pending} className="rounded-md">
+      <Button type="submit" disabled={pending}>
         {pending ? "Adding tenant…" : "Add tenant"}
       </Button>
     </form>

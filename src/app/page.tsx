@@ -27,12 +27,12 @@ export default function WelcomePage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-background px-6 text-center">
-      <div className="flex size-14 items-center justify-center rounded-3xl bg-primary text-primary-foreground">
+      <div className="flex size-14 items-center justify-center rounded-lg bg-primary text-primary-foreground">
         <Building2 className="size-7" />
       </div>
 
       <div className="flex flex-col items-center gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">Nestwell</h1>
+        <h1 className="text-display font-semibold">Nestwell</h1>
         <p className="max-w-sm text-balance text-muted-foreground">
           Hi there. I use Nestwell to run my own rental properties in Lagos.
           I&apos;ve opened up a demo copy so you can look around. Everything
@@ -40,7 +40,7 @@ export default function WelcomePage() {
         </p>
       </div>
 
-      <Button size="lg" className="rounded-full px-8" onClick={handleContinue}>
+      <Button className="px-6" onClick={handleContinue}>
         Continue
       </Button>
     </main>

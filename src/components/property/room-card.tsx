@@ -30,7 +30,7 @@ export function RoomCard({
       <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-3">
         <div className="min-w-0">
           <p className="truncate font-semibold">{room.name}</p>
-          <p className="text-sm text-muted-foreground tabular-nums">
+          <p className="text-muted-foreground tabular-nums">
             {room.beds.length} bed{room.beds.length === 1 ? "" : "s"} · {formatNaira(room.rentPerBed)}/bed
           </p>
         </div>
@@ -57,11 +57,11 @@ export function RoomCard({
                 selectedBedId === bed.id && "bg-accent",
               )}
             >
-              <span className="w-12 shrink-0 text-xs text-muted-foreground">{bed.label}</span>
+              <span className="w-12 shrink-0 text-meta-style">{bed.label}</span>
               {bed.tenant ? (
-                <span className="min-w-0 flex-1 truncate text-sm font-medium">{bed.tenant.fullName}</span>
+                <span className="min-w-0 flex-1 truncate font-medium">{bed.tenant.fullName}</span>
               ) : (
-                <span className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-medium text-muted-foreground">
+                <span className="flex min-w-0 flex-1 items-center gap-1.5 text-h3 font-semibold">
                   <Plus className="size-3.5" /> Add tenant
                 </span>
               )}
@@ -100,10 +100,10 @@ function ReminderToggle({ room, propertyId }: { room: RoomDetail; propertyId: st
   return (
     <div className="flex items-center justify-between gap-4 px-4 py-3">
       <label htmlFor={switchId} className="min-w-0 cursor-pointer">
-        <span className="block text-sm font-medium">
+        <span className="block font-medium">
           Reminders: {auto ? "Automatic" : "Manual"}
         </span>
-        <span className="block text-xs text-muted-foreground">
+        <span className="block text-meta-style">
           {auto ? "Sent 3 days before, on the due date, and at 3 days late" : "You send reminders yourself"}
         </span>
       </label>

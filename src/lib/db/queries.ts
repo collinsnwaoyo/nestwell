@@ -280,7 +280,14 @@ export interface BedDetail {
   rent: number | null;
   balance: number;
   payments: { id: string; periodMonth: string; amount: number; method: string; paidAt: string }[];
-  messages: { id: string; body: string; status: string; trigger: string; createdAt: string }[];
+  messages: {
+    id: string;
+    template: string;
+    body: string;
+    status: Database["public"]["Tables"]["messages"]["Row"]["status"];
+    trigger: string;
+    createdAt: string;
+  }[];
 }
 
 export interface RoomDetail {
@@ -468,6 +475,7 @@ export async function getPropertyDetail(
         })),
         messages: (messagesByTenancy.get(tenancy.id) ?? []).slice(0, 5).map((message) => ({
           id: message.id,
+          template: message.template,
           body: message.body,
           status: message.status,
           trigger: message.trigger,

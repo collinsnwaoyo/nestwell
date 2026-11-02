@@ -102,23 +102,23 @@ export function EditTenantForm({
         />
       </FormField>
 
-      <label className="flex items-center gap-2 text-sm">
+      <label className="flex items-center gap-2">
         <input
           type="checkbox"
           checked={verified}
           onChange={(event) => setVerified(event.target.checked)}
-          className="size-4 rounded border-input"
+          className="size-4 rounded-sm accent-positive"
         />
         Documents verified
       </label>
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-danger">{error}</p>}
 
       <div className="flex gap-2">
-        <Button type="submit" disabled={pending} className="rounded-md">
+        <Button type="submit" disabled={pending}>
           {pending ? "Saving…" : "Save changes"}
         </Button>
-        <Button type="button" variant="ghost" onClick={onCancel} className="rounded-md">
+        <Button type="button" variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
       </div>
