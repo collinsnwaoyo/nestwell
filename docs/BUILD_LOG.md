@@ -144,6 +144,8 @@ How Nestwell was built with Claude Code. One entry per working session, newest a
   - A proper README; branch renamed to `main`. Checked the whole git history for the service key and cron secret before publishing: never committed.
 - What went wrong and how it was fixed: bulk inserts with rows that set different columns wrote null into `messages.created_at`; `defaultToNull: false` lets those columns use their defaults.
 
+- Follow-up after going live: the welcome screen only showed once per browser tab, so a shared link straight to a page skipped it. It now works like a disclaimer: middleware sends every fresh page load (the browser's `Sec-Fetch-Dest: document` request) to the welcome screen with the requested page in `?next=`, and Continue goes there. In-app navigation is a background fetch, so it passes through. Next strips its own `RSC` header before middleware runs, which is why the check uses the browser's header instead.
+
 ## Ideas (not in this build)
 
 -

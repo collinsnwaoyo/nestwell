@@ -72,7 +72,7 @@ docs/                    PRD.md, BUILD_LOG.md
 - Font: Inter (self-hosted in `public/fonts`). Tabular figures for amounts.
 - Mobile first. It must work at 375px wide, with a bottom tab bar on mobile and a sidebar on desktop.
 - Sidebar: Home, Properties and Messages are live. Tenants, Payment history, Reports and Settings are visible but disabled under "In the full version", with an "Available in the full version" tooltip.
-- The welcome screen at `/` has no login fields, just the note and a Continue button. After Continue, the greeting is "Good morning / afternoon / evening, Collins" in Lagos time.
+- The welcome screen at `/` has no login fields, just the note and a Continue button. Every fresh load of an app page redirects there first (`src/middleware.ts`), and Continue returns to the requested page. After Continue, the greeting is "Good morning / afternoon / evening, Collins" in Lagos time.
 - Every action ends in a toast. Every empty state has a next action.
 
 ## Environment variables

@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import { BrandMark } from "@/components/shell/brand-mark";
 import { Button } from "@/components/ui/button";
 import { RentStatusPill } from "@/components/ui/status-pill";
 import type { RentStatus } from "@/lib/domain";
-import { hasSeenWelcome, markWelcomeSeen } from "@/lib/welcome";
 
 // A glimpse of the demo's own story: the same tenants and amounts you'll find inside.
 const PREVIEW: { initials: string; name: string; place: string; amount: string; status: RentStatus }[] = [
@@ -20,24 +19,22 @@ function rise(index: number) {
   return { "--row": index } as React.CSSProperties;
 }
 
+/**
+ * Where Continue goes: the page the visitor originally opened (the
+ * middleware passes it as ?next=), or Home. Only same-site paths are allowed.
+ */
+function nextPath(): string {
+  const next = new URLSearchParams(window.location.search).get("next");
+  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/home";
+}
+
+/** Shown on every fresh load of the app (see src/middleware.ts), like a disclaimer. */
 export default function WelcomePage() {
   const router = useRouter();
-  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    if (hasSeenWelcome()) {
-      router.replace("/home");
-      return;
-    }
-    setChecked(true);
+    router.prefetch(nextPath());
   }, [router]);
-
-  function handleContinue() {
-    markWelcomeSeen();
-    router.push("/home");
-  }
-
-  if (!checked) return null;
 
   return (
     <main className="flex min-h-dvh items-center bg-background px-5 py-12 md:px-10">
@@ -58,7 +55,7 @@ export default function WelcomePage() {
           </p>
 
           <div className="mt-8 flex animate-rise-in flex-wrap items-center gap-x-5 gap-y-3" style={rise(3)}>
-            <Button onClick={handleContinue} className="group px-5">
+            <Button onClick={() => router.push(nextPath())} className="group px-5">
               Continue
               <ArrowRight
                 aria-hidden

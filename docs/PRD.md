@@ -99,7 +99,7 @@ The link opens on a single welcome screen that sits where a login would. It fram
 - Layout: the Nestwell mark, a short note and one Continue button. No email or password fields.
 - Copy: "Hi there." then "I built this tool to run my own monthly rental properties in Lagos: furnished rooms with power, internet and cleaning covered, so tenants just move in and pay month to month. I've opened up a demo copy so you can look around." A meta line: "The data resets every night." Button: "Continue". Beside the copy, a small preview of the demo's own rent status (three seeded tenants and the rent roll).
 - Continue opens the app on the dashboard, signed in as Collins. There's no real authentication behind it.
-- The welcome screen is only shown on first visit in a browser session; a small "About this demo" link in the sidebar brings it back.
+- The welcome screen works like a disclaimer: every fresh load of the app (opening a shared link, reloading, typing a URL) starts on it, and Continue goes on to the page that was asked for. Moving around inside the app doesn't bring it back; the "About this demo" link in the sidebar does.
 
 ## Features
 
