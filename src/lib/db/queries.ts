@@ -38,6 +38,22 @@ export interface OverdueTenancy {
   daysLate: number;
 }
 
+/** A current tenancy someone can record rent against, soonest due first. */
+export interface PayableTenancy {
+  tenancyId: string;
+  bedId: string;
+  propertyId: string;
+  propertyName: string;
+  roomName: string;
+  tenantName: string;
+  rent: number;
+  balance: number;
+  status: RentStatus;
+  /** ISO date of the next unpaid period. */
+  nextDueDate: string;
+  daysUntilDue: number;
+}
+
 export interface VacantBed {
   bedId: string;
   propertyId: string;
@@ -72,6 +88,7 @@ export interface DashboardData {
   };
   properties: PropertySummary[];
   overdue: OverdueTenancy[];
+  payable: PayableTenancy[];
   vacantBeds: VacantBed[];
 }
 
@@ -130,6 +147,7 @@ export async function getDashboardData(today: Date = new Date()): Promise<Dashbo
   const rentRollByProperty = new Map<string, number>();
   const occupiedBedIds = new Set<string>();
   const overdue: OverdueTenancy[] = [];
+  const payable: PayableTenancy[] = [];
   const dueItems: { dueDate: Date; amount: number }[] = [];
 
   for (const tenancy of tenancies) {
@@ -153,6 +171,7 @@ export async function getDashboardData(today: Date = new Date()): Promise<Dashbo
     const daysUntilDue = getDaysUntilDue(nextDue, today);
     const status = deriveStatus({ tenancyStatus: tenancy.status, daysUntilDue });
 
+    const tenantName = tenantNameById.get(tenancy.tenant_id) ?? "Tenant";
     if (status === "due_soon" || status === "due_today" || status === "overdue") paymentsDueCount++;
     if (status === "overdue") {
       overdue.push({
@@ -160,11 +179,24 @@ export async function getDashboardData(today: Date = new Date()): Promise<Dashbo
         propertyId: property.id,
         propertyName: property.name,
         roomName: room.name,
-        tenantName: tenantNameById.get(tenancy.tenant_id) ?? "Tenant",
+        tenantName,
         balance,
         daysLate: -daysUntilDue,
       });
     }
+    payable.push({
+      tenancyId: tenancy.id,
+      bedId: tenancy.bed_id,
+      propertyId: property.id,
+      propertyName: property.name,
+      roomName: room.name,
+      tenantName,
+      rent: tenancy.rent,
+      balance,
+      status,
+      nextDueDate: nextDue.toISOString(),
+      daysUntilDue,
+    });
 
     const leavesBeforeDue = tenancy.move_out !== null && getDaysUntilDue(nextDue, tenancy.move_out) >= 0;
     if (!leavesBeforeDue) {
@@ -216,6 +248,9 @@ export async function getDashboardData(today: Date = new Date()): Promise<Dashbo
       rentRoll: rentRollByProperty.get(property.id) ?? 0,
     })),
     overdue: overdue.sort((a, b) => b.daysLate - a.daysLate),
+    payable: payable.sort(
+      (a, b) => a.daysUntilDue - b.daysUntilDue || a.tenantName.localeCompare(b.tenantName),
+    ),
     vacantBeds,
   };
 }
@@ -274,38 +309,29 @@ export async function getPropertyDetail(
 ): Promise<PropertyDetail | null> {
   const supabase = getSupabaseClient();
 
-  const propertyRes = await supabase.from("properties").select("*").eq("id", propertyId).maybeSingle();
-  if (propertyRes.error) throw new Error(propertyRes.error.message);
+  // Each Supabase round trip costs ~200ms, so fetch everything that doesn't depend on
+  // tenancy ids in one go. Beds and tenancies are portfolio-wide (as on the dashboard)
+  // and narrowed to this property's rooms below.
+  const [propertyRes, roomsRes, allBedsRes, allTenanciesRes] = await Promise.all([
+    supabase.from("properties").select("*").eq("id", propertyId).maybeSingle(),
+    supabase.from("rooms").select("*").eq("property_id", propertyId).order("name"),
+    supabase.from("beds").select("*").order("label"),
+    supabase.from("tenancies").select("*").order("move_in"),
+  ]);
+  for (const res of [propertyRes, roomsRes, allBedsRes, allTenanciesRes]) {
+    if (res.error) throw new Error(res.error.message);
+  }
   const property = propertyRes.data;
   if (!property) return null;
 
-  const roomsRes = await supabase
-    .from("rooms")
-    .select("*")
-    .eq("property_id", propertyId)
-    .order("name");
-  if (roomsRes.error) throw new Error(roomsRes.error.message);
   const rooms = roomsRes.data ?? [];
-  const roomIds = rooms.map((room) => room.id);
-
-  const bedsRes = roomIds.length
-    ? await supabase.from("beds").select("*").in("room_id", roomIds).order("label")
-    : { data: [], error: null };
-  if (bedsRes.error) throw new Error(bedsRes.error.message);
-  const beds = bedsRes.data ?? [];
-  const bedIds = beds.map((bed) => bed.id);
-
+  const roomIds = new Set(rooms.map((room) => room.id));
+  const beds = (allBedsRes.data ?? []).filter((bed) => roomIds.has(bed.room_id));
+  const bedIds = new Set(beds.map((bed) => bed.id));
   // Includes checked-out tenancies: the property was active from its first move-in.
-  const firstTenancyRes = bedIds.length
-    ? await supabase.from("tenancies").select("move_in").in("bed_id", bedIds).order("move_in").limit(1)
-    : { data: [], error: null };
-  if (firstTenancyRes.error) throw new Error(firstTenancyRes.error.message);
-
-  const tenanciesRes = bedIds.length
-    ? await supabase.from("tenancies").select("*").in("bed_id", bedIds).in("status", ["active", "notice"])
-    : { data: [], error: null };
-  if (tenanciesRes.error) throw new Error(tenanciesRes.error.message);
-  const tenancies = tenanciesRes.data ?? [];
+  const propertyTenancies = (allTenanciesRes.data ?? []).filter((tenancy) => bedIds.has(tenancy.bed_id));
+  const firstMoveIn = propertyTenancies[0]?.move_in;
+  const tenancies = propertyTenancies.filter((t) => t.status === "active" || t.status === "notice");
   const tenancyIds = tenancies.map((tenancy) => tenancy.id);
   const tenantIds = tenancies.map((tenancy) => tenancy.tenant_id);
 
@@ -457,7 +483,7 @@ export async function getPropertyDetail(
     area: property.area,
     address: property.address,
     photoUrl: property.photo_url,
-    activeSince: firstTenancyRes.data?.[0]?.move_in ?? property.created_at,
+    activeSince: firstMoveIn ?? property.created_at,
     rooms: roomDetails,
   };
 }
@@ -480,44 +506,21 @@ export interface MessageRow {
 export async function getMessages(): Promise<MessageRow[]> {
   const supabase = getSupabaseClient();
 
-  const messagesRes = await supabase.from("messages").select("*").order("created_at", { ascending: false });
-  if (messagesRes.error) throw new Error(messagesRes.error.message);
+  // One parallel round instead of a chain of lookups: the lookup tables are small.
+  const [messagesRes, tenanciesRes, tenantsRes, bedsRes, roomsRes, propertiesRes] = await Promise.all([
+    supabase.from("messages").select("*").order("created_at", { ascending: false }),
+    supabase.from("tenancies").select("id, tenant_id, bed_id"),
+    supabase.from("tenants").select("id, full_name"),
+    supabase.from("beds").select("id, room_id"),
+    supabase.from("rooms").select("id, name, property_id"),
+    supabase.from("properties").select("id, name"),
+  ]);
+  for (const res of [messagesRes, tenanciesRes, tenantsRes, bedsRes, roomsRes, propertiesRes]) {
+    if (res.error) throw new Error(res.error.message);
+  }
   const messages = messagesRes.data ?? [];
 
-  const tenancyIds = [...new Set(messages.map((m) => m.tenancy_id).filter((id): id is string => !!id))];
-  const tenanciesRes = tenancyIds.length
-    ? await supabase.from("tenancies").select("id, tenant_id, bed_id").in("id", tenancyIds)
-    : { data: [], error: null };
-  if (tenanciesRes.error) throw new Error(tenanciesRes.error.message);
-  const tenancies = tenanciesRes.data ?? [];
-
-  const tenantIds = [...new Set(tenancies.map((t) => t.tenant_id))];
-  const bedIds = [...new Set(tenancies.map((t) => t.bed_id))];
-
-  const [tenantsRes, bedsRes] = await Promise.all([
-    tenantIds.length
-      ? supabase.from("tenants").select("id, full_name").in("id", tenantIds)
-      : Promise.resolve({ data: [], error: null }),
-    bedIds.length
-      ? supabase.from("beds").select("id, room_id").in("id", bedIds)
-      : Promise.resolve({ data: [], error: null }),
-  ]);
-  if (tenantsRes.error) throw new Error(tenantsRes.error.message);
-  if (bedsRes.error) throw new Error(bedsRes.error.message);
-
-  const roomIds = [...new Set((bedsRes.data ?? []).map((b) => b.room_id))];
-  const roomsRes = roomIds.length
-    ? await supabase.from("rooms").select("id, name, property_id").in("id", roomIds)
-    : { data: [], error: null };
-  if (roomsRes.error) throw new Error(roomsRes.error.message);
-
-  const propertyIds = [...new Set((roomsRes.data ?? []).map((r) => r.property_id))];
-  const propertiesRes = propertyIds.length
-    ? await supabase.from("properties").select("id, name").in("id", propertyIds)
-    : { data: [], error: null };
-  if (propertiesRes.error) throw new Error(propertiesRes.error.message);
-
-  const tenancyById = new Map(tenancies.map((t) => [t.id, t]));
+  const tenancyById = new Map((tenanciesRes.data ?? []).map((t) => [t.id, t]));
   const tenantById = new Map((tenantsRes.data ?? []).map((t) => [t.id, t]));
   const bedById = new Map((bedsRes.data ?? []).map((b) => [b.id, b]));
   const roomById = new Map((roomsRes.data ?? []).map((r) => [r.id, r]));
