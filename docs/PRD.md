@@ -25,39 +25,43 @@ It's presented as the tool Collins uses to run his own properties, opened up as 
 
 Nestwell runs four properties in Lagos, two of them on the Lekki axis, with 11 beds across four room types. Rent is paid monthly, one full month at a time. Each tenant also pays a refundable ₦100,000 caution deposit at move-in.
 
-| Property | Area | Layout | Rooms |
+| Property | Area | Layout | Rooms and monthly rent per bed |
 | --- | --- | --- | --- |
-| Nestwell Lekki Studio | Lekki Phase 1 | Studio | 1 studio |
-| Nestwell Yaba | Yaba | Self-contained room, one tenant | 1 single |
-| Nestwell Surulere | Surulere | 3-bedroom flat | 1 triple, 1 shared, 1 single |
-| Nestwell Ikota | Ikota GRA | 2-bedroom flat | 1 shared, 1 single |
+| Lekki studio | Lekki Phase 1 | Studio | 1 studio, ₦500,000 |
+| Yaba studio (Akoka side) | Akoka, Yaba | Self-contained room, one tenant | 1 single, ₦150,000 |
+| Surulere 3-bedroom | Surulere | 3-bedroom flat | 1 triple, ₦65,000; 1 double, ₦85,000; 1 single, ₦120,000 |
+| Ikota 2-bedroom | Ikota GRA | 2-bedroom flat | 1 double, ₦150,000; 1 single, ₦250,000 |
 
-Room types and their default monthly rent. Each room can override the default.
+Properties are named the way an owner talks about them (area and layout), not with a brand prefix.
+
+Rents are benchmarked against furnished, pay-monthly listings in each area in October 2026 (Nigeria Property Centre's monthly-rent filters, PropertyPro, Jiji and Flatmate). Most Lagos rent is paid a year upfront; rooms you can pay for monthly are furnished and serviced, and run about two to three times the annual rate divided by twelve. Points of reference: furnished studios around Lekki and Chevron at ₦400,000 to ₦600,000 a month; furnished rooms in Lekki shared apartments at ₦450,000 to ₦600,000 plus service charge; Ikota shared rooms at ₦1.2M to ₦2.5M a year unfurnished; Akoka self-contains at ₦1.2M to ₦1.3M a year and furnished bed spaces from ₦100,000 a month; Surulere shared rooms at ₦350,000 to ₦600,000 a year per person.
+
+Room types and their default monthly rent for a new room. Area matters more than type, so each room can override it.
 
 | Room type | Beds | Default rent / bed / month |
 | --- | --- | --- |
-| Triple | 3 | ₦140,000 |
-| Shared | 2 | ₦180,000 |
-| Single | 1 | ₦280,000 |
-| Studio | 1 | ₦450,000 |
+| Triple | 3 | ₦65,000 |
+| Double | 2 | ₦85,000 |
+| Single | 1 | ₦150,000 |
+| Studio | 1 | ₦400,000 |
 
 Seeded tenants, with about four months of payment and message history each. Statuses are as of the demo date (today).
 
 | Tenant | Property and room | Status | Why it's there |
 | --- | --- | --- | --- |
-| Tolulope Adebayo | Lekki Studio | Paid up | The calm, on-time tenant |
-| Babatunde Lawal | Yaba, single | Due today | Shows the due-day reminder |
+| Tolulope Adebayo | Lekki studio | Paid up | The calm, on-time tenant |
+| Babatunde Lawal | Yaba studio, single | Due today | Shows the due-day reminder |
 | Ifeoma Nwosu | Surulere, triple bed 1 | Paid up | |
 | Halima Bello | Surulere, triple bed 2 | Overdue, late fee added | Shows grace, fine and the overdue reminder |
 | (empty) | Surulere, triple bed 3 | Vacant bed | Vacancy at bed level |
-| Kelechi Eze | Surulere, shared bed 1 | Paid up | |
-| Damilola Ogunleye | Surulere, shared bed 2 | Due in 3 days | Shows the advance reminder |
+| Kelechi Eze | Surulere, double bed 1 | Paid up | |
+| Damilola Ogunleye | Surulere, double bed 2 | Due in 3 days | Shows the advance reminder |
 | Emeka Obi | Surulere, single | Notice issued | Shows the eviction flow mid-way |
-| Zainab Yusuf | Ikota, shared bed 1 | Paid up, room on automatic reminders | Shows a room on automatic |
-| Funmilayo Ajayi | Ikota, shared bed 2 | Paid up | |
+| Zainab Yusuf | Ikota, double bed 1 | Paid up, room on automatic reminders | Shows a room on automatic |
+| Funmilayo Ajayi | Ikota, double bed 2 | Paid up | |
 | (empty) | Ikota, single | Vacant room | Vacancy at room level |
 
-That's 9 of 11 beds occupied and ₦2,010,000 of monthly rent roll. Seeded tenants get obviously fake sample documents. Every phone number in the seed (tenants, next of kin, emergency contacts) is Collins's own WhatsApp number, +234 702 576 2759 (stored as +2347025762759, used in links as wa.me/2347025762759), so any message a visitor sends from the demo lands with him.
+That's 9 of 11 beds occupied and ₦1,370,000 of monthly rent roll. Seeded tenants get obviously fake sample documents. Every phone number in the seed (tenants, next of kin, emergency contacts) is Collins's own WhatsApp number, +234 702 576 2759 (stored as +2347025762759, used in links as wa.me/2347025762759), so any message a visitor sends from the demo lands with him.
 
 ## Core model
 
@@ -79,7 +83,7 @@ Everything hangs off one chain, property to room to bed to tenancy. Balances and
 The link opens on a single welcome screen that sits where a login would. It frames the product as Collins's own tool, opened up for the viewer.
 
 - Layout: the Nestwell mark, a short note and one Continue button. No email or password fields.
-- Copy (draft): "Hi there. I use Nestwell to run my own rental properties in Lagos. I've opened up a demo copy so you can look around. Everything works, and the data resets every night." Button: "Continue".
+- Copy: "Hi there." then "I built this tool to run my own rental properties in Lagos. I've opened up a demo copy so you can look around." A meta line: "The data resets every night." Button: "Continue". Beside the copy, a small preview of the demo's own rent status (three seeded tenants and the rent roll).
 - Continue opens the app on the dashboard, signed in as Collins. There's no real authentication behind it.
 - The welcome screen is only shown on first visit in a browser session; a small "About this demo" link in the sidebar brings it back.
 
@@ -90,7 +94,7 @@ There are two levels of navigation, portfolio then property, plus the actions th
 ### Dashboard (home)
 
 - Greeting at the top: "Good morning, Collins" (changes with the time of day in Lagos).
-- A summary strip under it with three numbers: Properties (4), Tenants (9 of 11 beds filled), and Expected revenue this month (₦2,010,000, with collected so far shown beneath it).
+- A summary strip under it with three numbers: Properties (4), Tenants (9 of 11 beds filled), and Expected revenue this month (₦1,370,000, with collected so far shown beneath it).
 - Below that, one card per property: photo, name, area, beds filled (e.g. 5 of 6), amount owed, and a status chip if anyone is overdue or on notice. Clicking a card opens the property.
 - No filters or search. With four properties they add clutter, not value.
 
@@ -99,7 +103,7 @@ There are two levels of navigation, portfolio then property, plus the actions th
 The left sidebar shows the full product so it reads like a real tool, but only some modules are live in the demo.
 
 - Live: Home, Properties, Messages.
-- Shown but disabled: Tenants, Payments, Payment history, Reports, Settings. Each is greyed out with a small lock and a "Not in this demo" tooltip, and nothing happens on click.
+- Shown but disabled: Tenants, Payment history, Reports, Settings. Each is greyed out with a small lock and a "Not in this demo" tooltip, and nothing happens on click.
 - Tenants and payments are still reachable inside properties, rooms and the tenant drawer. Only the standalone modules are disabled.
 
 ### Property view
@@ -246,7 +250,7 @@ Three days, with the deployed link live by the end of day 2 and day 3 for polish
 
 Acceptance checks before sharing the link:
 
-- [ ] Dashboard numbers match a hand count of the seed (4 properties, 9 of 11 beds, expected revenue ₦2,010,000), and Continue on the welcome screen lands on "Good morning, Collins".
+- [ ] Dashboard numbers match a hand count of the seed (4 properties, 9 of 11 beds, expected revenue ₦1,370,000), and Continue on the welcome screen lands on "Good morning, Collins".
 - [ ] Onboarding blocks submission without both documents and a valid +234 number.
 - [ ] Recording a payment moves the due date forward one month and clears the status.
 - [ ] Switching a room to Automatic and pressing "Run today's reminders" creates the right messages in the outbox.
@@ -255,7 +259,7 @@ Acceptance checks before sharing the link:
 - [ ] Reset brings back the exact demo story.
 - [ ] Usable at 375 px wide.
 
-Later phases, deliberately out of this build: WhatsApp Business API for hands-off sending and delivery receipts, Paystack virtual accounts, partial payments, operator and staff logins, the Tenants, Payments, Reports and Settings modules, expenses and P&L, maintenance requests, a tenant-facing view.
+Later phases, deliberately out of this build: WhatsApp Business API for hands-off sending and delivery receipts, Paystack virtual accounts, partial payments, operator and staff logins, the Tenants, Payment history, Reports and Settings modules, expenses and P&L, maintenance requests, a tenant-facing view.
 
 Risks:
 

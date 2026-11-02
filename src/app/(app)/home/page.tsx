@@ -13,6 +13,11 @@ import { Page, Section } from "@/components/shell/page";
 export const dynamic = "force-dynamic";
 
 const ATTENTION_LIMIT = 5;
+
+/** "Due 5 Nov" → "due 5 Nov", for use mid-sentence without lowercasing the month. */
+function lowerFirst(text: string) {
+  return text.charAt(0).toLowerCase() + text.slice(1);
+}
 const NEEDS_ACTION = new Set(["overdue", "notice", "due_today", "due_soon"]);
 
 export default async function HomePage() {
@@ -32,7 +37,7 @@ export default async function HomePage() {
         detail:
           item.daysUntilDue === 0
             ? item.propertyName
-            : `${item.propertyName}, ${describeDue(item.daysUntilDue, item.nextDueDate).toLowerCase()}`,
+            : `${item.propertyName}, ${lowerFirst(describeDue(item.daysUntilDue, item.nextDueDate))}`,
         status: item.status,
         href: `/properties/${item.propertyId}?bed=${item.bedId}`,
         tenancyId: item.tenancyId,

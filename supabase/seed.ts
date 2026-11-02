@@ -1,5 +1,5 @@
-// Demo seed data for Nestwell, matching docs/PRD.md exactly: 4 properties,
-// 11 beds, 9 occupied, ₦2,010,000 monthly rent roll. Dates are generated
+// Demo seed data for Nestwell, matching docs/PRD.md: 4 properties,
+// 11 beds, 9 occupied, ₦1,370,000 monthly rent roll. Dates are generated
 // relative to today so the story always holds (see PRD "Public demo").
 //
 // Payment/charge history is computed with the real domain logic (not
@@ -29,7 +29,6 @@ import {
   MAX_UPLOAD_BYTES,
   MESSAGE_TEMPLATES,
   PAYMENT_ACCOUNT_DETAILS,
-  ROOM_TYPE_DEFAULTS,
   TENANT_DOCS_BUCKET,
 } from "../src/config/rules";
 
@@ -51,10 +50,18 @@ const supabase = createClient<Database>(supabaseUrl, serviceRoleKey, {
 const PHONE = "+2347025762759";
 const PHONE_DIGITS = "2347025762759";
 
-const RENT_BY_TYPE: Record<Database["public"]["Tables"]["rooms"]["Row"]["type"], number> =
-  Object.fromEntries(
-    Object.entries(ROOM_TYPE_DEFAULTS).map(([type, defaults]) => [type, defaults.rentPerBed]),
-  ) as Record<Database["public"]["Tables"]["rooms"]["Row"]["type"], number>;
+// Monthly rent per bed. Benchmarked against furnished, pay-monthly listings in
+// each area in October 2026 (pay-monthly rooms run about two to three times the
+// annual rate / 12, since most Lagos rent is paid a year upfront). See the PRD.
+const RENT = {
+  lekkiStudio: 500_000,
+  yabaRoom: 150_000,
+  surulereTriple: 65_000,
+  surulereDouble: 85_000,
+  surulereSingle: 120_000,
+  ikotaDouble: 150_000,
+  ikotaSingle: 250_000,
+} as const;
 
 const DEPOSIT = DEFAULT_DEPOSIT;
 const today = new Date();
@@ -396,7 +403,7 @@ async function main() {
   console.log("Seeding properties, rooms and beds...");
 
   const lekki = await insertProperty({
-    name: "Nestwell Lekki Studio",
+    name: "Lekki studio",
     area: "Lekki Phase 1",
     address: "12 Admiralty Way, Lekki Phase 1, Lagos",
   });
@@ -404,25 +411,25 @@ async function main() {
     property_id: lekki.id,
     name: "Studio",
     type: "studio",
-    rent_per_bed: RENT_BY_TYPE.studio,
+    rent_per_bed: RENT.lekkiStudio,
   });
   const lekkiStudioBed = await insertBed({ room_id: lekkiStudio.id, label: "Studio" });
 
   const yaba = await insertProperty({
-    name: "Nestwell Yaba",
-    area: "Yaba",
+    name: "Yaba studio (Akoka side)",
+    area: "Akoka, Yaba",
     address: "8 Herbert Macaulay Way, Yaba, Lagos",
   });
   const yabaSingle = await insertRoom({
     property_id: yaba.id,
     name: "Self-contained room",
     type: "single",
-    rent_per_bed: RENT_BY_TYPE.single,
+    rent_per_bed: RENT.yabaRoom,
   });
   const yabaSingleBed = await insertBed({ room_id: yabaSingle.id, label: "Room" });
 
   const surulere = await insertProperty({
-    name: "Nestwell Surulere",
+    name: "Surulere 3-bedroom",
     area: "Surulere",
     address: "23 Adeniran Ogunsanya Street, Surulere, Lagos",
   });
@@ -430,7 +437,7 @@ async function main() {
     property_id: surulere.id,
     name: "Triple room",
     type: "triple",
-    rent_per_bed: RENT_BY_TYPE.triple,
+    rent_per_bed: RENT.surulereTriple,
   });
   const [surulereTripleA, surulereTripleB, surulereTripleC] = await Promise.all([
     insertBed({ room_id: surulereTriple.id, label: "Bed 1" }),
@@ -441,7 +448,7 @@ async function main() {
     property_id: surulere.id,
     name: "Double room",
     type: "shared",
-    rent_per_bed: RENT_BY_TYPE.shared,
+    rent_per_bed: RENT.surulereDouble,
   });
   const [surulereSharedA, surulereSharedB] = await Promise.all([
     insertBed({ room_id: surulereShared.id, label: "Bed 1" }),
@@ -451,12 +458,12 @@ async function main() {
     property_id: surulere.id,
     name: "Single room",
     type: "single",
-    rent_per_bed: RENT_BY_TYPE.single,
+    rent_per_bed: RENT.surulereSingle,
   });
   const surulereSingleBed = await insertBed({ room_id: surulereSingle.id, label: "Room" });
 
   const ikota = await insertProperty({
-    name: "Nestwell Ikota",
+    name: "Ikota 2-bedroom",
     area: "Ikota GRA",
     address: "5 Ikota Shopping Complex Road, Ikota GRA, Lagos",
   });
@@ -464,7 +471,7 @@ async function main() {
     property_id: ikota.id,
     name: "Double room",
     type: "shared",
-    rent_per_bed: RENT_BY_TYPE.shared,
+    rent_per_bed: RENT.ikotaDouble,
     reminder_mode: "auto",
   });
   const [ikotaSharedA, ikotaSharedB] = await Promise.all([
@@ -475,13 +482,13 @@ async function main() {
     property_id: ikota.id,
     name: "Single room",
     type: "single",
-    rent_per_bed: RENT_BY_TYPE.single,
+    rent_per_bed: RENT.ikotaSingle,
   });
   await insertBed({ room_id: ikotaSingle.id, label: "Room" });
 
   console.log("Seeding tenants and tenancies...");
 
-  await seedTenancy(lekkiStudioBed.id, RENT_BY_TYPE.studio, "manual", "Studio", {
+  await seedTenancy(lekkiStudioBed.id, RENT.lekkiStudio, "manual", "Studio", {
     fullName: "Tolulope Adebayo",
     occupation: "Software Engineer",
     nextOfKinName: "Bukola Adebayo",
@@ -490,7 +497,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(yabaSingleBed.id, RENT_BY_TYPE.single, "manual", "Self-contained room", {
+  await seedTenancy(yabaSingleBed.id, RENT.yabaRoom, "manual", "Self-contained room", {
     fullName: "Babatunde Lawal",
     occupation: "Marketing Executive",
     nextOfKinName: "Rasheed Lawal",
@@ -500,7 +507,7 @@ async function main() {
     currentMessage: { type: "due_today", status: "opened" },
   });
 
-  await seedTenancy(surulereTripleA.id, RENT_BY_TYPE.triple, "manual", "Triple room", {
+  await seedTenancy(surulereTripleA.id, RENT.surulereTriple, "manual", "Triple room", {
     fullName: "Ifeoma Nwosu",
     occupation: "Nurse",
     nextOfKinName: "Chidera Nwosu",
@@ -509,7 +516,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(surulereTripleB.id, RENT_BY_TYPE.triple, "manual", "Triple room", {
+  await seedTenancy(surulereTripleB.id, RENT.surulereTriple, "manual", "Triple room", {
     fullName: "Halima Bello",
     occupation: "Graphic Designer",
     nextOfKinName: "Amina Bello",
@@ -522,7 +529,7 @@ async function main() {
   // surulereTripleC stays vacant.
   void surulereTripleC;
 
-  await seedTenancy(surulereSharedA.id, RENT_BY_TYPE.shared, "manual", "Double room", {
+  await seedTenancy(surulereSharedA.id, RENT.surulereDouble, "manual", "Double room", {
     fullName: "Kelechi Eze",
     occupation: "Civil Engineer",
     nextOfKinName: "Ugochi Eze",
@@ -531,7 +538,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(surulereSharedB.id, RENT_BY_TYPE.shared, "manual", "Double room", {
+  await seedTenancy(surulereSharedB.id, RENT.surulereDouble, "manual", "Double room", {
     fullName: "Damilola Ogunleye",
     occupation: "University Student",
     nextOfKinName: "Adeola Ogunleye",
@@ -541,7 +548,7 @@ async function main() {
     currentMessage: { type: "due_soon", status: "ready" },
   });
 
-  await seedTenancy(surulereSingleBed.id, RENT_BY_TYPE.single, "manual", "Single room", {
+  await seedTenancy(surulereSingleBed.id, RENT.surulereSingle, "manual", "Single room", {
     fullName: "Emeka Obi",
     occupation: "Logistics Manager",
     nextOfKinName: "Ngozi Obi",
@@ -552,7 +559,7 @@ async function main() {
     moveOutInDays: 14,
   });
 
-  await seedTenancy(ikotaSharedA.id, RENT_BY_TYPE.shared, "auto", "Double room", {
+  await seedTenancy(ikotaSharedA.id, RENT.ikotaDouble, "auto", "Double room", {
     fullName: "Zainab Yusuf",
     occupation: "Accountant",
     nextOfKinName: "Fatima Yusuf",
@@ -561,7 +568,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(ikotaSharedB.id, RENT_BY_TYPE.shared, "auto", "Double room", {
+  await seedTenancy(ikotaSharedB.id, RENT.ikotaDouble, "auto", "Double room", {
     fullName: "Funmilayo Ajayi",
     occupation: "Teacher",
     nextOfKinName: "Olumide Ajayi",
