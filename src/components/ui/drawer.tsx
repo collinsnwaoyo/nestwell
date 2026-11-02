@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useDragControls, useReducedMotion, type PanInfo } from "framer-motion";
 import { X } from "lucide-react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 import { useIsClient, useMediaQuery } from "@/lib/use-media-query";
 import { Tooltip } from "./tooltip";
 

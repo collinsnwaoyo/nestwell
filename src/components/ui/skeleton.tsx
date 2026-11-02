@@ -1,4 +1,4 @@
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 /** A placeholder block shown while a page's data loads. */
 export function Skeleton({ className }: { className?: string }) {

@@ -2,7 +2,7 @@
 
 import { useId } from "react";
 import { motion } from "framer-motion";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 /**
  * A row of mutually exclusive options. The selected background slides

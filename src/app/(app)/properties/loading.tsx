@@ -3,13 +3,11 @@ import { ListSkeleton, PageSkeleton, Skeleton } from "@/components/ui/skeleton";
 export default function PropertiesLoading() {
   return (
     <PageSkeleton>
-      <div className="flex items-center justify-between gap-3">
-        <Skeleton className="h-7 w-32" />
-        <Skeleton className="h-9 w-32" />
+      <div className="mb-8 flex items-end justify-between gap-3">
+        <Skeleton className="h-8 w-40" />
+        <Skeleton className="h-9 w-36" />
       </div>
-      <div className="mt-6">
-        <ListSkeleton rows={4} />
-      </div>
+      <ListSkeleton rows={4} />
     </PageSkeleton>
   );
 }

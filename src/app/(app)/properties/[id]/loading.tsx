@@ -3,16 +3,26 @@ import { ListSkeleton, PageSkeleton, Skeleton } from "@/components/ui/skeleton";
 export default function PropertyLoading() {
   return (
     <PageSkeleton>
-      <Skeleton className="h-7 w-40" />
-      <Skeleton className="mt-2 h-4 w-52" />
-      <div className="mt-6 flex gap-3">
-        <Skeleton className="h-10 flex-1 sm:w-36 sm:flex-none" />
-        <Skeleton className="h-10 flex-1 sm:w-40 sm:flex-none" />
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <Skeleton className="h-8 w-56" />
+          <Skeleton className="mt-2 h-4 w-48" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-36" />
+          <Skeleton className="h-9 w-40" />
+        </div>
       </div>
-      <Skeleton className="mt-8 mb-4 h-5 w-16" />
-      <div className="flex flex-col gap-4">
-        <ListSkeleton rows={2} />
-        <ListSkeleton rows={1} />
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:gap-10">
+        <div className="flex flex-col gap-4">
+          <Skeleton className="h-5 w-16" />
+          <ListSkeleton rows={3} />
+          <ListSkeleton rows={2} />
+        </div>
+        <div className="hidden flex-col gap-3 lg:flex">
+          <Skeleton className="h-5 w-24" />
+          <ListSkeleton rows={3} />
+        </div>
       </div>
     </PageSkeleton>
   );

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 /**
  * The one table style: a surface card with a header row and 64px rows

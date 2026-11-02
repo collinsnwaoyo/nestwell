@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 /** 32x18 toggle. The thumb slides with a transform; the track colour crossfades. On is positive green. */
 export function Switch({

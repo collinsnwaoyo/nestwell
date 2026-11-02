@@ -1,4 +1,4 @@
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 import { formatNaira } from "@/lib/domain";
 import type { PropertySummary } from "@/lib/db/queries";
 import { Table, TableBody, TableHeader, TableRowLink } from "@/components/ui/table";

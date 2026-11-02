@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 const HOVER_DELAY_MS = 300;
 

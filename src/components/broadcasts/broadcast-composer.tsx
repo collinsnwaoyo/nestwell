@@ -28,17 +28,13 @@ export function BroadcastComposer({
   scopeType,
   scopeId,
   scopeLabel,
-  triggerClassName,
   triggerLabel = "Message",
-  iconOnly,
   renderTrigger,
 }: {
   scopeType: BroadcastScopeType;
   scopeId: string | null;
   scopeLabel: string;
-  triggerClassName?: string;
   triggerLabel?: string;
-  iconOnly?: boolean;
   /** Replaces the default button, e.g. a dashboard quick-action card. */
   renderTrigger?: (open: () => void) => ReactNode;
 }) {
@@ -168,14 +164,8 @@ export function BroadcastComposer({
       {renderTrigger ? (
         renderTrigger(() => setOpen(true))
       ) : (
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => setOpen(true)}
-          aria-label={iconOnly ? triggerLabel : undefined}
-          className={triggerClassName ?? "gap-1.5"}
-        >
-          <MessageCircle className="size-4" /> {!iconOnly && triggerLabel}
+        <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
+          <MessageCircle aria-hidden /> {triggerLabel}
         </Button>
       )}
       <Drawer

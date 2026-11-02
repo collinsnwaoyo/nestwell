@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { format } from "date-fns";
 import { AlertTriangle, Bell, LogOut, MessageCircle, MoreHorizontal } from "lucide-react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 import { formatDate, formatNaira, formatTimestamp, toLagosDate } from "@/lib/domain";
 import type { BedDetail } from "@/lib/db/queries";
 import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";

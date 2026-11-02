@@ -2,7 +2,7 @@
 
 import { useId } from "react";
 import { Check } from "lucide-react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 import { moveFocus } from "./popover";
 
 /**

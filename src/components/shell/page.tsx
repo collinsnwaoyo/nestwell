@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 /**
  * The one page frame: aligned to the sidebar (never centred in the leftover
@@ -22,7 +22,8 @@ export function PageHeader({
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
       <div className="min-w-0">
-        <h1 className="text-display font-semibold">{title}</h1>
+        {/* caret-transparent: a stray text caret showed before titles; headings are never editable. */}
+        <h1 className="text-display font-semibold caret-transparent">{title}</h1>
         {meta && <p className="mt-1 text-meta-style">{meta}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2 max-sm:w-full">{actions}</div>}

@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 import type { RentStatus } from "@/lib/domain";
 import type { MessageStatus } from "@/lib/db/types";
 

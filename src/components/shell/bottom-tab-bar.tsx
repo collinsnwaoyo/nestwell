@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MoreHorizontal } from "lucide-react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 import { DISABLED_NAV_ITEMS, LIVE_NAV_ITEMS, type NavItem } from "@/config/nav";
 import { Drawer } from "@/components/ui/drawer";
 import { AboutDemoButton } from "./about-demo-button";

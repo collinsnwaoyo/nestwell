@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 import { formatNaira } from "@/lib/domain";
 import { AnimatedNumber } from "@/components/ui/animated-number";
 import { OccupancyBar } from "@/components/property-list";
