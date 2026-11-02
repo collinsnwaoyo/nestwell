@@ -15,7 +15,7 @@ It's a working portfolio prototype, built with [Claude Code](https://claude.com/
 - Send WhatsApp messages and broadcasts to a tenant, a room, a property or everyone, stepping through one chat at a time.
 - Turn on automatic reminders per room: 3 days before rent is due, on the day, and at 3 days late, when a ₦10,000 late fee is added.
 
-There's no login. The demo opens on a welcome note; everything else works on real data.
+There's no login. The demo opens on a welcome note; everything else works on real data, and a nightly job puts the demo back to its starting state at 2:00am Lagos time.
 
 ## How it's built
 
@@ -29,12 +29,13 @@ src/app/            routes: welcome, home, properties, property detail, messages
 src/components/     UI, with shared primitives in components/ui
 src/lib/domain/     pure, tested business rules
 src/lib/db/         Supabase client and queries
+src/lib/demo/       demo seed, pricing model and demo story (with tests)
 src/config/rules.ts grace days, late fee, reminder offsets, message templates
-supabase/           schema, demo seed, pricing model, demo story
+supabase/           schema migration and the seed command
 docs/               PRD and build log
 ```
 
-The demo data is generated relative to today, so the story always holds: one tenant due today, one due in three days, one overdue with a late fee, one on notice, two vacant beds. Rents come from a cost-plus model of the business (lease, furnishing and bills, at 90% occupancy and a 20% margin); see `supabase/pricing.ts` and the PRD.
+The demo data is generated relative to today, so the story always holds: one tenant due today, one due in three days, one overdue with a late fee, one on notice, two vacant beds. Rents come from a cost-plus model of the business (lease, furnishing and bills, at 90% occupancy and a 20% margin); see `src/lib/demo/pricing.ts` and the PRD.
 
 The design system is in [`DESIGN.md`](DESIGN.md), product intent in [`PRODUCT.md`](PRODUCT.md), the spec in [`docs/PRD.md`](docs/PRD.md), and how it was built, session by session, in [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md).
 

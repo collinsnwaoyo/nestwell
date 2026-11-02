@@ -131,6 +131,19 @@ How Nestwell was built with Claude Code. One entry per working session, newest a
 - Commits: names and rents, locked menu, welcome screen.
 - Follow-up, same session: market rents were the wrong lens. This is a business that leases units a year upfront, furnishes them and covers power, internet and cleaning, so rent has to be cost-plus. Added `supabase/pricing.ts` (lease plus 20% fees, furnishing over 36 months, bills, at 90% occupancy and a 20% margin, with a sharer discount per bed) and tests; the seed now takes rents from it. Rents: Lekki studio ₦795,000; Yaba ₦425,000; Surulere ₦170,000 / ₦215,000 / ₦285,000; Ikota ₦365,000 / ₦490,000. Rent roll ₦3,005,000. The welcome copy now says what the business is: monthly rentals, furnished, bills covered.
 
+## Session 7, 2 November 2026: getting ready to publish
+
+- Goal: put the code on my GitHub and give anyone a link to click around the app.
+- What I asked Claude Code to do: push to GitHub so the link works like my portfolio.
+- What it found: my portfolio is static and runs on GitHub Pages, but Nestwell needs a server (database writes, a secret key, scheduled jobs), so the code goes on GitHub and the live app on Vercel. The welcome screen promised a nightly reset that didn't exist yet.
+- What it built:
+  - The nightly reset: the seed moved into `src/lib/demo/seed.ts` (with the pricing model and demo story beside it), shared by `npm run db:seed` and a new `/api/cron/reset` route scheduled in `vercel.json` at 01:00 UTC (2:00am Lagos).
+  - The seed now queues payments, charges, messages and events and writes one insert per table, and seeds tenants in parallel: 45 seconds down to under 10 from here, well inside a serverless time limit.
+  - Cron routes refuse every request when `CRON_SECRET` isn't set, instead of accepting "Bearer undefined".
+  - The build script no longer passes `--use-system-ca`, which only exists for my local network.
+  - A proper README; branch renamed to `main`. Checked the whole git history for the service key and cron secret before publishing: never committed.
+- What went wrong and how it was fixed: bulk inserts with rows that set different columns wrote null into `messages.created_at`; `defaultToNull: false` lets those columns use their defaults.
+
 ## Ideas (not in this build)
 
 -

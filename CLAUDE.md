@@ -33,7 +33,8 @@ src/lib/domain/          due dates, status, balances, reminders, templates (pure
 src/lib/db/              Supabase client and queries
 src/config/rules.ts      grace days, late fee, offsets, send time, templates
 supabase/migrations/     schema SQL
-supabase/seed.ts         demo seed, dates relative to today
+supabase/seed.ts         `npm run db:seed` entry point
+src/lib/demo/            demo seed (shared with the nightly reset), pricing model, story
 docs/                    PRD.md, BUILD_LOG.md
 ```
 
@@ -57,7 +58,7 @@ docs/                    PRD.md, BUILD_LOG.md
 
 ## Seed data
 
-- Follow the property, room and tenant tables in the PRD exactly: 4 properties named by area and layout (Lekki studio, Yaba studio (Akoka side), Surulere 3-bedroom, Ikota 2-bedroom), 11 beds, 9 occupied, ₦3,005,000 monthly rent roll. Rents come from the cost-plus model in `supabase/pricing.ts` (furnished, bills included, paid monthly).
+- Follow the property, room and tenant tables in the PRD exactly: 4 properties named by area and layout (Lekki studio, Yaba studio (Akoka side), Surulere 3-bedroom, Ikota 2-bedroom), 11 beds, 9 occupied, ₦3,005,000 monthly rent roll. Rents come from the cost-plus model in `src/lib/demo/pricing.ts` (furnished, bills included, paid monthly).
 - Every phone number in the seed (tenant, next of kin, emergency contact) is `+2347025762759`.
 - Seeded documents are obvious placeholder images marked "SAMPLE". Never generate anything that looks like a real ID.
 - Generate dates relative to today so the story always holds: Babatunde Lawal due today, Damilola Ogunleye due in 3 days, Halima Bello overdue with a late fee, Emeka Obi on notice, Ikota double room on automatic.

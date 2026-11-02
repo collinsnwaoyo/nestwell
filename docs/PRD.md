@@ -36,7 +36,7 @@ Properties are named the way an owner talks about them (area and layout), not wi
 
 ### Pricing
 
-The business leases each unit from a landlord a year upfront, furnishes it, and lets it room by room (or bed by bed) month to month with power, internet, cleaning and maintenance covered. Tenants just move in and pay monthly. Rent is cost-plus, computed by `supabase/pricing.ts`:
+The business leases each unit from a landlord a year upfront, furnishes it, and lets it room by room (or bed by bed) month to month with power, internet, cleaning and maintenance covered. Tenants just move in and pay monthly. Rent is cost-plus, computed by `src/lib/demo/pricing.ts`:
 
 - Monthly cost = annual lease plus 20% agency and legal fees, divided by 12; plus furnishing written off over 36 months; plus the bills the business covers.
 - Price per bed = monthly cost ÷ 90% occupancy ÷ (1 − 20% margin), split across beds with a sharer discount (a bed in a double is 0.75 of a private room, in a triple 0.6), rounded to ₦5,000.

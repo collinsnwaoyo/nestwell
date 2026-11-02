@@ -11,7 +11,7 @@ export const REMINDER_SEND_HOUR = 9; // 9:00am Lagos time
  * Bed count and default monthly rent/bed for a new room, by type: furnished,
  * bills included, paid monthly. Either can be overridden per room, since the
  * lease behind a room drives its price more than its type does (see the
- * pricing model in supabase/pricing.ts). Defaults sit mid-portfolio.
+ * pricing model in src/lib/demo/pricing.ts). Defaults sit mid-portfolio.
  */
 export const ROOM_TYPE_DEFAULTS: Record<RoomType, { beds: number; rentPerBed: number }> = {
   triple: { beds: 3, rentPerBed: 170_000 },

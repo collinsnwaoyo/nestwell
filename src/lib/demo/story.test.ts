@@ -8,7 +8,7 @@ import {
   lateFeesOwed,
   moveInForNextDue,
   type RentStatus,
-} from "../src/lib/domain";
+} from "../domain";
 import { STORY, type StoryTenant } from "./story";
 
 // Expected headline status per PRD; Emeka's tenancy is on notice.
