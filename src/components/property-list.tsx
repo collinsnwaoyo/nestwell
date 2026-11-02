@@ -44,7 +44,6 @@ export function PropertyList({ properties }: { properties: PropertySummary[] }) 
               index={index}
               href={`/properties/${property.id}`}
               columns={COLUMNS}
-              label={`${property.name}, ${property.area}. ${occupancy}${free > 0 ? `, ${free} free` : ""}. Rent roll ${formatNaira(property.rentRoll)}`}
             >
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">{property.name}</p>

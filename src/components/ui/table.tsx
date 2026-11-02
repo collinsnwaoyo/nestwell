@@ -38,14 +38,11 @@ export function TableRowLink({
   href,
   columns,
   children,
-  label,
   index,
 }: {
   href: string;
   columns: string;
   children: ReactNode;
-  /** Accessible name for the whole row. */
-  label: string;
   /** Position in the list; the first eight stagger in on first render. */
   index: number;
 }) {
@@ -53,7 +50,6 @@ export function TableRowLink({
     <li className={index < 8 ? "animate-row-in" : undefined} style={{ "--row": index } as React.CSSProperties}>
       <Link
         href={href}
-        aria-label={label}
         style={{ "--cols": columns } as React.CSSProperties}
         className="group flex min-h-16 items-center gap-4 px-5 py-3 transition-colors duration-(--dur-1) hover:bg-surface-sunk md:grid md:grid-cols-(--cols) md:gap-6"
       >

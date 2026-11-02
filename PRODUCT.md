@@ -18,14 +18,14 @@ Structured, utilitarian, confident — spreadsheet-grade clarity over consumer-a
 
 ## Anti-references
 
-Revolut-style fintech softness: oversized glowing hero numbers, heavy pill/bubble chrome, soft drop-shadow bloom. This was the project's original direction (see CLAUDE.md) and has been dropped in favour of a Luma-style black and white product UI. Also avoid generic SaaS-dashboard cliches: gradient-text hero metrics, identical icon+heading filler-card grids, glassmorphism, modal-as-first-reflex.
+Revolut-style fintech softness: oversized glowing hero numbers, heavy pill/bubble chrome, soft drop-shadow bloom. This was the project's original direction and has been dropped; a later black-and-white Luma-style board was dropped too, in favour of a calm, light Stripe-Dashboard feel. Also avoid generic SaaS-dashboard cliches: gradient-text hero metrics, identical icon+heading filler-card grids, glassmorphism, modal-as-first-reflex.
 
 ## Design Principles
 
-- Flat over glowy. Structure, contrast, and hairline borders carry hierarchy — not shadow bloom or soft glow.
+- Gentle depth, not glow. Hairline borders and a very soft layered shadow carry hierarchy; never shadow bloom or glow.
 - Peers, not a hero metric. Properties, tenants, and revenue are equal-weight facts an operator scans together, not one dominant number with footnotes.
 - Real operator data, never decorative. Every figure on screen is an actual Naira amount or a real due date; nothing is there just to look full.
-- Colour means something. Surfaces stay black and white; colour appears only on status tags, chart lines and the small brand mark.
+- Colour means something. Surfaces are soft, light neutrals; colour marks money in, money due, overdue and opened, and nothing else.
 - Dense but legible. This is a daily-use operator tool, optimized for scanning, not a marketing surface optimized for first impression.
 
 ## Accessibility & Inclusion

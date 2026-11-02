@@ -98,6 +98,25 @@ How Nestwell was built with Claude Code. One entry per working session, newest a
 - Seed dates fixed: `seed.ts` pinned every move-in to July 2026, so the story only held on one date. Each tenant's place in the story now lives in `supabase/story.ts` as "next unpaid rent is N days from today" plus months paid, and `moveInForNextDue` works back to a move-in date (trying a neighbouring month count when a month-end makes an exact date impossible). `supabase/story.test.ts` checks every tenant's status, Halima's single late fee and Emeka's 30+ days behind on every day of 2026 and 2027.
 - Commits: perf + skeletons, record payment quick action, light mode, relative seed dates.
 
+## Session 5, 2 November 2026: design polish brief
+
+- Goal: a finish pass from a written brief, Stripe Dashboard feel: calm, light, soft colour, gentle depth, confident numbers. UX and flows unchanged.
+- What I asked Claude Code to do: work through the brief page by page (tokens, frame, components, Home, properties, Messages, motion, accessibility), committing after each step.
+- What it built:
+  - Tokens for colour (green-tinted neutrals, semantic tones for meaning only), type scale, radius, layered shadows, easing and durations, all mapped into Tailwind.
+  - One page frame aligned to the sidebar (no centred column); a 240px sidebar, a 64px icon rail at tablet width, a bottom tab bar with a More sheet on phones; locked items under "In the full version".
+  - One button system, one StatusPill, one table, a 32x18 toggle, popover/menu/listbox/segmented control/tooltip, and one overlay Drawer that replaced the push-aside panel (zero layout shift, focus trap, Escape, focus returns to the row).
+  - Home: revenue panel with change vs the previous 30 days and an area chart, a stat strip, a Needs attention rail and quick actions as a list. Property page: summary rail, compact room headers with an "Auto reminders" switch. Messages: segmented type filter, a Filter popover with chips, day groups, the same actions per stage.
+  - Motion per the brief (route fade, row stagger, drawer, pill swaps, count-up and chart draw-in on the first visit only, toast Undo), all off under reduced motion.
+- What went wrong and how it was fixed:
+  - `cn` (tailwind-merge) didn't know the new type scale, so `text-stat-sm text-positive` silently lost its size. Configured it with the custom sizes and shadows.
+  - Three pill tones fell short of 4.5:1 for small text (warning was 3.3:1). Added darker `-text` tokens for small text on tints and kept the brief's tones for fills, icons and large numbers.
+  - A notice reason ending in a full stop produced "follow-up.." in the template; fillTemplate now drops the second stop. Em dashes removed from templates and seed data.
+  - Tabular figures on whole message bodies widened hyphens in Inter ("follow -up"); now only ₦ amounts get them.
+  - Lighthouse first ran against an old production server still holding port 3001. Stopped it and re-ran: accessibility 100 on every page.
+- Decisions: kept Inter self-hosted by hand rather than via next/font, since next/font can't keep the latin/latin-ext unicode-range split that puts ₦ in Inter. Home stacks below 1280px (the Home section of the brief) while the property page keeps its rail from 1024px (the layout section). Marking a message opened or sent now writes an event, which also gives Sent its timestamp. Record payment's Undo removes the payment and receipt and logs a payment_undone event. Dark mode tokens were dropped; the brief is light only.
+- Commits: tokens, frame and navigation, components, Home, property page, Messages, motion and contrast, docs.
+
 ## Ideas (not in this build)
 
 -

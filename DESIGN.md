@@ -1,175 +1,101 @@
 ---
 name: Nestwell
-description: Rent and occupancy manager for a fictional Lagos co-living operator. Black and white, Luma-style, light by default, colour only where it carries meaning.
+description: Rent and occupancy manager for a fictional Lagos co-living operator. Calm, light and precise, in the manner of the Stripe Dashboard; colour only where it means something.
 colors:
-  page-grey: "oklch(0.968 0.002 260)"
-  card-white: "oklch(0.997 0.001 260)"
-  sidebar-grey: "oklch(0.945 0.003 260)"
-  raised-grey: "oklch(0.945 0.003 260)"
-  ink: "oklch(0.18 0.004 260)"
-  ash-grey: "oklch(0.5 0.008 260)"
-  hairline: "oklch(0.2 0.01 260 / 9%)"
-  envato-green: "oklch(0.56 0.15 142)"
-  chart-green: "oklch(0.6 0.15 150)"
-  chart-amber: "oklch(0.64 0.15 62)"
-  chart-blue: "oklch(0.55 0.15 255)"
-  chart-violet: "oklch(0.55 0.16 300)"
+  bg: "oklch(0.975 0.004 150)"
+  surface: "oklch(0.995 0.002 150)"
+  surface-sunk: "oklch(0.96 0.005 150)"
+  border: "oklch(0.91 0.006 150)"
+  border-strong: "oklch(0.85 0.008 150)"
+  text: "oklch(0.22 0.012 150)"
+  text-2: "oklch(0.45 0.012 150)"
+  text-3: "oklch(0.58 0.01 150)"
+  primary: "oklch(0.24 0.012 150)"
+  positive: "oklch(0.55 0.13 150)"
+  warning: "oklch(0.62 0.14 70)"
+  danger: "oklch(0.55 0.17 27)"
+  info: "oklch(0.55 0.11 250)"
 typography:
-  display:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.625rem"
-    fontWeight: 700
-    lineHeight: 1.25
-    letterSpacing: "-0.01em"
-  section:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.125rem"
-    fontWeight: 600
-    lineHeight: 1.3
-    letterSpacing: "-0.01em"
-  title:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "0.9375rem"
-    fontWeight: 600
-    lineHeight: 1.35
-  body:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "0.875rem"
-    fontWeight: 400
-    lineHeight: 1.5
-  caption:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "0.75rem"
-    fontWeight: 400
-    lineHeight: 1.4
+  display: { fontFamily: Inter, fontSize: 28px, lineHeight: 34px, fontWeight: 600, letterSpacing: -0.02em }
+  h2: { fontFamily: Inter, fontSize: 17px, lineHeight: 24px, fontWeight: 600, letterSpacing: -0.01em }
+  h3: { fontFamily: Inter, fontSize: 15px, lineHeight: 22px, fontWeight: 600 }
+  body: { fontFamily: Inter, fontSize: 14px, lineHeight: 21px, fontWeight: 400 }
+  meta: { fontFamily: Inter, fontSize: 12.5px, lineHeight: 18px, fontWeight: 450 }
+  stat: { fontFamily: Inter, fontSize: 32px, lineHeight: 36px, fontWeight: 600, letterSpacing: -0.02em }
+  stat-sm: { fontFamily: Inter, fontSize: 22px, lineHeight: 28px, fontWeight: 600 }
 rounded:
-  sm: "6px"
-  md: "8px"
-  lg: "10px"
-components:
-  card:
-    backgroundColor: "{colors.card-white}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.lg}"
-    padding: "16px"
-  button-primary:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.card-white}"
-    rounded: "{rounded.md}"
-    padding: "8px 16px"
-  button-outline:
-    backgroundColor: "{colors.page-grey}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.md}"
-    padding: "8px 16px"
+  control: 6px
+  card: 10px
+  round: 999px
 ---
 
 # Design System: Nestwell
 
 ## 1. Overview
 
-**Creative North Star: "The Quiet Ledger"**
+Calm, light and precise, in the manner of the Stripe Dashboard: a soft grey-green page, white surfaces with a hairline border and a very soft layered shadow, confident numbers, considered charts. Not flashy and not monochrome-brutal. Every token lives in `src/app/globals.css` and is mapped into Tailwind; components never use raw colours, radii, shadows or durations.
 
-The home dashboard is the reference board for every page. It follows Luma's product UI: a pale grey page, white cards with no borders, a slightly darker sidebar, bold near-black headings, grey supporting text, and almost no colour. Light is the default theme; the original dark theme is kept under `.dark` in `globals.css` for a later theme switch, with the same rules. The interface is black and white so that the few coloured things carry meaning: a status tag says something is wrong, a chart line says which way a number is moving.
+This replaces two earlier directions: the original Revolut-style softness and the black-and-white Luma board.
 
-This system rejects the project's starting point (Revolut-style glowing hero numbers, pill buttons, soft shadows) and also the first pivot attempt (a green-tinted surface with coloured icon badges on every card), which read as too colourful.
+## 2. Colour
 
-**Key Characteristics:**
-- Black and white surfaces; colour on status tags, chart lines and the small brand mark only.
-- Sections separated by a hairline rule, each with a bold title and an optional right-hand aside (a date, a "+ Create").
-- Borderless white cards on a pale grey page; depth comes from one lightness step.
-- Detail views open in a push-aside side panel on desktop, a bottom sheet on mobile.
+Neutrals lean slightly green; nothing is pure black or white.
 
-## 2. Colors
+- **Surfaces**: `--bg` page and sidebar, `--surface` cards, tables and drawers, `--surface-sunk` insets (balance box, hovered and selected rows).
+- **Text**: `--text` primary, `--text-2` secondary and meta (7:1 on surface), `--text-3` for placeholders and disabled items only.
+- **Primary action**: near-black `--primary`, hover `--primary-hover`.
+- **Semantic, for meaning only**: positive (collected, paid), warning (due), danger (overdue, notice), info (opened), each with a `-bg` tint. Small text on a tint uses the matching `-text` token, one step darker, so pills clear 4.5:1. The tones themselves are for fills, icons and large numbers.
+- Numbers are `--text` unless the colour carries meaning: revenue collected in positive, payments due in warning, overdue in danger. Purple is not used.
 
-Neutral greys with the faintest cool cast, so the page reads as black and white rather than tinted.
-
-### Primary
-- **Envato Green** (`oklch(0.56 0.15 142)`): the brand mark. Used for the logo square, the active nav item, and switches that are on. Never on buttons, cards or text blocks.
-
-### Secondary (chart lines and glance figures only)
-- **Chart Green** (`oklch(0.6 0.15 150)`): money coming in (Revenue).
-- **Chart Amber** (`oklch(0.64 0.15 62)`): money coming due (Payments due).
-- **Chart Blue** (`oklch(0.55 0.15 255)`): occupancy (Vacant beds).
-- **Chart Violet** (`oklch(0.55 0.16 300)`): portfolio size (Properties, rent roll).
-
-### Neutral (light theme)
-- **Page Grey** (`oklch(0.968 0.002 260)`): page background.
-- **Sidebar Grey** (`oklch(0.945 0.003 260)`): the sidebar, a step darker than the page.
-- **Card White** (`oklch(0.997 0.001 260)`): cards, list containers, the side panel. Never pure white.
-- **Raised Grey** (`oklch(0.945 0.003 260)`): hover and selected rows, muted fills, rows inside a panel.
-- **Ink** (`oklch(0.18 0.004 260)`): primary text and the primary button.
-- **Ash Grey** (`oklch(0.5 0.008 260)`): captions, labels, secondary text, faded corner icons.
-- **Hairline** (`oklch(0.2 0.01 260 / 9%)`): section rules and dividers between list rows.
-
-### Status tags
-Paid green, Due soon / Due today amber, Overdue red, Notice issued purple, Vacant grey. Each is a small rounded tag with a 10 to 15% fill of its colour and full-strength text. These are the loudest colour on any screen.
-
-### Named Rules
-**The Tags Speak Rule.** Status colour lives only on labelled tags. A row, tile, card or banner is never filled with a status colour; put a tag inside it instead.
-
-**The Black and White Rule.** If colour appears anywhere other than a tag, a chart line, a glance figure or the brand mark, remove it. Primary buttons are ink (white in the dark theme), not green.
+**The Meaning Rule.** If colour isn't saying paid, due, overdue or opened, it shouldn't be there.
 
 ## 3. Typography
 
-**Font:** Inter (self-hosted variable, both latin and latin-ext subsets so ₦ renders in Inter), falling back to the system UI font. Inter is the closest web font to the SF Pro look of the Luma reference.
+Inter, self-hosted (latin and latin-ext, so ₦ renders in Inter), with `cv11` and `ss01` on globally and tabular figures on every amount, date, table and count. The scale is Tailwind utilities: `text-display`, `text-h2`, `text-h3`, `text-body`, `text-meta` (`text-meta-style` adds the weight and `--text-2`), `text-stat`, `text-stat-sm`, `text-th`. Table headers are sentence case, never uppercase. Money is `₦1,490,000`, no decimals.
 
-### Hierarchy
-- **Display** (700, 26px, 1.25): page titles and the greeting name.
-- **Section** (600, 18px, 1.3): section titles ("At a glance", "Quick actions", "Properties", "Rooms").
-- **Title** (600, 15px): card titles, quick-action labels, room names.
-- **Body** (400 to 500, 14px, 1.5): list rows, tenant names, form text.
-- **Caption** (400, 12px): card captions ("Last 30 days"), axis labels, column headers.
+## 4. Space, radius, depth
 
-### Named Rules
-**The Two-Tone Greeting Rule.** The greeting is two lines at the same size: "Good morning," in Ash Grey regular, the name in Ink bold.
+- Spacing steps 4, 8, 12, 16, 20, 24, 32, 40, 56, 72: 32 to 40 between sections, 16 to 20 inside cards, 12 between related rows.
+- Radius: 6 for buttons, inputs and pills; 10 for cards, tables and drawers; 999 for avatars and toggles.
+- Shadows: `shadow-1` for cards and tables, `shadow-2` for hovered cards, popovers and tooltips, `shadow-3` for the drawer.
+- Cards are `surface` + 1px `border` + `shadow-1`. Never nest a card in a card; inside one, use spacing, a divider or a sunk inset.
 
-**The Tabular Money Rule.** Every ₦ amount and count uses tabular figures.
+## 5. Layout
 
-## 4. Elevation
+One page frame (`Page` in `components/shell/page.tsx`): aligned to the sidebar, 40px side padding from 768px, at most 1200px wide, never centred in leftover space. Every page header is title (and meta line) on the left, actions on the right, 32px above the content.
 
-Flat. No shadows anywhere. Depth is the lightness step from page to card (or sidebar), and hairline rules between sections and rows. Hover raises a row or card one more step to Raised Grey.
+- 1024px and up: 240px sidebar. Property detail has rooms (2fr) and a summary rail (1fr).
+- 1280px and up: Home is two columns, main (2fr) and side rail (1fr). Below that it stacks: revenue, stats, needs attention, quick actions.
+- 768 to 1023px: the sidebar is a 64px icon rail with tooltips.
+- Below 768px: a bottom tab bar (Home, Properties, Messages, More), tables become stacked rows, the drawer becomes a bottom sheet, and touch targets grow to 44px.
 
-## 5. Components
+## 6. Components
 
-### Section
-A hairline rule on top, then a Section-weight title with an optional aside on the right (date, "+ Create", "View all"). Sections are spaced 32px apart.
+- **Button** (`ui/button.tsx`): primary, secondary, ghost, plus destructive for the final confirm of an irreversible action. 36px, 32px compact, 44px on touch; every hit area is at least 40px. Icon-only buttons have an aria-label and a tooltip.
+- **StatusPill** (`ui/status-pill.tsx`): the only pill. `RentStatusPill`, `MessageStatusPill` (Ready, Opened in WhatsApp, Sent) and `MessageTypePill` map onto it. Notices carry a warning icon so status is never colour alone.
+- **Table** (`ui/table.tsx`): whole-row links, 64px rows, chevron that nudges on hover. Properties use Property, Occupancy (beds, a 64px bar and beds free) and Rent roll.
+- **Drawer** (`ui/drawer.tsx`): the only overlay. 440px from the right over a scrim on 768px and up, a draggable bottom sheet below. Traps focus, closes on Escape, returns focus to the row that opened it. The page underneath never moves.
+- **Popover, Menu, Listbox, SegmentedControl, Tooltip**: in `ui/`. Tooltips wait 300ms on hover and appear at once on keyboard focus.
+- **WhatsApp send actions**: the same per stage everywhere. Ready: Send and Mark sent. Opened: Mark sent and Resend. Sent: a check and the time.
+- **Toggle**: 32x18, positive when on.
 
-### Glance card (signature)
-White card, no border, 16px padding. Top left: title and a one-line caption. Top right: the figure in its chart colour, regular weight, 24px. Below: a sparkline in the same colour over a dashed baseline, then three axis captions (start, what the line measures, end). Four of them in a 2×2 grid on desktop, stacked on mobile.
+## 7. Motion
 
-### Quick action card
-Short white card (64px tall): bold label on one line with a grey arrow (arrow hidden on phones), and a large faded grey icon (48px, 30% opacity, thin stroke) clipped into the bottom-right corner. 2×2 grid at every width. Send message, Record payment, View overdue, Add a tenant. Each opens a side panel or the composer.
+Motion only when state changes or content arrives; nothing loops or moves on idle. Only transform and opacity animate (plus stroke-dashoffset for the chart and colour crossfades). Easing is ease-out-quart by default, ease-out-expo for the drawer, never bounce.
 
-### List container (properties, rooms)
-One white card holding rows separated by hairlines. Desktop shows a caption-sized column header row. No icons on rows; a grey chevron on the right. Properties list puts beds available first.
+| Moment | Spec |
+|---|---|
+| Route change | content fades in and rises 6px, 280ms; the sidebar stays still |
+| First render of a list | rows rise 4px and fade, 30ms apart, first eight only |
+| Filter change | the list crossfades, 100ms out, 200ms in |
+| Drawer | slides in 280ms (ease-out-expo), out 220ms; scrim fades 200ms |
+| Status change | pill colours crossfade; the label swaps with a 4px slide |
+| Record payment | balance counts down over 400ms; toast with Undo for 4s |
+| Home numbers and chart | count up and draw in on the first Home visit of the session only |
+| Hover | background or shadow only, 120ms; buttons press to 0.98 |
 
-### Buttons
-- **Primary:** Ink fill, white text, 8px radius.
-- **Outline:** transparent with a hairline border, ink text. Used for most actions, including Issue notice and Check out.
-- **Destructive:** red, only on the final confirm step of a destructive action.
+`prefers-reduced-motion` turns movement off everywhere (MotionConfig for Framer, a CSS rule for the rest); state changes stay instant.
 
-### Side Panel
-On desktop (≥1024px) a right-hand panel sits beside the page and pushes the main column narrower; it never covers the page. Card White, hairline left edge, sticky header with a close button, Escape closes, one open at a time. Below 1024px it becomes a bottom sheet. Pages can open it from the URL (`?bed=`).
+## 8. Copy
 
-### Room card
-Room name and "N beds · ₦X/bed" header; one row per bed with the label, tenant's full name, status tag and chevron; vacant beds read "+ Add tenant". Footer: a labelled switch, "Reminders: Automatic / Manual", with a one-line explanation.
-
-### Navigation
-Sidebar Grey background, 15px medium labels with 20px outline icons, active item in Envato Green (no fill), disabled items faded with a lock. Owner initial and name at the bottom. Mobile uses a bottom tab bar.
-
-## 6. Do's and Don'ts
-
-### Do:
-- **Do** treat the home dashboard as the reference board for every new page.
-- **Do** keep surfaces black and white; let tags and chart lines carry the colour.
-- **Do** separate sections with a hairline rule and a bold section title.
-- **Do** use faded grey corner icons on quick-action cards, and no icons on list rows.
-- **Do** open details in the side panel on desktop.
-
-### Don't:
-- **Don't** reintroduce Revolut-style softness: glowing hero numbers, pill buttons, drop shadows.
-- **Don't** put coloured icon badges on cards, or colour a whole row, tile or banner by status.
-- **Don't** make primary buttons green; they're white.
-- **Don't** add borders to cards; the lightness step is enough.
-- **Don't** use gradient text, glassmorphism or side-stripe borders.
+No em dashes and no doubled punctuation, in the UI or in message templates. Dates are "18 Nov 2026" in details and "2 Nov, 11:43am" in timestamps, always in Lagos time. Every action ends in a toast; every empty state has a next action.

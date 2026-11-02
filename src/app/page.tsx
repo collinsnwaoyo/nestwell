@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Building2 } from "lucide-react";
+import { BrandMark } from "@/components/shell/brand-mark";
 import { Button } from "@/components/ui/button";
 import { hasSeenWelcome, markWelcomeSeen } from "@/lib/welcome";
 
@@ -27,9 +27,7 @@ export default function WelcomePage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-background px-6 text-center">
-      <div className="flex size-14 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-        <Building2 className="size-7" />
-      </div>
+      <BrandMark large />
 
       <div className="flex flex-col items-center gap-3">
         <h1 className="text-display font-semibold">Nestwell</h1>
