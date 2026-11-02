@@ -26,12 +26,12 @@ export function Switch({
       onClick={() => onCheckedChange(!checked)}
       className={cn(
         "relative inline-flex h-6 w-10 shrink-0 items-center rounded-full border border-transparent transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:opacity-50",
-        checked ? "bg-brand" : "bg-muted-foreground/30",
+        checked ? "bg-positive" : "bg-muted-foreground/30",
       )}
     >
       <span
         className={cn(
-          "inline-block size-5 rounded-full bg-card transition-transform dark:bg-foreground",
+          "inline-block size-5 rounded-full bg-surface transition-transform",
           checked ? "translate-x-[17px]" : "translate-x-[1px]",
         )}
       />

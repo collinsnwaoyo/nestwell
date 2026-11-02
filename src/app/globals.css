@@ -2,9 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
-
-/* Inter, self-hosted. ₦ (U+20A6) is in the latin-ext subset, hence both files. */
+/* Inter, self-hosted. ₦ (U+20A6) is in the latin-ext subset, hence both files.
+   Declared by hand rather than with next/font so each file keeps its unicode-range. */
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -25,133 +24,196 @@
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Design tokens. Neutrals lean slightly green; colour is for meaning only. */
+:root {
+  /* surfaces */
+  --bg: oklch(0.975 0.004 150);
+  --surface: oklch(0.995 0.002 150);
+  --surface-sunk: oklch(0.96 0.005 150);
+  --border: oklch(0.91 0.006 150);
+  --border-strong: oklch(0.85 0.008 150);
+
+  /* text */
+  --text: oklch(0.22 0.012 150);
+  --text-2: oklch(0.45 0.012 150);
+  --text-3: oklch(0.58 0.01 150);
+
+  /* primary action */
+  --primary: oklch(0.24 0.012 150);
+  --primary-hover: oklch(0.32 0.012 150);
+  --on-primary: oklch(0.985 0.003 150);
+
+  /* semantic */
+  --positive: oklch(0.55 0.13 150);
+  --positive-bg: oklch(0.95 0.04 150);
+  --warning: oklch(0.62 0.14 70);
+  --warning-bg: oklch(0.96 0.045 80);
+  --danger: oklch(0.55 0.17 27);
+  --danger-bg: oklch(0.96 0.03 27);
+  --info: oklch(0.55 0.11 250);
+  --info-bg: oklch(0.96 0.025 250);
+  --neutral-bg: oklch(0.94 0.005 150);
+
+  --focus-ring: oklch(0.55 0.11 250 / 0.45);
+  --scrim: oklch(0.2 0.01 150 / 0.18);
+
+  /* motion durations (easings and shadows live in @theme below) */
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 280ms;
+  --dur-4: 600ms;
+
+  /* shadcn names, pointed at the tokens above so every component shares one palette */
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface);
+  --popover-foreground: var(--text);
+  --primary-foreground: var(--on-primary);
+  --secondary: var(--surface-sunk);
+  --secondary-foreground: var(--text);
+  --muted: var(--surface-sunk);
+  --muted-foreground: var(--text-2);
+  --accent: var(--surface-sunk);
+  --accent-foreground: var(--text);
+  --destructive: var(--danger);
+  --input: var(--border-strong);
+  --ring: var(--focus-ring);
+  --radius: 10px;
+}
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-heading: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --color-brand: var(--brand);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-faint: var(--text-3);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-surface-sunk: var(--surface-sunk);
+  --color-positive: var(--positive);
+  --color-positive-bg: var(--positive-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-neutral-bg: var(--neutral-bg);
+  --color-scrim: var(--scrim);
+
+  /* radius: 6 for controls and pills, 10 for cards, tables and panels */
+  --radius-sm: 4px;
+  --radius-md: 6px;
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-xl: var(--radius);
+
+  /* type scale: size / line-height / weight / tracking */
+  --text-display: 28px;
+  --text-display--line-height: 34px;
+  --text-display--letter-spacing: -0.02em;
+  --text-h2: 17px;
+  --text-h2--line-height: 24px;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: 15px;
+  --text-h3--line-height: 22px;
+  --text-body: 14px;
+  --text-body--line-height: 21px;
+  --text-meta: 12.5px;
+  --text-meta--line-height: 18px;
+  --text-stat: 32px;
+  --text-stat--line-height: 36px;
+  --text-stat--letter-spacing: -0.02em;
+  --text-stat-sm: 22px;
+  --text-stat-sm--line-height: 28px;
+  --text-th: 12px;
+  --text-th--line-height: 16px;
 }
 
-/* Light is the default theme. Black and white: colour is reserved for status chips,
-   chart lines and the small brand mark. White cards sit on a pale grey page, so cards
-   stay borderless; the sidebar is a step darker than the page, as in the dark theme. */
-:root {
-  --background: oklch(0.968 0.002 260);
-  --foreground: oklch(0.18 0.004 260);
-  --brand: oklch(0.56 0.15 142);
-  --card: oklch(0.997 0.001 260);
-  --card-foreground: oklch(0.18 0.004 260);
-  --popover: oklch(0.997 0.001 260);
-  --popover-foreground: oklch(0.18 0.004 260);
-  --primary: oklch(0.2 0.004 260);
-  --primary-foreground: oklch(0.985 0.001 260);
-  --secondary: oklch(0.94 0.003 260);
-  --secondary-foreground: oklch(0.2 0.004 260);
-  --muted: oklch(0.94 0.003 260);
-  --muted-foreground: oklch(0.5 0.008 260);
-  --accent: oklch(0.945 0.003 260);
-  --accent-foreground: oklch(0.2 0.004 260);
-  --destructive: oklch(0.56 0.21 27);
-  --border: oklch(0.2 0.01 260 / 9%);
-  --input: oklch(0.2 0.01 260 / 14%);
-  --ring: oklch(0.45 0.005 260);
-  --chart-1: oklch(0.6 0.15 150);
-  --chart-2: oklch(0.64 0.15 62);
-  --chart-3: oklch(0.55 0.15 255);
-  --chart-4: oklch(0.55 0.16 300);
-  --chart-5: oklch(0.6 0 0);
-  --radius: 0.5rem;
-  --sidebar: oklch(0.945 0.003 260);
-  --sidebar-foreground: oklch(0.18 0.004 260);
-  --sidebar-primary: oklch(0.56 0.15 142);
-  --sidebar-primary-foreground: oklch(0.985 0.001 260);
-  --sidebar-accent: oklch(0.92 0.003 260);
-  --sidebar-accent-foreground: oklch(0.2 0.004 260);
-  --sidebar-border: oklch(0.2 0.01 260 / 9%);
-  --sidebar-ring: oklch(0.45 0.005 260);
-}
-
-/* The original dark theme, kept for a later theme switch. */
-.dark {
-  --background: oklch(0.155 0.002 260);
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0.212 0.003 260);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.212 0.003 260);
-  --popover-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.97 0 0);
-  --primary-foreground: oklch(0.17 0.002 260);
-  --secondary: oklch(0.26 0.003 260);
-  --secondary-foreground: oklch(0.97 0 0);
-  --muted: oklch(0.26 0.003 260);
-  --muted-foreground: oklch(0.66 0.005 260);
-  --accent: oklch(0.255 0.003 260);
-  --accent-foreground: oklch(0.97 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 7%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.72 0 0);
-  --brand: oklch(0.72 0.16 142);
-  --chart-1: oklch(0.74 0.15 150);
-  --chart-2: oklch(0.78 0.14 70);
-  --chart-3: oklch(0.68 0.13 250);
-  --chart-4: oklch(0.70 0.13 300);
-  --chart-5: oklch(0.55 0 0);
-  --sidebar: oklch(0.19 0.003 260);
-  --sidebar-foreground: oklch(0.97 0 0);
-  --sidebar-primary: oklch(0.72 0.16 142);
-  --sidebar-primary-foreground: oklch(0.17 0.002 260);
-  --sidebar-accent: oklch(0.255 0.003 260);
-  --sidebar-accent-foreground: oklch(0.97 0 0);
-  --sidebar-border: oklch(1 0 0 / 7%);
-  --sidebar-ring: oklch(0.72 0 0);
+/* Depth and easing tokens. Declared in @theme so they exist as CSS variables
+   (--shadow-1, --ease-out, ...) and as utilities (shadow-1, ease-out, ...). */
+@theme {
+  --shadow-1: 0 1px 1px oklch(0.2 0.01 150 / 0.04), 0 1px 3px oklch(0.2 0.01 150 / 0.06);
+  --shadow-2: 0 2px 4px oklch(0.2 0.01 150 / 0.05), 0 8px 24px oklch(0.2 0.01 150 / 0.08);
+  --shadow-3: 0 12px 48px oklch(0.2 0.01 150 / 0.16);
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-x: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
+    @apply border-border;
   }
   html {
     @apply font-sans;
+    font-feature-settings: "cv11", "ss01";
+  }
+  body {
+    @apply bg-background text-body text-foreground;
+  }
+  /* One focus treatment for every interactive element. */
+  :focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  /* Numbers line up wherever they appear in tables and time stamps. */
+  table,
+  time,
+  dd {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@utility text-meta-style {
+  font-size: var(--text-meta);
+  line-height: var(--text-meta--line-height);
+  font-weight: 450;
+  color: var(--text-2);
+}
+
+/* Skeletons: a static block whose opacity breathes between 0.6 and 1. No shimmer. */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@utility animate-skeleton {
+  animation: skeleton-pulse 1.2s var(--ease-in-out) infinite;
+}
+
+/* Reduced motion: no movement anywhere. State changes stay instant; fades are capped at 100ms. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
   }
 }

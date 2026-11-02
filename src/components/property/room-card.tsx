@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { cn } from "cn";
 import { formatNaira } from "@/lib/domain";
 import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
-import { StatusChip } from "@/components/status-chip";
+import { RentStatusPill } from "@/components/ui/status-pill";
 import { Switch } from "@/components/ui/switch";
 import { setRoomReminderMode } from "@/lib/actions/rooms";
 import type { RoomDetail } from "@/lib/db/queries";
@@ -65,7 +65,7 @@ export function RoomCard({
                   <Plus className="size-3.5" /> Add tenant
                 </span>
               )}
-              <StatusChip status={bed.status} />
+              <RentStatusPill status={bed.status} />
               <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
             </button>
           </li>

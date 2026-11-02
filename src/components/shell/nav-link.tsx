@@ -60,12 +60,12 @@ export function NavLink({ item, tooltipSide = "right", variant = "sidebar" }: Na
         variant === "sidebar" &&
           cn(
             "w-full px-3 py-2.5 text-[15px]",
-            active ? "text-brand" : "text-foreground/80 hover:bg-muted hover:text-foreground",
+            active ? "text-foreground" : "text-foreground/80 hover:bg-muted hover:text-foreground",
           ),
         variant === "bottom-bar" &&
           cn(
             "flex-col gap-1 px-2 py-1 text-[11px]",
-            active ? "text-brand" : "text-muted-foreground",
+            active ? "text-foreground" : "text-muted-foreground",
           ),
       )}
     >

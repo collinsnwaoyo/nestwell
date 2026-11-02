@@ -5,7 +5,7 @@ import { useCallback, useState, type ComponentType } from "react";
 import { format } from "date-fns";
 import { AlarmClock, ArrowLeft, ArrowRight, BedDouble, ChevronRight, MessageCircle, Wallet } from "lucide-react";
 import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
-import { StatusChip } from "@/components/status-chip";
+import { RentStatusPill } from "@/components/ui/status-pill";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { SidePanel } from "@/components/ui/side-panel";
 import { RecordPaymentButton } from "@/components/property/record-payment-button";
@@ -130,7 +130,7 @@ export function QuickActions({
                     {paying.propertyName} · {paying.roomName}
                   </p>
                 </div>
-                <StatusChip status={recorded ? "paid" : paying.status} />
+                <RentStatusPill status={recorded ? "paid" : paying.status} />
               </div>
               <dl className="divide-y divide-border rounded-lg bg-background text-sm">
                 <div className="flex justify-between gap-3 px-4 py-3">
@@ -181,7 +181,7 @@ export function QuickActions({
                     <span className="text-sm font-medium tabular-nums">
                       {formatNaira(item.balance > 0 ? item.balance : item.rent)}
                     </span>
-                    <StatusChip status={item.status} />
+                    <RentStatusPill status={item.status} />
                   </div>
                   <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
                 </button>
@@ -205,7 +205,7 @@ export function QuickActions({
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-1">
                     <span className="text-sm font-medium tabular-nums">{formatNaira(item.balance)}</span>
-                    <StatusChip status="overdue" />
+                    <RentStatusPill status="overdue" />
                   </div>
                 </PanelRow>
               ))}
@@ -232,7 +232,7 @@ export function QuickActions({
                       {bed.roomName} · {bed.bedLabel} · {formatNaira(bed.rentPerBed)}/month
                     </p>
                   </div>
-                  <StatusChip status="vacant" />
+                  <RentStatusPill status="vacant" />
                 </PanelRow>
               ))}
             </div>

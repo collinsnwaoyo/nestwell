@@ -4,7 +4,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { Pencil } from "lucide-react";
 import { formatNaira } from "@/lib/domain";
-import { StatusChip } from "@/components/status-chip";
+import { RentStatusPill, StatusPill } from "@/components/ui/status-pill";
 import type { BedDetail } from "@/lib/db/queries";
 import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 import { AddTenantForm } from "./add-tenant-form";
@@ -57,7 +57,7 @@ export function TenantPanelContent({
 
             {!bed.tenant.verified && (
               <div className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs text-muted-foreground">
-                <span className="rounded-md bg-amber-500/10 px-2 py-0.5 font-medium text-amber-700 dark:text-amber-300">Unverified</span>
+                <StatusPill tone="warning">Unverified</StatusPill>
                 Documents haven&apos;t been checked yet.
               </div>
             )}
@@ -67,13 +67,13 @@ export function TenantPanelContent({
                 <p className="text-sm text-muted-foreground">Balance</p>
                 <p className="text-2xl font-semibold tabular-nums">{formatNaira(bed.balance)}</p>
               </div>
-              {bed.status !== "paid" && <StatusChip status={bed.status} />}
+              {bed.status !== "paid" && <RentStatusPill status={bed.status} />}
             </div>
 
             {bed.tenancyStatus === "notice" && (
               <div className="rounded-lg border border-border px-3 py-2.5 text-xs">
                 <div className="flex items-center gap-2">
-                  <StatusChip status="notice" />
+                  <RentStatusPill status="notice" />
                   <span className="font-medium">Move out by {bed.moveOut && formatDate(bed.moveOut)}</span>
                 </div>
                 {bed.noticeReason && <p className="mt-1.5 text-muted-foreground">{bed.noticeReason}</p>}

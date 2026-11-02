@@ -1,19 +1,7 @@
 import { format } from "date-fns";
-import { cn } from "cn";
+import { MessageStatusPill } from "@/components/ui/status-pill";
 import { WhatsAppSendButton } from "@/components/whatsapp-send-button";
 import type { MessageRow as MessageRowData } from "@/lib/db/queries";
-
-const STATUS_LABELS: Record<string, string> = {
-  ready: "Ready",
-  opened: "Opened in WhatsApp",
-  marked_sent: "Marked sent",
-};
-
-const STATUS_STYLES: Record<string, string> = {
-  ready: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
-  opened: "bg-blue-500/10 text-blue-700 dark:text-blue-300",
-  marked_sent: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-};
 
 const TRIGGER_LABELS: Record<string, string> = {
   auto: "Automatic",
@@ -39,14 +27,7 @@ export function MessageRow({ message }: { message: MessageRowData }) {
             {[message.propertyName, message.roomName].filter(Boolean).join(" · ") || message.phone}
           </p>
         </div>
-        <span
-          className={cn(
-            "shrink-0 rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap",
-            STATUS_STYLES[message.status] ?? "bg-muted text-muted-foreground",
-          )}
-        >
-          {STATUS_LABELS[message.status] ?? message.status}
-        </span>
+        <MessageStatusPill status={message.status} />
       </div>
 
       <p className="text-sm">{message.body}</p>

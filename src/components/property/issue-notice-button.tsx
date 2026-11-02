@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { FormField, inputClass } from "@/components/ui/form";
 import { WhatsAppSendButton } from "@/components/whatsapp-send-button";
+import { RentStatusPill } from "@/components/ui/status-pill";
 import { issueNotice, type IssueNoticeResult } from "@/lib/actions/notices";
 
 export function IssueNoticeButton({ tenancyId }: { tenancyId: string }) {
@@ -37,8 +38,8 @@ export function IssueNoticeButton({ tenancyId }: { tenancyId: string }) {
 
   if (result) {
     return (
-      <div className="flex flex-col gap-2 rounded-lg bg-purple-500/10 p-3">
-        <p className="text-sm font-medium text-purple-700 dark:text-purple-300">Notice issued</p>
+      <div className="flex flex-col gap-2 rounded-lg bg-surface-sunk p-3">
+        <RentStatusPill status="notice" className="self-start" />
         <WhatsAppSendButton messageId={result.messageId} waLink={result.waLink} label="Send notice on WhatsApp" />
       </div>
     );

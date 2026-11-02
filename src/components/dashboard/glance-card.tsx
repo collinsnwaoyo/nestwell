@@ -3,10 +3,10 @@ import { cn } from "cn";
 export type GlanceTone = "chart-1" | "chart-2" | "chart-3" | "chart-4";
 
 const TONE_TEXT: Record<GlanceTone, string> = {
-  "chart-1": "text-chart-1",
-  "chart-2": "text-chart-2",
-  "chart-3": "text-chart-3",
-  "chart-4": "text-chart-4",
+  "chart-1": "text-positive",
+  "chart-2": "text-warning",
+  "chart-3": "text-info",
+  "chart-4": "text-foreground",
 };
 
 function Sparkline({ values, tone }: { values: number[]; tone: GlanceTone }) {
