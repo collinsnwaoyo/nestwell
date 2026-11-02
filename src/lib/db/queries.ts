@@ -1,4 +1,5 @@
 import "server-only";
+import { subDays } from "date-fns";
 import { getSupabaseClient } from "./client";
 import {
   computeBalance,
@@ -7,10 +8,8 @@ import {
   getNextDueDate,
   getUnpaidPeriods,
   collectedInWindow,
-  cumulativeDue,
-  occupiedCountOn,
-  rentRollOn,
-  sampleDates,
+  dailyCumulativeCollected,
+  toLagosDate,
   type RentStatus,
 } from "@/lib/domain";
 import type { Database } from "./types";
@@ -63,10 +62,7 @@ export interface VacantBed {
   rentPerBed: number;
 }
 
-/** History is sampled every SERIES_STEP_DAYS over roughly six months; the due outlook runs DUE_HORIZON_DAYS ahead. */
-export const SERIES_POINTS = 14;
-export const SERIES_STEP_DAYS = 14;
-export const DUE_HORIZON_DAYS = 30;
+/** Revenue is compared across two back-to-back windows of this many days. */
 export const COLLECTED_WINDOW_DAYS = 30;
 
 export interface DashboardData {
@@ -77,15 +73,9 @@ export interface DashboardData {
   collectedLast30Days: number;
   paymentsDueCount: number;
   overdueCount: number;
-  /** ISO date of the first history sample. */
-  seriesStart: string;
-  series: {
-    collected: number[];
-    vacant: number[];
-    rentRoll: number[];
-    /** Cumulative rent falling due, one point per day from today. */
-    due: number[];
-  };
+  collectedPrevious30Days: number;
+  /** Running total collected per day over the last 30 days, for the revenue chart. */
+  revenueDaily: { date: string; total: number }[];
   properties: PropertySummary[];
   overdue: OverdueTenancy[];
   payable: PayableTenancy[];
@@ -148,7 +138,6 @@ export async function getDashboardData(today: Date = new Date()): Promise<Dashbo
   const occupiedBedIds = new Set<string>();
   const overdue: OverdueTenancy[] = [];
   const payable: PayableTenancy[] = [];
-  const dueItems: { dueDate: Date; amount: number }[] = [];
 
   for (const tenancy of tenancies) {
     const room = roomByBedId.get(tenancy.bed_id);
@@ -197,11 +186,6 @@ export async function getDashboardData(today: Date = new Date()): Promise<Dashbo
       nextDueDate: nextDue.toISOString(),
       daysUntilDue,
     });
-
-    const leavesBeforeDue = tenancy.move_out !== null && getDaysUntilDue(nextDue, tenancy.move_out) >= 0;
-    if (!leavesBeforeDue) {
-      dueItems.push({ dueDate: nextDue, amount: unpaidPeriods.length > 0 ? balance : tenancy.rent });
-    }
   }
 
   const vacantBeds: VacantBed[] = beds.flatMap((bed) => {
@@ -220,9 +204,7 @@ export async function getDashboardData(today: Date = new Date()): Promise<Dashbo
     ];
   });
 
-  const spans = allTenancies.map((t) => ({ moveIn: t.move_in, moveOut: t.move_out, rent: t.rent }));
   const paidPayments = payments.map((p) => ({ amount: p.amount, paidAt: p.paid_at }));
-  const samples = sampleDates(today, SERIES_POINTS, SERIES_STEP_DAYS);
 
   return {
     propertiesCount: properties.length,
@@ -230,15 +212,14 @@ export async function getDashboardData(today: Date = new Date()): Promise<Dashbo
     bedsFilled: tenancies.length,
     expectedRevenue,
     collectedLast30Days: collectedInWindow(paidPayments, today, COLLECTED_WINDOW_DAYS),
+    collectedPrevious30Days: collectedInWindow(
+      paidPayments,
+      subDays(toLagosDate(today), COLLECTED_WINDOW_DAYS),
+      COLLECTED_WINDOW_DAYS,
+    ),
+    revenueDaily: dailyCumulativeCollected(paidPayments, today, COLLECTED_WINDOW_DAYS),
     paymentsDueCount,
     overdueCount: overdue.length,
-    seriesStart: samples[0].toISOString(),
-    series: {
-      collected: samples.map((date) => collectedInWindow(paidPayments, date, COLLECTED_WINDOW_DAYS)),
-      vacant: samples.map((date) => beds.length - occupiedCountOn(spans, date)),
-      rentRoll: samples.map((date) => rentRollOn(spans, date)),
-      due: cumulativeDue(dueItems, today, DUE_HORIZON_DAYS),
-    },
     properties: properties.map((property) => ({
       id: property.id,
       name: property.name,

@@ -1,59 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useState, type ComponentType } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { format } from "date-fns";
-import { AlarmClock, ArrowLeft, ArrowRight, BedDouble, ChevronRight, MessageCircle, Wallet } from "lucide-react";
+import { AlarmClock, ArrowLeft, BedDouble, ChevronRight, MessageCircle, Wallet } from "lucide-react";
 import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 import { RentStatusPill } from "@/components/ui/status-pill";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Drawer } from "@/components/ui/drawer";
 import { RecordPaymentButton } from "@/components/property/record-payment-button";
-import { formatNaira, toLagosDate } from "@/lib/domain";
+import { describeDue, formatNaira, toLagosDate } from "@/lib/domain";
 import type { OverdueTenancy, PayableTenancy, VacantBed } from "@/lib/db/queries";
 
 type Panel = "record-payment" | "overdue" | "add-tenant" | null;
 
-function dueLabel(item: PayableTenancy) {
-  if (item.daysUntilDue < 0) return `${-item.daysUntilDue} day${item.daysUntilDue === -1 ? "" : "s"} late`;
-  if (item.daysUntilDue === 0) return "Due today";
-  return `Due ${format(toLagosDate(item.nextDueDate), "d MMM")}`;
-}
+const ACTION_CLASS = "w-full justify-start gap-3 px-2.5 text-foreground";
 
-function ActionCard({
-  label,
-  icon: Icon,
-  onClick,
-}: {
-  label: string;
-  icon: ComponentType<{ className?: string; strokeWidth?: number }>;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group relative h-16 overflow-hidden rounded-lg bg-card px-3.5 py-3 text-left transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none sm:px-4"
-    >
-      <span className="relative flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap sm:text-[15px]">
-        {label}
-        {/* Hidden on phones so two-word labels stay on one line in the half-width card. */}
-        <ArrowRight className="hidden size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 sm:block" />
-      </span>
-      <Icon className="absolute -right-1.5 -bottom-3 size-12 text-muted-foreground/30" strokeWidth={1.25} />
-    </button>
-  );
-}
-
-function PanelRow({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center gap-3 rounded-lg bg-background px-4 py-3 transition-colors hover:bg-accent"
-    >
+/** A row inside a quick-action drawer: a list item with a chevron, on the drawer's sunk inset. */
+function PanelRow({ href, onClick, children }: { href?: string; onClick?: () => void; children: ReactNode }) {
+  const className =
+    "flex w-full items-center gap-3 rounded-lg bg-surface-sunk px-4 py-3 text-left transition-colors duration-(--dur-1) hover:bg-neutral-bg";
+  const content = (
+    <>
       {children}
-      <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+      <ChevronRight aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+    </>
+  );
+  return href ? (
+    <Link href={href} className={className}>
+      {content}
     </Link>
+  ) : (
+    <button type="button" onClick={onClick} className={className}>
+      {content}
+    </button>
   );
 }
 
@@ -95,16 +75,26 @@ export function QuickActions({
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="flex flex-col gap-0.5">
         <BroadcastComposer
           scopeType="portfolio"
           scopeId={null}
           scopeLabel={`Whole portfolio, ${tenantCount} tenant${tenantCount === 1 ? "" : "s"}`}
-          renderTrigger={(open) => <ActionCard label="Send message" icon={MessageCircle} onClick={open} />}
+          renderTrigger={(open) => (
+            <Button type="button" variant="ghost" onClick={open} className={ACTION_CLASS}>
+              <MessageCircle aria-hidden className="text-muted-foreground" /> Send message
+            </Button>
+          )}
         />
-        <ActionCard label="Record payment" icon={Wallet} onClick={() => setPanel("record-payment")} />
-        <ActionCard label="View overdue" icon={AlarmClock} onClick={() => setPanel("overdue")} />
-        <ActionCard label="Add a tenant" icon={BedDouble} onClick={() => setPanel("add-tenant")} />
+        <Button type="button" variant="ghost" onClick={() => setPanel("record-payment")} className={ACTION_CLASS}>
+          <Wallet aria-hidden className="text-muted-foreground" /> Record payment
+        </Button>
+        <Button type="button" variant="ghost" onClick={() => setPanel("overdue")} className={ACTION_CLASS}>
+          <AlarmClock aria-hidden className="text-muted-foreground" /> View overdue
+        </Button>
+        <Button type="button" variant="ghost" onClick={() => setPanel("add-tenant")} className={ACTION_CLASS}>
+          <BedDouble aria-hidden className="text-muted-foreground" /> Add a tenant
+        </Button>
       </div>
 
       <Drawer
@@ -116,35 +106,31 @@ export function QuickActions({
         {panel === "record-payment" &&
           (paying ? (
             <div className="flex flex-col gap-5">
-              <button
-                type="button"
-                onClick={() => choose(null)}
-                className="flex items-center gap-1.5 self-start text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <ArrowLeft className="size-4" /> All tenants
-              </button>
+              <Button type="button" variant="ghost" size="compact" onClick={() => choose(null)} className="-ml-2 self-start">
+                <ArrowLeft aria-hidden /> All tenants
+              </Button>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate text-[15px] font-semibold">{paying.tenantName}</p>
-                  <p className="truncate text-sm text-muted-foreground">
+                  <p className="truncate text-h3 font-semibold">{paying.tenantName}</p>
+                  <p className="truncate text-meta-style">
                     {paying.propertyName} · {paying.roomName}
                   </p>
                 </div>
                 <RentStatusPill status={recorded ? "paid" : paying.status} />
               </div>
-              <dl className="divide-y divide-border rounded-lg bg-background text-sm">
+              <dl className="divide-y divide-border rounded-lg bg-surface-sunk">
                 <div className="flex justify-between gap-3 px-4 py-3">
                   <dt className="text-muted-foreground">Rent for period</dt>
-                  <dd className="tabular-nums">{format(toLagosDate(paying.nextDueDate), "d MMM yyyy")}</dd>
+                  <dd>{format(toLagosDate(paying.nextDueDate), "d MMM yyyy")}</dd>
                 </div>
                 <div className="flex justify-between gap-3 px-4 py-3">
                   <dt className="text-muted-foreground">Amount</dt>
-                  <dd className="font-medium tabular-nums">{formatNaira(paying.rent)}</dd>
+                  <dd className="font-medium">{formatNaira(paying.rent)}</dd>
                 </div>
                 {paying.balance > paying.rent && (
                   <div className="flex justify-between gap-3 px-4 py-3">
                     <dt className="text-muted-foreground">Total owed</dt>
-                    <dd className="tabular-nums">{formatNaira(paying.balance)}</dd>
+                    <dd>{formatNaira(paying.balance)}</dd>
                   </div>
                 )}
               </dl>
@@ -157,85 +143,83 @@ export function QuickActions({
             </div>
           ) : payable.length === 0 ? (
             <div className="flex flex-col items-start gap-3">
-              <p className="text-sm text-muted-foreground">No tenants yet. Fill a vacant bed first.</p>
+              <p className="text-muted-foreground">No tenants yet. Fill a vacant bed first.</p>
               <Button type="button" variant="secondary" onClick={() => setPanel("add-tenant")}>
                 Add a tenant
               </Button>
             </div>
           ) : (
-            <div className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2">
               {payable.map((item) => (
-                <button
-                  key={item.tenancyId}
-                  type="button"
-                  onClick={() => choose(item)}
-                  className="flex items-center gap-3 rounded-lg bg-background px-4 py-3 text-left transition-colors hover:bg-accent"
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{item.tenantName}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {item.propertyName} · {dueLabel(item)}
-                    </p>
-                  </div>
-                  <div className="flex shrink-0 flex-col items-end gap-1">
-                    <span className="text-sm font-medium tabular-nums">
-                      {formatNaira(item.balance > 0 ? item.balance : item.rent)}
-                    </span>
-                    <RentStatusPill status={item.status} />
-                  </div>
-                  <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
-                </button>
+                <li key={item.tenancyId}>
+                  <PanelRow onClick={() => choose(item)}>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium">{item.tenantName}</p>
+                      <p className="truncate text-meta-style">
+                        {item.propertyName} · {describeDue(item.daysUntilDue, item.nextDueDate)}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 flex-col items-end gap-1">
+                      <span className="font-medium tabular-nums">
+                        {formatNaira(item.balance > 0 ? item.balance : item.rent)}
+                      </span>
+                      <RentStatusPill status={item.status} />
+                    </div>
+                  </PanelRow>
+                </li>
               ))}
-            </div>
+            </ul>
           ))}
 
         {panel === "overdue" &&
           (overdue.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Nobody is overdue. Everyone is within their grace period.</p>
+            <p className="text-muted-foreground">Nobody is overdue. Everyone is within their grace period.</p>
           ) : (
-            <div className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2">
               {overdue.map((item) => (
-                <PanelRow key={item.bedId} href={`/properties/${item.propertyId}?bed=${item.bedId}`}>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{item.tenantName}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {item.propertyName} · {item.roomName} · {item.daysLate} day{item.daysLate === 1 ? "" : "s"}{" "}
-                      late
-                    </p>
-                  </div>
-                  <div className="flex shrink-0 flex-col items-end gap-1">
-                    <span className="text-sm font-medium tabular-nums">{formatNaira(item.balance)}</span>
-                    <RentStatusPill status="overdue" />
-                  </div>
-                </PanelRow>
+                <li key={item.bedId}>
+                  <PanelRow href={`/properties/${item.propertyId}?bed=${item.bedId}`}>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium">{item.tenantName}</p>
+                      <p className="truncate text-meta-style">
+                        {item.propertyName} · {item.roomName} · {item.daysLate} day{item.daysLate === 1 ? "" : "s"}{" "}
+                        late
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 flex-col items-end gap-1">
+                      <span className="font-medium tabular-nums">{formatNaira(item.balance)}</span>
+                      <RentStatusPill status="overdue" />
+                    </div>
+                  </PanelRow>
+                </li>
               ))}
-            </div>
+            </ul>
           ))}
 
         {panel === "add-tenant" &&
           (vacantBeds.length === 0 ? (
             <div className="flex flex-col items-start gap-3">
-              <p className="text-sm text-muted-foreground">
-                Every bed is filled. Add a room from a property&apos;s Configure rooms.
-              </p>
+              <p className="text-muted-foreground">Every bed is filled. Add a room from a property&apos;s Configure rooms.</p>
               <Link href="/properties" className={buttonVariants({ variant: "secondary" })}>
                 Go to properties
               </Link>
             </div>
           ) : (
-            <div className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2">
               {vacantBeds.map((bed) => (
-                <PanelRow key={bed.bedId} href={`/properties/${bed.propertyId}?bed=${bed.bedId}`}>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{bed.propertyName}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {bed.roomName} · {bed.bedLabel} · {formatNaira(bed.rentPerBed)}/month
-                    </p>
-                  </div>
-                  <RentStatusPill status="vacant" />
-                </PanelRow>
+                <li key={bed.bedId}>
+                  <PanelRow href={`/properties/${bed.propertyId}?bed=${bed.bedId}`}>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium">{bed.propertyName}</p>
+                      <p className="truncate text-meta-style tabular-nums">
+                        {bed.roomName} · {formatNaira(bed.rentPerBed)}/month
+                      </p>
+                    </div>
+                    <RentStatusPill status="vacant" />
+                  </PanelRow>
+                </li>
               ))}
-            </div>
+            </ul>
           ))}
       </Drawer>
     </>

@@ -193,6 +193,11 @@
   color: var(--text-2);
 }
 
+/* First Home visit of the session: hold animated values back until they count up. */
+html[data-intro] [data-intro-hide] {
+  opacity: 0;
+}
+
 /* Skeletons: a static block whose opacity breathes between 0.6 and 1. No shimmer. */
 @keyframes skeleton-pulse {
   0%,

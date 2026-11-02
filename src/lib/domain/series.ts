@@ -1,40 +1,10 @@
-import { differenceInCalendarDays, subDays } from "date-fns";
+import { differenceInCalendarDays, format, subDays } from "date-fns";
 import { toLagosDate } from "./due-date";
 
-/** `count` sample dates ending today, `stepDays` apart, oldest first. */
-export function sampleDates(today: Date | string, count: number, stepDays: number): Date[] {
-  const end = toLagosDate(today);
-  return Array.from({ length: count }, (_, i) => subDays(end, (count - 1 - i) * stepDays));
-}
-
-export interface TenancySpan {
-  moveIn: string;
-  /** Null while the tenancy is open-ended. */
-  moveOut: string | null;
-  rent: number;
-}
-
-/** Occupied from the move-in day up to, but not including, the move-out day. */
-export function isOccupiedOn(span: TenancySpan, date: Date | string): boolean {
-  const day = toLagosDate(date);
-  if (differenceInCalendarDays(day, toLagosDate(span.moveIn)) < 0) return false;
-  return span.moveOut === null || differenceInCalendarDays(toLagosDate(span.moveOut), day) > 0;
-}
-
-export function occupiedCountOn(spans: TenancySpan[], date: Date | string): number {
-  return spans.filter((span) => isOccupiedOn(span, date)).length;
-}
-
-export function rentRollOn(spans: TenancySpan[], date: Date | string): number {
-  return spans.reduce((sum, span) => (isOccupiedOn(span, date) ? sum + span.rent : sum), 0);
-}
+type Paid = { amount: number; paidAt: string };
 
 /** Total paid in the `days` days ending on `date` (inclusive). */
-export function collectedInWindow(
-  payments: { amount: number; paidAt: string }[],
-  date: Date | string,
-  days: number,
-): number {
+export function collectedInWindow(payments: Paid[], date: Date | string, days: number): number {
   const end = toLagosDate(date);
   return payments.reduce((sum, payment) => {
     const age = differenceInCalendarDays(end, toLagosDate(payment.paidAt));
@@ -43,16 +13,23 @@ export function collectedInWindow(
 }
 
 /**
- * Cumulative amount due by each of the next `days` days, starting today.
- * Anything already overdue counts from day 0.
+ * Running total collected across the `days` days ending today, one point per
+ * Lagos calendar day, oldest first. The last point equals collectedInWindow.
  */
-export function cumulativeDue(
-  items: { dueDate: Date | string; amount: number }[],
+export function dailyCumulativeCollected(
+  payments: Paid[],
   today: Date | string,
   days: number,
-): number[] {
-  const offsets = items.map((item) => differenceInCalendarDays(toLagosDate(item.dueDate), toLagosDate(today)));
-  return Array.from({ length: days + 1 }, (_, day) =>
-    items.reduce((sum, item, i) => (offsets[i] <= day ? sum + item.amount : sum), 0),
-  );
+): { date: string; total: number }[] {
+  const end = toLagosDate(today);
+  const perDay = new Array<number>(days).fill(0);
+  for (const payment of payments) {
+    const age = differenceInCalendarDays(end, toLagosDate(payment.paidAt));
+    if (age >= 0 && age < days) perDay[days - 1 - age] += payment.amount;
+  }
+  let running = 0;
+  return perDay.map((amount, i) => {
+    running += amount;
+    return { date: format(subDays(end, days - 1 - i), "yyyy-MM-dd"), total: running };
+  });
 }
