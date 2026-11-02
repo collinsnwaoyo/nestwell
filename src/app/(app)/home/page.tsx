@@ -1,7 +1,6 @@
 import { formatNaira, getGreeting } from "@/lib/domain";
 import { getDashboardData } from "@/lib/db/queries";
 import { PropertyCard } from "@/components/property-card";
-import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 
 export const dynamic = "force-dynamic";
 
@@ -12,35 +11,29 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-8 sm:px-8">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{greeting}</p>
-        <BroadcastComposer
-          scopeType="portfolio"
-          scopeId={null}
-          scopeLabel={`Whole portfolio, ${data.bedsFilled} tenant${data.bedsFilled === 1 ? "" : "s"}`}
-        />
-      </div>
+      <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] leading-[1.1] font-bold tracking-tight">
+        {greeting}
+      </h1>
 
-      <div className="mt-3">
-        <p className="text-sm text-muted-foreground">Expected revenue this month</p>
-        <p className="text-4xl font-semibold tracking-tight tabular-nums sm:text-5xl">
-          {formatNaira(data.expectedRevenue)}
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {formatNaira(data.collectedSoFar)} collected so far
-        </p>
-      </div>
-
-      <div className="mt-6 grid grid-cols-2 gap-3">
-        <div className="rounded-[20px] bg-muted/50 p-4">
-          <p className="text-2xl font-semibold tabular-nums">{data.propertiesCount}</p>
-          <p className="text-sm text-muted-foreground">Properties</p>
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="min-w-0 rounded-lg border border-border bg-card p-5">
+          <p className="text-sm font-medium text-muted-foreground">Properties</p>
+          <p className="mt-1.5 text-2xl font-semibold tabular-nums">{data.propertiesCount}</p>
         </div>
-        <div className="rounded-[20px] bg-muted/50 p-4">
-          <p className="text-2xl font-semibold tabular-nums">
-            {data.bedsFilled} of {data.bedsTotal}
+        <div className="min-w-0 rounded-lg border border-border bg-card p-5">
+          <p className="text-sm font-medium text-muted-foreground">Tenants</p>
+          <p className="mt-1.5 text-2xl font-semibold tabular-nums">
+            {data.bedsFilled} <span className="text-muted-foreground">of {data.bedsTotal}</span>
           </p>
-          <p className="text-sm text-muted-foreground">Tenants</p>
+        </div>
+        <div className="col-span-2 min-w-0 rounded-lg border border-border bg-card p-5 sm:col-span-1">
+          <p className="text-sm font-medium text-muted-foreground">Revenue</p>
+          <p className="mt-1.5 truncate text-xl font-semibold tabular-nums sm:text-2xl">
+            {formatNaira(data.expectedRevenue)}
+          </p>
+          <p className="mt-0.5 truncate text-sm tabular-nums text-primary">
+            {formatNaira(data.collectedSoFar)} collected
+          </p>
         </div>
       </div>
 

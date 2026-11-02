@@ -24,7 +24,7 @@ export function StatusChip({ status, className }: { status: RentStatus; classNam
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap",
+        "inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap",
         STATUS_STYLES[status],
         className,
       )}

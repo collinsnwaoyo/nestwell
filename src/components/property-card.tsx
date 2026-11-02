@@ -8,9 +8,9 @@ export function PropertyCard({ property }: { property: PropertySummary }) {
   return (
     <Link
       href={`/properties/${property.id}`}
-      className="flex items-center gap-4 rounded-[20px] bg-muted/50 p-4 transition-colors hover:bg-muted"
+      className="flex items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-accent"
     >
-      <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+      <div className="flex size-11 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
         <Building2 className="size-5" />
       </div>
 
