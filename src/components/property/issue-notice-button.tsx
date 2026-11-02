@@ -37,7 +37,7 @@ export function IssueNoticeButton({ tenancyId }: { tenancyId: string }) {
 
   if (result) {
     return (
-      <div className="flex flex-col gap-2 rounded-xl bg-purple-500/10 p-3">
+      <div className="flex flex-col gap-2 rounded-lg bg-purple-500/10 p-3">
         <p className="text-sm font-medium text-purple-700 dark:text-purple-300">Notice issued</p>
         <WhatsAppSendButton messageId={result.messageId} waLink={result.waLink} label="Send notice on WhatsApp" />
       </div>
@@ -46,7 +46,7 @@ export function IssueNoticeButton({ tenancyId }: { tenancyId: string }) {
 
   if (open) {
     return (
-      <div className="flex flex-col gap-3 rounded-xl border border-border p-3">
+      <div className="flex flex-col gap-3 rounded-lg border border-border p-3">
         <FormField label="Reason" htmlFor="notice-reason">
           <textarea
             id="notice-reason"
@@ -74,11 +74,11 @@ export function IssueNoticeButton({ tenancyId }: { tenancyId: string }) {
             variant="destructive"
             disabled={pending || !reason.trim()}
             onClick={submit}
-            className="rounded-full"
+            className="rounded-md"
           >
             {pending ? "Issuing…" : "Confirm notice"}
           </Button>
-          <Button type="button" variant="ghost" onClick={() => setOpen(false)} className="rounded-full">
+          <Button type="button" variant="ghost" onClick={() => setOpen(false)} className="rounded-md">
             Cancel
           </Button>
         </div>
@@ -87,7 +87,7 @@ export function IssueNoticeButton({ tenancyId }: { tenancyId: string }) {
   }
 
   return (
-    <Button type="button" variant="destructive" onClick={() => setOpen(true)} className="gap-1.5 rounded-full">
+    <Button type="button" variant="destructive" onClick={() => setOpen(true)} className="gap-1.5 rounded-md">
       <AlertTriangle className="size-4" /> Issue notice
     </Button>
   );

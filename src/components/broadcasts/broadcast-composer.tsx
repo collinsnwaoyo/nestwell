@@ -29,12 +29,14 @@ export function BroadcastComposer({
   scopeId,
   scopeLabel,
   triggerClassName,
+  triggerLabel = "Message",
   iconOnly,
 }: {
   scopeType: BroadcastScopeType;
   scopeId: string | null;
   scopeLabel: string;
   triggerClassName?: string;
+  triggerLabel?: string;
   iconOnly?: boolean;
 }) {
   const router = useRouter();
@@ -164,10 +166,10 @@ export function BroadcastComposer({
         type="button"
         variant="outline"
         onClick={() => setOpen(true)}
-        aria-label={iconOnly ? "Message" : undefined}
-        className={triggerClassName ?? "gap-1.5 rounded-full"}
+        aria-label={iconOnly ? triggerLabel : undefined}
+        className={triggerClassName ?? "gap-1.5"}
       >
-        <MessageCircle className="size-4" /> {!iconOnly && "Message"}
+        <MessageCircle className="size-4" /> {!iconOnly && triggerLabel}
       </Button>
       <Sheet
         open={open}
@@ -180,15 +182,15 @@ export function BroadcastComposer({
             <p className="text-sm text-muted-foreground">
               {queueIndex + 1} of {queue.length}
             </p>
-            <div className="rounded-[20px] bg-muted/50 p-4">
+            <div className="rounded-lg bg-muted/50 p-4">
               <p className="font-medium">{queue[queueIndex].recipientName}</p>
               <p className="mt-2 text-sm">{queue[queueIndex].body}</p>
             </div>
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={handleOpenCurrent} className="rounded-full">
+              <Button type="button" variant="outline" onClick={handleOpenCurrent} className="rounded-md">
                 Open WhatsApp
               </Button>
-              <Button type="button" disabled={!queueOpened} onClick={handleNext} className="rounded-full">
+              <Button type="button" disabled={!queueOpened} onClick={handleNext} className="rounded-md">
                 {queueIndex + 1 < queue.length ? "Next" : "Done"}
               </Button>
             </div>
@@ -252,7 +254,7 @@ export function BroadcastComposer({
             {firstIncluded && (
               <div>
                 <p className="mb-1.5 text-sm font-medium text-muted-foreground">Preview — {firstIncluded.fullName}</p>
-                <div className="rounded-xl bg-muted/50 p-3 text-sm">{previewFor(firstIncluded)}</div>
+                <div className="rounded-lg bg-muted/50 p-3 text-sm">{previewFor(firstIncluded)}</div>
               </div>
             )}
 
@@ -281,7 +283,7 @@ export function BroadcastComposer({
 
             {error && <p className="text-sm text-destructive">{error}</p>}
 
-            <Button type="button" disabled={sending || included.size === 0} onClick={handleSend} className="rounded-full">
+            <Button type="button" disabled={sending || included.size === 0} onClick={handleSend} className="rounded-md">
               {sending ? "Sending…" : `Send to ${included.size}`}
             </Button>
           </div>

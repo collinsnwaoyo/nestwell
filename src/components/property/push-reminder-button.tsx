@@ -42,7 +42,7 @@ export function PushReminderButton({ tenancyId }: { tenancyId: string }) {
       variant="outline"
       disabled={pending}
       onClick={send}
-      className="gap-1.5 rounded-full"
+      className="gap-1.5 rounded-md"
     >
       <Bell className="size-4" /> {pending ? "Preparing…" : "Push reminder"}
     </Button>

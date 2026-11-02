@@ -1,42 +1,92 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { Settings2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SidePanel } from "@/components/ui/side-panel";
+import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 import type { RoomDetail } from "@/lib/db/queries";
-import { AddRoomButton } from "./add-room-button";
+import { ConfigureRooms } from "./configure-rooms";
 import { RoomCard } from "./room-card";
-import { TenantDrawer } from "./tenant-drawer";
+import { TenantPanelContent } from "./tenant-panel";
 
-export function PropertyRooms({ propertyId, rooms }: { propertyId: string; rooms: RoomDetail[] }) {
-  const [selectedBedId, setSelectedBedId] = useState<string | null>(null);
+type Panel = { kind: "bed"; bedId: string } | { kind: "configure" } | null;
 
-  const selected = rooms
-    .flatMap((room) => room.beds.map((bed) => ({ room, bed })))
-    .find(({ bed }) => bed.id === selectedBedId);
+const ACTION_CLASS = "h-10 flex-1 gap-2 sm:flex-none sm:px-5";
+
+export function PropertyRooms({
+  propertyId,
+  propertyName,
+  rooms,
+}: {
+  propertyId: string;
+  propertyName: string;
+  rooms: RoomDetail[];
+}) {
+  const [panel, setPanel] = useState<Panel>(null);
+  const close = useCallback(() => setPanel(null), []);
+
+  const tenantCount = rooms.reduce((sum, room) => sum + room.beds.filter((bed) => bed.tenant).length, 0);
+  const selected =
+    panel?.kind === "bed"
+      ? rooms.flatMap((room) => room.beds.map((bed) => ({ room, bed }))).find(({ bed }) => bed.id === panel.bedId)
+      : undefined;
+
+  const title =
+    panel?.kind === "configure" ? "Configure rooms" : selected?.bed.tenant ? selected.bed.tenant.fullName : "Add tenant";
+  const description =
+    panel?.kind === "configure" ? propertyName : selected && `${selected.room.name} · ${selected.bed.label}`;
 
   return (
     <>
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-medium text-muted-foreground">Rooms</h2>
-        <AddRoomButton propertyId={propertyId} />
+      <div className="flex gap-3">
+        <BroadcastComposer
+          scopeType="property"
+          scopeId={propertyId}
+          scopeLabel={`${propertyName}, ${tenantCount} tenant${tenantCount === 1 ? "" : "s"}`}
+          triggerLabel="Send message"
+          triggerClassName={ACTION_CLASS}
+        />
+        <Button type="button" variant="outline" onClick={() => setPanel({ kind: "configure" })} className={ACTION_CLASS}>
+          <Settings2 className="size-4" /> Configure rooms
+        </Button>
       </div>
 
+      <h2 className="mt-8 mb-3 text-[1.0625rem] font-semibold">Rooms</h2>
+
       {rooms.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No rooms yet. Add one to get started.</p>
+        <div className="rounded-lg border border-dashed border-border p-6 text-center">
+          <p className="text-sm text-muted-foreground">No rooms yet.</p>
+          <Button type="button" variant="outline" onClick={() => setPanel({ kind: "configure" })} className="mt-3">
+            Add the first room
+          </Button>
+        </div>
       ) : (
         <div className="flex flex-col gap-3">
           {rooms.map((room) => (
-            <RoomCard key={room.id} room={room} propertyId={propertyId} onSelectBed={setSelectedBedId} />
+            <RoomCard
+              key={room.id}
+              room={room}
+              propertyId={propertyId}
+              selectedBedId={panel?.kind === "bed" ? panel.bedId : null}
+              onSelectBed={(bedId) => setPanel({ kind: "bed", bedId })}
+            />
           ))}
         </div>
       )}
 
-      <TenantDrawer
-        bed={selected?.bed ?? null}
-        propertyId={propertyId}
-        roomName={selected?.room.name ?? ""}
-        rentPerBed={selected?.room.rentPerBed ?? 0}
-        onClose={() => setSelectedBedId(null)}
-      />
+      <SidePanel open={panel !== null} onClose={close} title={title} description={description}>
+        {panel?.kind === "configure" && <ConfigureRooms propertyId={propertyId} rooms={rooms} />}
+        {selected && (
+          <TenantPanelContent
+            key={selected.bed.id}
+            bed={selected.bed}
+            propertyId={propertyId}
+            rentPerBed={selected.room.rentPerBed}
+            onClose={close}
+          />
+        )}
+      </SidePanel>
     </>
   );
 }

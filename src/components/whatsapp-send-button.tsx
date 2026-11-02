@@ -52,11 +52,11 @@ export function WhatsAppSendButton({
 
   return (
     <div className="flex items-center gap-2">
-      <Button type="button" variant="outline" onClick={handleOpen} className="gap-1.5 rounded-full">
+      <Button type="button" variant="outline" onClick={handleOpen} className="gap-1.5 rounded-md">
         <MessageCircle className="size-4" /> {label}
       </Button>
       {status === "opened" && (
-        <Button type="button" variant="ghost" size="sm" onClick={handleMarkSent} className="rounded-full">
+        <Button type="button" variant="ghost" size="sm" onClick={handleMarkSent} className="rounded-md">
           Mark sent
         </Button>
       )}

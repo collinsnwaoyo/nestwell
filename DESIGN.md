@@ -151,6 +151,16 @@ Flat by default, everywhere. There is no shadow vocabulary in this system — de
 - **Style:** Slate Panel background, Hairline border, 8px radius.
 - **Focus:** border shifts to Envato Green at full opacity; no glow.
 
+### Side Panel (signature)
+- **Desktop (≥1024px):** detail views (a tenant, Configure rooms) open in a right-hand panel that sits beside the page and pushes the main column narrower, like Claude's own side panel. It never covers the page; the selected row stays highlighted so you can see what's open. 380px wide (420px at ≥1280px), Slate Panel background, Hairline left border, sticky header with a close button, Escape closes. Only one panel is open at a time; opening another swaps its content.
+- **Below 1024px:** the same content falls back to a bottom sheet, since there's no room to push.
+- **Motion:** content fades and slides 24px on transform/opacity only; the column reflow itself is not animated.
+
+### Room Card
+- Header: room name (Title weight) with "N beds · ₦X/bed" beneath; a room-level message icon on the right.
+- One row per bed: bed label (muted, fixed width), tenant **full name**, labelled status chip, chevron. Vacant beds read "+ Add tenant" in the accent color, so the empty state carries its next action.
+- Footer: a labelled switch, "Reminders: Automatic / Manual", with a one-line explanation underneath. Never a bare "Auto"/"Manual" pill.
+
 ### Navigation
 - Sidebar/tab bar keep their current structural role; restyle to Night Charcoal background with Hairline dividers. Active item: Envato Green on the icon and label text only, no background fill — matching the Luma reference (colored text/icon reads as "selected" without needing a pill). Inactive: muted foreground, hover shifts to a flat Slate Panel background.
 
@@ -169,7 +179,8 @@ Flat by default, everywhere. There is no shadow vocabulary in this system — de
 - **Don't** use `box-shadow` for elevation anywhere — flat panels plus a hairline border only.
 - **Don't** use gradient-text for any metric or heading.
 - **Don't** build rows of identical icon+heading+text filler cards — every card on screen should carry a specific, real number.
-- **Don't** reach for a modal/bottom-sheet as the first answer for tenant/room detail (the team is moving toward a push-aside side panel instead); treat overlay sheets as a fallback, not the default.
+- **Don't** open tenant detail or room configuration in a centered modal on desktop. Use the Side Panel (push-aside); the bottom sheet is only its mobile fallback.
+- **Don't** fill a whole tile, row, or card with a status color. Status color lives only on the labelled chip ("Paid", "Due soon", "Overdue", "Notice issued", "Vacant").
 - **Don't** use `border-left`/`border-right` as a colored accent stripe on any card, row, or chip.
 - **Don't** leave a stat card, quick action, or nav item icon-less — bare text-only cards read as a wireframe, not a finished product.
 - **Don't** render section headers as small muted caption text — they're Title-scale, full-foreground.

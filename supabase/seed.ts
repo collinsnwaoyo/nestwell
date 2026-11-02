@@ -435,7 +435,7 @@ async function main() {
   ]);
   const surulereShared = await insertRoom({
     property_id: surulere.id,
-    name: "Shared room",
+    name: "Double room",
     type: "shared",
     rent_per_bed: RENT_BY_TYPE.shared,
   });
@@ -458,7 +458,7 @@ async function main() {
   });
   const ikotaShared = await insertRoom({
     property_id: ikota.id,
-    name: "Shared room",
+    name: "Double room",
     type: "shared",
     rent_per_bed: RENT_BY_TYPE.shared,
     reminder_mode: "auto",
@@ -526,7 +526,7 @@ async function main() {
   // surulereTripleC stays vacant.
   void surulereTripleC;
 
-  await seedTenancy(surulereSharedA.id, RENT_BY_TYPE.shared, "manual", "Shared room", {
+  await seedTenancy(surulereSharedA.id, RENT_BY_TYPE.shared, "manual", "Double room", {
     fullName: "Kelechi Eze",
     occupation: "Civil Engineer",
     nextOfKinName: "Ugochi Eze",
@@ -537,7 +537,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(surulereSharedB.id, RENT_BY_TYPE.shared, "manual", "Shared room", {
+  await seedTenancy(surulereSharedB.id, RENT_BY_TYPE.shared, "manual", "Double room", {
     fullName: "Damilola Ogunleye",
     occupation: "University Student",
     nextOfKinName: "Adeola Ogunleye",
@@ -562,7 +562,7 @@ async function main() {
     moveOutInDays: 14,
   });
 
-  await seedTenancy(ikotaSharedA.id, RENT_BY_TYPE.shared, "auto", "Shared room", {
+  await seedTenancy(ikotaSharedA.id, RENT_BY_TYPE.shared, "auto", "Double room", {
     fullName: "Zainab Yusuf",
     occupation: "Accountant",
     nextOfKinName: "Fatima Yusuf",
@@ -573,7 +573,7 @@ async function main() {
     status: "active",
   });
 
-  await seedTenancy(ikotaSharedB.id, RENT_BY_TYPE.shared, "auto", "Shared room", {
+  await seedTenancy(ikotaSharedB.id, RENT_BY_TYPE.shared, "auto", "Double room", {
     fullName: "Funmilayo Ajayi",
     occupation: "Teacher",
     nextOfKinName: "Olumide Ajayi",

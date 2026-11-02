@@ -16,7 +16,7 @@ const STATUS_LABELS: Record<RentStatus, string> = {
   due_soon: "Due soon",
   due_today: "Due today",
   overdue: "Overdue",
-  notice: "On notice",
+  notice: "Notice issued",
   vacant: "Vacant",
 };
 

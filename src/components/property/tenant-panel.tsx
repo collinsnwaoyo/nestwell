@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { format } from "date-fns";
 import { Pencil } from "lucide-react";
 import { formatNaira } from "@/lib/domain";
 import { StatusChip } from "@/components/status-chip";
-import { Sheet } from "@/components/ui/sheet";
 import type { BedDetail } from "@/lib/db/queries";
 import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 import { AddTenantForm } from "./add-tenant-form";
@@ -19,32 +18,22 @@ function formatDate(iso: string) {
   return format(new Date(iso), "d MMM yyyy");
 }
 
-export function TenantDrawer({
+/** Body of the tenant panel. The parent keys it by bed id, so edit state resets per bed. */
+export function TenantPanelContent({
   bed,
   propertyId,
-  roomName,
   rentPerBed,
   onClose,
 }: {
-  bed: BedDetail | null;
+  bed: BedDetail;
   propertyId: string;
-  roomName: string;
   rentPerBed: number;
   onClose: () => void;
 }) {
   const [editing, setEditing] = useState(false);
 
-  useEffect(() => {
-    if (!bed) setEditing(false);
-  }, [bed]);
-
   return (
-    <Sheet
-      open={bed !== null}
-      onClose={onClose}
-      title={bed?.tenant ? bed.tenant.fullName : "Add tenant"}
-      description={bed && `${roomName} · ${bed.label}`}
-    >
+    <>
       {bed && !bed.tenant ? (
         <AddTenantForm bedId={bed.id} rentPerBed={rentPerBed} onDone={onClose} />
       ) : bed && bed.tenant && editing ? (
@@ -67,12 +56,12 @@ export function TenantDrawer({
             </button>
 
             {!bed.tenant.verified && (
-              <div className="rounded-xl bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-700 dark:text-amber-300">
+              <div className="rounded-lg bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-700 dark:text-amber-300">
                 Verification pending — documents haven&apos;t been checked yet.
               </div>
             )}
 
-            <div className="flex items-center justify-between rounded-[20px] bg-muted/50 p-4">
+            <div className="flex items-center justify-between rounded-lg bg-muted/50 p-4">
               <div>
                 <p className="text-sm text-muted-foreground">Balance</p>
                 <p className="text-2xl font-semibold tabular-nums">{formatNaira(bed.balance)}</p>
@@ -81,8 +70,8 @@ export function TenantDrawer({
             </div>
 
             {bed.tenancyStatus === "notice" && (
-              <div className="rounded-xl bg-purple-500/10 px-3 py-2 text-xs text-purple-700 dark:text-purple-300">
-                <p className="font-medium">On notice — move out by {bed.moveOut && formatDate(bed.moveOut)}</p>
+              <div className="rounded-lg bg-purple-500/10 px-3 py-2 text-xs text-purple-700 dark:text-purple-300">
+                <p className="font-medium">Notice issued, move out by {bed.moveOut && formatDate(bed.moveOut)}</p>
                 {bed.noticeReason && <p className="mt-0.5">{bed.noticeReason}</p>}
               </div>
             )}
@@ -101,7 +90,7 @@ export function TenantDrawer({
                   scopeType="tenant"
                   scopeId={bed.tenancyId}
                   scopeLabel={bed.tenant.fullName}
-                  triggerClassName="w-fit gap-1.5 rounded-full"
+                  triggerClassName="w-fit gap-1.5 rounded-md"
                 />
               </div>
             )}
@@ -171,7 +160,7 @@ export function TenantDrawer({
               ) : (
                 <div className="flex flex-col gap-2">
                   {bed.messages.map((message) => (
-                    <div key={message.id} className="rounded-xl bg-muted/50 p-3 text-sm">
+                    <div key={message.id} className="rounded-lg bg-muted/50 p-3 text-sm">
                       <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
                         <span className="capitalize">{message.trigger}</span>
                         <span className="capitalize">{message.status.replace("_", " ")}</span>
@@ -185,6 +174,6 @@ export function TenantDrawer({
           </div>
         )
       )}
-    </Sheet>
+    </>
   );
 }

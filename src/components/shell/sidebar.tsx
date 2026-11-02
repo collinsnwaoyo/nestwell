@@ -10,7 +10,7 @@ export function Sidebar() {
   const router = useRouter();
 
   return (
-    <aside className="hidden h-dvh w-64 shrink-0 flex-col border-r border-border/60 px-4 py-6 md:flex">
+    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col self-start border-r border-border/60 px-4 py-6 md:flex">
       <div className="mb-8 flex items-center gap-2.5 px-2">
         <div className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
           <Building2 className="size-4.5" />

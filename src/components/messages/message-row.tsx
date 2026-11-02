@@ -31,7 +31,7 @@ const TEMPLATE_LABELS: Record<string, string> = {
 
 export function MessageRow({ message }: { message: MessageRowData }) {
   return (
-    <div className="flex flex-col gap-2 rounded-[20px] bg-muted/50 p-4">
+    <div className="flex flex-col gap-2 rounded-lg bg-muted/50 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate font-medium">{message.recipientName}</p>
@@ -41,7 +41,7 @@ export function MessageRow({ message }: { message: MessageRowData }) {
         </div>
         <span
           className={cn(
-            "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap",
+            "shrink-0 rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap",
             STATUS_STYLES[message.status] ?? "bg-muted text-muted-foreground",
           )}
         >

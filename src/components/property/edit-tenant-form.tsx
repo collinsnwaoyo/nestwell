@@ -115,10 +115,10 @@ export function EditTenantForm({
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       <div className="flex gap-2">
-        <Button type="submit" disabled={pending} className="rounded-full">
+        <Button type="submit" disabled={pending} className="rounded-md">
           {pending ? "Saving…" : "Save changes"}
         </Button>
-        <Button type="button" variant="ghost" onClick={onCancel} className="rounded-full">
+        <Button type="button" variant="ghost" onClick={onCancel} className="rounded-md">
           Cancel
         </Button>
       </div>

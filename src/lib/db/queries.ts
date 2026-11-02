@@ -182,6 +182,8 @@ export interface PropertyDetail {
   area: string;
   address: string;
   photoUrl: string | null;
+  /** Earliest move-in on any of its beds, else when the property was added. */
+  activeSince: string;
   rooms: RoomDetail[];
 }
 
@@ -211,6 +213,12 @@ export async function getPropertyDetail(
   if (bedsRes.error) throw new Error(bedsRes.error.message);
   const beds = bedsRes.data ?? [];
   const bedIds = beds.map((bed) => bed.id);
+
+  // Includes checked-out tenancies: the property was active from its first move-in.
+  const firstTenancyRes = bedIds.length
+    ? await supabase.from("tenancies").select("move_in").in("bed_id", bedIds).order("move_in").limit(1)
+    : { data: [], error: null };
+  if (firstTenancyRes.error) throw new Error(firstTenancyRes.error.message);
 
   const tenanciesRes = bedIds.length
     ? await supabase.from("tenancies").select("*").in("bed_id", bedIds).in("status", ["active", "notice"])
@@ -368,6 +376,7 @@ export async function getPropertyDetail(
     area: property.area,
     address: property.address,
     photoUrl: property.photo_url,
+    activeSince: firstTenancyRes.data?.[0]?.move_in ?? property.created_at,
     rooms: roomDetails,
   };
 }

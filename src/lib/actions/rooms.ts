@@ -84,6 +84,24 @@ export async function updateRoom(input: UpdateRoomInput): Promise<ActionResult<{
   return { data: { id: input.roomId } };
 }
 
+export async function setRoomReminderMode(
+  roomId: string,
+  propertyId: string,
+  mode: ReminderMode,
+): Promise<ActionResult<null>> {
+  const supabase = getSupabaseClient();
+  const { error } = await supabase.from("rooms").update({ reminder_mode: mode }).eq("id", roomId);
+  if (error) return { error: error.message };
+
+  const { error: eventError } = await supabase
+    .from("events")
+    .insert({ tenancy_id: null, type: "reminder_mode_changed", payload: { room_id: roomId, mode } });
+  if (eventError) return { error: eventError.message };
+
+  revalidatePath(`/properties/${propertyId}`);
+  return { data: null };
+}
+
 export async function deleteRoom(roomId: string, propertyId: string): Promise<ActionResult<null>> {
   const supabase = getSupabaseClient();
 

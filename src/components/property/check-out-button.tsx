@@ -47,14 +47,14 @@ export function CheckOutButton({
 
   if (!open) {
     return (
-      <Button type="button" variant="destructive" onClick={() => setOpen(true)} className="gap-1.5 rounded-full">
+      <Button type="button" variant="destructive" onClick={() => setOpen(true)} className="gap-1.5 rounded-md">
         <LogOut className="size-4" /> Check out
       </Button>
     );
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border p-3">
+    <div className="flex flex-col gap-3 rounded-lg border border-border p-3">
       <FormField label="Move-out date" htmlFor="checkout-move-out">
         <input
           id="checkout-move-out"
@@ -93,10 +93,10 @@ export function CheckOutButton({
       )}
       {error && <p className="text-sm text-destructive">{error}</p>}
       <div className="flex gap-2">
-        <Button type="button" variant="destructive" disabled={pending} onClick={submit} className="rounded-full">
+        <Button type="button" variant="destructive" disabled={pending} onClick={submit} className="rounded-md">
           {pending ? "Checking out…" : "Confirm check-out"}
         </Button>
-        <Button type="button" variant="ghost" onClick={() => setOpen(false)} className="rounded-full">
+        <Button type="button" variant="ghost" onClick={() => setOpen(false)} className="rounded-md">
           Cancel
         </Button>
       </div>

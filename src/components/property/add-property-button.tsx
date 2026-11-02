@@ -47,7 +47,7 @@ export function AddPropertyButton() {
 
   return (
     <>
-      <Button type="button" onClick={() => setOpen(true)} className="gap-1.5 rounded-full px-4">
+      <Button type="button" onClick={() => setOpen(true)} className="gap-1.5 rounded-md px-4">
         <Plus /> Add property
       </Button>
       <Sheet open={open} onClose={close} title="Add property" description="You can add its rooms next.">
@@ -83,7 +83,7 @@ export function AddPropertyButton() {
             />
           </FormField>
           {error && <p className="text-sm text-destructive">{error}</p>}
-          <Button type="submit" disabled={pending} className="mt-2 rounded-full">
+          <Button type="submit" disabled={pending} className="mt-2 rounded-md">
             {pending ? "Adding…" : "Add property"}
           </Button>
         </form>

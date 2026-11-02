@@ -31,7 +31,7 @@ export function RecordPaymentButton({ tenancyId }: { tenancyId: string }) {
 
   if (result) {
     return (
-      <div className="flex flex-col gap-2 rounded-xl bg-muted/50 p-3">
+      <div className="flex flex-col gap-2 rounded-lg bg-muted/50 p-3">
         <p className="text-sm font-medium">Receipt ready</p>
         <WhatsAppSendButton
           messageId={result.messageId}
@@ -46,7 +46,7 @@ export function RecordPaymentButton({ tenancyId }: { tenancyId: string }) {
     return (
       <div className="flex items-center gap-2">
         <span className="text-sm text-muted-foreground">Paid by</span>
-        <Button type="button" disabled={pending} onClick={() => record("transfer")} className="rounded-full">
+        <Button type="button" disabled={pending} onClick={() => record("transfer")} className="rounded-md">
           Transfer
         </Button>
         <Button
@@ -54,7 +54,7 @@ export function RecordPaymentButton({ tenancyId }: { tenancyId: string }) {
           disabled={pending}
           variant="outline"
           onClick={() => record("cash")}
-          className="rounded-full"
+          className="rounded-md"
         >
           Cash
         </Button>
@@ -63,7 +63,7 @@ export function RecordPaymentButton({ tenancyId }: { tenancyId: string }) {
   }
 
   return (
-    <Button type="button" onClick={() => setChoosing(true)} className="gap-1.5 rounded-full">
+    <Button type="button" onClick={() => setChoosing(true)} className="gap-1.5 rounded-md">
       <Wallet className="size-4" /> Record payment
     </Button>
   );
