@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Sheet } from "@/components/ui/sheet";
+import { Drawer } from "@/components/ui/drawer";
 import { FormField, inputClass } from "@/components/ui/form";
 import { BROADCAST_TEMPLATES, BROADCAST_TEMPLATE_LABELS } from "@/config/rules";
 import { fillTemplate, formatNaira } from "@/lib/domain";
@@ -178,7 +178,7 @@ export function BroadcastComposer({
           <MessageCircle className="size-4" /> {!iconOnly && triggerLabel}
         </Button>
       )}
-      <Sheet
+      <Drawer
         open={open}
         onClose={close}
         title={queue ? "Sending" : "Message"}
@@ -295,7 +295,7 @@ export function BroadcastComposer({
             </Button>
           </div>
         )}
-      </Sheet>
+      </Drawer>
     </>
   );
 }

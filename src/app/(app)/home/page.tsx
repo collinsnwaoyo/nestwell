@@ -4,6 +4,7 @@ import { DUE_HORIZON_DAYS, getDashboardData } from "@/lib/db/queries";
 import { GlanceCard } from "@/components/dashboard/glance-card";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { Section } from "@/components/dashboard/section";
+import { Page } from "@/components/shell/page";
 import { PropertyList } from "@/components/property-list";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +20,7 @@ export default async function HomePage() {
   const vacant = data.bedsTotal - data.bedsFilled;
 
   return (
-    <div className="mx-auto max-w-2xl px-5 py-8 sm:px-8">
+    <Page>
       <h1 className="text-[1.625rem] leading-tight tracking-tight">
         <span className="block text-muted-foreground">{greetingLabel},</span>
         <span className="block font-bold">{greetingName}</span>
@@ -83,6 +84,6 @@ export default async function HomePage() {
           )}
         </Section>
       </div>
-    </div>
+    </Page>
   );
 }

@@ -166,6 +166,8 @@
   }
   html {
     @apply font-sans;
+    /* Keeps the page from shifting sideways when an overlay locks scrolling. */
+    scrollbar-gutter: stable;
     font-feature-settings: "cv11", "ss01";
   }
   body {

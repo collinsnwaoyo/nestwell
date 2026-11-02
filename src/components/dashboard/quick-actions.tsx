@@ -7,7 +7,7 @@ import { AlarmClock, ArrowLeft, ArrowRight, BedDouble, ChevronRight, MessageCirc
 import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 import { RentStatusPill } from "@/components/ui/status-pill";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { SidePanel } from "@/components/ui/side-panel";
+import { Drawer } from "@/components/ui/drawer";
 import { RecordPaymentButton } from "@/components/property/record-payment-button";
 import { formatNaira, toLagosDate } from "@/lib/domain";
 import type { OverdueTenancy, PayableTenancy, VacantBed } from "@/lib/db/queries";
@@ -107,7 +107,7 @@ export function QuickActions({
         <ActionCard label="Add a tenant" icon={BedDouble} onClick={() => setPanel("add-tenant")} />
       </div>
 
-      <SidePanel
+      <Drawer
         open={panel !== null}
         onClose={close}
         title={panel ? titles[panel] : ""}
@@ -237,7 +237,7 @@ export function QuickActions({
               ))}
             </div>
           ))}
-      </SidePanel>
+      </Drawer>
     </>
   );
 }

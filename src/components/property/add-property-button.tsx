@@ -5,7 +5,7 @@ import { useState, useTransition, type FormEvent } from "react";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Sheet } from "@/components/ui/sheet";
+import { Drawer } from "@/components/ui/drawer";
 import { FormField, inputClass } from "@/components/ui/form";
 import { addProperty } from "@/lib/actions/properties";
 
@@ -50,7 +50,7 @@ export function AddPropertyButton() {
       <Button type="button" onClick={() => setOpen(true)} className="gap-1.5 rounded-md px-4">
         <Plus /> Add property
       </Button>
-      <Sheet open={open} onClose={close} title="Add property" description="You can add its rooms next.">
+      <Drawer open={open} onClose={close} title="Add property" description="You can add its rooms next.">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <FormField label="Name" htmlFor="property-name">
             <input
@@ -87,7 +87,7 @@ export function AddPropertyButton() {
             {pending ? "Adding…" : "Add property"}
           </Button>
         </form>
-      </Sheet>
+      </Drawer>
     </>
   );
 }

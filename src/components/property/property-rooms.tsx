@@ -3,7 +3,8 @@
 import { useCallback, useState } from "react";
 import { Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SidePanel } from "@/components/ui/side-panel";
+import { PageHeader } from "@/components/shell/page";
+import { Drawer } from "@/components/ui/drawer";
 import { BroadcastComposer } from "@/components/broadcasts/broadcast-composer";
 import type { RoomDetail } from "@/lib/db/queries";
 import { ConfigureRooms } from "./configure-rooms";
@@ -17,11 +18,14 @@ const ACTION_CLASS = "h-10 flex-1 gap-2 sm:flex-none sm:px-5";
 export function PropertyRooms({
   propertyId,
   propertyName,
+  meta,
   rooms,
   initialBedId,
 }: {
   propertyId: string;
   propertyName: string;
+  /** "Area · Active since Month Year" under the title. */
+  meta: string;
   rooms: RoomDetail[];
   /** Opens that bed's panel on arrival, e.g. from a dashboard quick action. */
   initialBedId?: string;
@@ -42,7 +46,11 @@ export function PropertyRooms({
 
   return (
     <>
-      <div className="flex gap-3">
+      <PageHeader
+        title={propertyName}
+        meta={meta}
+        actions={
+          <>
         <BroadcastComposer
           scopeType="property"
           scopeId={propertyId}
@@ -53,7 +61,9 @@ export function PropertyRooms({
         <Button type="button" variant="outline" onClick={() => setPanel({ kind: "configure" })} className={ACTION_CLASS}>
           <Settings2 className="size-4" /> Configure rooms
         </Button>
-      </div>
+          </>
+        }
+      />
 
       <h2 className="mt-8 mb-3 text-[1.0625rem] font-semibold">Rooms</h2>
 
@@ -78,7 +88,7 @@ export function PropertyRooms({
         </div>
       )}
 
-      <SidePanel open={panel !== null} onClose={close} title={title} description={description}>
+      <Drawer open={panel !== null} onClose={close} title={title} description={description}>
         {panel?.kind === "configure" && <ConfigureRooms propertyId={propertyId} rooms={rooms} />}
         {selected && (
           <TenantPanelContent
@@ -89,7 +99,7 @@ export function PropertyRooms({
             onClose={close}
           />
         )}
-      </SidePanel>
+      </Drawer>
     </>
   );
 }
