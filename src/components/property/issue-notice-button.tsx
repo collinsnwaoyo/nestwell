@@ -87,7 +87,7 @@ export function IssueNoticeButton({ tenancyId }: { tenancyId: string }) {
   }
 
   return (
-    <Button type="button" variant="destructive" onClick={() => setOpen(true)} className="gap-1.5 rounded-md">
+    <Button type="button" variant="outline" onClick={() => setOpen(true)} className="gap-1.5">
       <AlertTriangle className="size-4" /> Issue notice
     </Button>
   );

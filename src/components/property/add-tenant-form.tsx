@@ -10,7 +10,7 @@ import { DEFAULT_DEPOSIT } from "@/config/rules";
 import { addTenant } from "@/lib/actions/tenants";
 import type { GovIdType } from "@/lib/db/types";
 
-const fileInputClass = `${inputClass} file:mr-3 file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary`;
+const fileInputClass = `${inputClass} file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground`;
 
 const GOV_ID_OPTIONS: { value: GovIdType; label: string }[] = [
   { value: "nin_slip", label: "NIN slip" },

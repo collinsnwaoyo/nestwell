@@ -6,6 +6,11 @@ import {
   getDaysUntilDue,
   getNextDueDate,
   getUnpaidPeriods,
+  collectedInWindow,
+  cumulativeDue,
+  occupiedCountOn,
+  rentRollOn,
+  sampleDates,
   type RentStatus,
 } from "@/lib/domain";
 import type { Database } from "./types";
@@ -17,125 +22,201 @@ export interface PropertySummary {
   id: string;
   name: string;
   area: string;
-  photoUrl: string | null;
   bedsTotal: number;
   bedsFilled: number;
-  amountOwed: number;
-  /** Highest-severity status among the property's tenancies, for the dashboard chip. */
-  flag: Extract<RentStatus, "overdue" | "notice"> | null;
+  /** Monthly rent from current tenancies. */
+  rentRoll: number;
 }
+
+export interface OverdueTenancy {
+  bedId: string;
+  propertyId: string;
+  propertyName: string;
+  roomName: string;
+  tenantName: string;
+  balance: number;
+  daysLate: number;
+}
+
+export interface VacantBed {
+  bedId: string;
+  propertyId: string;
+  propertyName: string;
+  roomName: string;
+  bedLabel: string;
+  rentPerBed: number;
+}
+
+/** History is sampled every SERIES_STEP_DAYS over roughly six months; the due outlook runs DUE_HORIZON_DAYS ahead. */
+export const SERIES_POINTS = 14;
+export const SERIES_STEP_DAYS = 14;
+export const DUE_HORIZON_DAYS = 30;
+export const COLLECTED_WINDOW_DAYS = 30;
 
 export interface DashboardData {
   propertiesCount: number;
   bedsTotal: number;
   bedsFilled: number;
   expectedRevenue: number;
-  collectedSoFar: number;
+  collectedLast30Days: number;
+  paymentsDueCount: number;
+  overdueCount: number;
+  /** ISO date of the first history sample. */
+  seriesStart: string;
+  series: {
+    collected: number[];
+    vacant: number[];
+    rentRoll: number[];
+    /** Cumulative rent falling due, one point per day from today. */
+    due: number[];
+  };
   properties: PropertySummary[];
+  overdue: OverdueTenancy[];
+  vacantBeds: VacantBed[];
 }
 
 export async function getDashboardData(today: Date = new Date()): Promise<DashboardData> {
   const supabase = getSupabaseClient();
 
-  const [propertiesRes, roomsRes, bedsRes, tenanciesRes, paymentsRes, chargesRes] =
+  const [propertiesRes, roomsRes, bedsRes, tenanciesRes, tenantsRes, paymentsRes, chargesRes] =
     await Promise.all([
       supabase.from("properties").select("*").order("name"),
       supabase.from("rooms").select("*"),
-      supabase.from("beds").select("*"),
-      supabase.from("tenancies").select("*").in("status", ["active", "notice"]),
-      supabase.from("payments").select("tenancy_id"),
+      supabase.from("beds").select("*").order("label"),
+      supabase.from("tenancies").select("*"),
+      supabase.from("tenants").select("id, full_name"),
+      supabase.from("payments").select("tenancy_id, amount, paid_at"),
       supabase.from("charges").select("tenancy_id, amount"),
     ]);
 
-  for (const res of [propertiesRes, roomsRes, bedsRes, tenanciesRes, paymentsRes, chargesRes]) {
+  for (const res of [propertiesRes, roomsRes, bedsRes, tenanciesRes, tenantsRes, paymentsRes, chargesRes]) {
     if (res.error) throw new Error(res.error.message);
   }
 
   const properties = propertiesRes.data ?? [];
   const rooms = roomsRes.data ?? [];
   const beds = bedsRes.data ?? [];
-  const tenancies = tenanciesRes.data ?? [];
+  const allTenancies = tenanciesRes.data ?? [];
   const payments = paymentsRes.data ?? [];
   const charges = chargesRes.data ?? [];
 
-  const propertyIdByRoomId = new Map(rooms.map((room) => [room.id, room.property_id]));
-  const propertyIdByBedId = new Map(
-    beds.map((bed) => [bed.id, propertyIdByRoomId.get(bed.room_id) ?? null]),
-  );
+  const tenancies = allTenancies.filter((t) => t.status === "active" || t.status === "notice");
+  const tenantNameById = new Map((tenantsRes.data ?? []).map((t) => [t.id, t.full_name]));
+  const propertyById = new Map(properties.map((p) => [p.id, p]));
+  const roomById = new Map(rooms.map((room) => [room.id, room]));
+  const roomByBedId = new Map(beds.map((bed) => [bed.id, roomById.get(bed.room_id)]));
 
   const paymentsCountByTenancy = new Map<string, number>();
   for (const payment of payments) {
-    paymentsCountByTenancy.set(
-      payment.tenancy_id,
-      (paymentsCountByTenancy.get(payment.tenancy_id) ?? 0) + 1,
-    );
+    paymentsCountByTenancy.set(payment.tenancy_id, (paymentsCountByTenancy.get(payment.tenancy_id) ?? 0) + 1);
   }
 
-  const chargeAmountsByTenancy = new Map<string, { amount: number }[]>();
+  const chargesByTenancy = new Map<string, { amount: number }[]>();
   for (const charge of charges) {
-    const list = chargeAmountsByTenancy.get(charge.tenancy_id) ?? [];
+    const list = chargesByTenancy.get(charge.tenancy_id) ?? [];
     list.push({ amount: charge.amount });
-    chargeAmountsByTenancy.set(charge.tenancy_id, list);
+    chargesByTenancy.set(charge.tenancy_id, list);
   }
 
   const bedsTotalByProperty = new Map<string, number>();
   for (const bed of beds) {
-    const propertyId = propertyIdByBedId.get(bed.id);
-    if (!propertyId) continue;
-    bedsTotalByProperty.set(propertyId, (bedsTotalByProperty.get(propertyId) ?? 0) + 1);
+    const propertyId = roomById.get(bed.room_id)?.property_id;
+    if (propertyId) bedsTotalByProperty.set(propertyId, (bedsTotalByProperty.get(propertyId) ?? 0) + 1);
   }
 
   let expectedRevenue = 0;
-  let collectedSoFar = 0;
+  let paymentsDueCount = 0;
   const bedsFilledByProperty = new Map<string, number>();
-  const amountOwedByProperty = new Map<string, number>();
-  const flagByProperty = new Map<string, Extract<RentStatus, "overdue" | "notice">>();
+  const rentRollByProperty = new Map<string, number>();
+  const occupiedBedIds = new Set<string>();
+  const overdue: OverdueTenancy[] = [];
+  const dueItems: { dueDate: Date; amount: number }[] = [];
 
   for (const tenancy of tenancies) {
-    const propertyId = propertyIdByBedId.get(tenancy.bed_id);
-    if (!propertyId) continue;
+    const room = roomByBedId.get(tenancy.bed_id);
+    const property = room ? propertyById.get(room.property_id) : undefined;
+    if (!room || !property) continue;
+
+    occupiedBedIds.add(tenancy.bed_id);
+    expectedRevenue += tenancy.rent;
+    bedsFilledByProperty.set(property.id, (bedsFilledByProperty.get(property.id) ?? 0) + 1);
+    rentRollByProperty.set(property.id, (rentRollByProperty.get(property.id) ?? 0) + tenancy.rent);
 
     const paymentsCount = paymentsCountByTenancy.get(tenancy.id) ?? 0;
     const unpaidPeriods = getUnpaidPeriods(tenancy.move_in, today, paymentsCount);
-    const tenancyCharges = chargeAmountsByTenancy.get(tenancy.id) ?? [];
-    const balance = computeBalance({ rent: tenancy.rent, unpaidPeriods, charges: tenancyCharges });
+    const balance = computeBalance({
+      rent: tenancy.rent,
+      unpaidPeriods,
+      charges: chargesByTenancy.get(tenancy.id) ?? [],
+    });
+    const nextDue = getNextDueDate(tenancy.move_in, paymentsCount);
+    const daysUntilDue = getDaysUntilDue(nextDue, today);
+    const status = deriveStatus({ tenancyStatus: tenancy.status, daysUntilDue });
 
-    expectedRevenue += tenancy.rent;
-    if (unpaidPeriods.length === 0) collectedSoFar += tenancy.rent;
+    if (status === "due_soon" || status === "due_today" || status === "overdue") paymentsDueCount++;
+    if (status === "overdue") {
+      overdue.push({
+        bedId: tenancy.bed_id,
+        propertyId: property.id,
+        propertyName: property.name,
+        roomName: room.name,
+        tenantName: tenantNameById.get(tenancy.tenant_id) ?? "Tenant",
+        balance,
+        daysLate: -daysUntilDue,
+      });
+    }
 
-    bedsFilledByProperty.set(propertyId, (bedsFilledByProperty.get(propertyId) ?? 0) + 1);
-    amountOwedByProperty.set(propertyId, (amountOwedByProperty.get(propertyId) ?? 0) + balance);
-
-    if (tenancy.status === "notice") {
-      flagByProperty.set(propertyId, "notice");
-    } else {
-      const nextDue = getNextDueDate(tenancy.move_in, paymentsCount);
-      const daysUntilDue = getDaysUntilDue(nextDue, today);
-      const status = deriveStatus({ tenancyStatus: tenancy.status, daysUntilDue });
-      if (status === "overdue" && flagByProperty.get(propertyId) !== "notice") {
-        flagByProperty.set(propertyId, "overdue");
-      }
+    const leavesBeforeDue = tenancy.move_out !== null && getDaysUntilDue(nextDue, tenancy.move_out) >= 0;
+    if (!leavesBeforeDue) {
+      dueItems.push({ dueDate: nextDue, amount: unpaidPeriods.length > 0 ? balance : tenancy.rent });
     }
   }
 
-  const propertySummaries: PropertySummary[] = properties.map((property) => ({
-    id: property.id,
-    name: property.name,
-    area: property.area,
-    photoUrl: property.photo_url,
-    bedsTotal: bedsTotalByProperty.get(property.id) ?? 0,
-    bedsFilled: bedsFilledByProperty.get(property.id) ?? 0,
-    amountOwed: amountOwedByProperty.get(property.id) ?? 0,
-    flag: flagByProperty.get(property.id) ?? null,
-  }));
+  const vacantBeds: VacantBed[] = beds.flatMap((bed) => {
+    const room = roomById.get(bed.room_id);
+    const property = room ? propertyById.get(room.property_id) : undefined;
+    if (!room || !property || occupiedBedIds.has(bed.id)) return [];
+    return [
+      {
+        bedId: bed.id,
+        propertyId: property.id,
+        propertyName: property.name,
+        roomName: room.name,
+        bedLabel: bed.label,
+        rentPerBed: room.rent_per_bed,
+      },
+    ];
+  });
+
+  const spans = allTenancies.map((t) => ({ moveIn: t.move_in, moveOut: t.move_out, rent: t.rent }));
+  const paidPayments = payments.map((p) => ({ amount: p.amount, paidAt: p.paid_at }));
+  const samples = sampleDates(today, SERIES_POINTS, SERIES_STEP_DAYS);
 
   return {
     propertiesCount: properties.length,
     bedsTotal: beds.length,
     bedsFilled: tenancies.length,
     expectedRevenue,
-    collectedSoFar,
-    properties: propertySummaries,
+    collectedLast30Days: collectedInWindow(paidPayments, today, COLLECTED_WINDOW_DAYS),
+    paymentsDueCount,
+    overdueCount: overdue.length,
+    seriesStart: samples[0].toISOString(),
+    series: {
+      collected: samples.map((date) => collectedInWindow(paidPayments, date, COLLECTED_WINDOW_DAYS)),
+      vacant: samples.map((date) => beds.length - occupiedCountOn(spans, date)),
+      rentRoll: samples.map((date) => rentRollOn(spans, date)),
+      due: cumulativeDue(dueItems, today, DUE_HORIZON_DAYS),
+    },
+    properties: properties.map((property) => ({
+      id: property.id,
+      name: property.name,
+      area: property.area,
+      bedsTotal: bedsTotalByProperty.get(property.id) ?? 0,
+      bedsFilled: bedsFilledByProperty.get(property.id) ?? 0,
+      rentRoll: rentRollByProperty.get(property.id) ?? 0,
+    })),
+    overdue: overdue.sort((a, b) => b.daysLate - a.daysLate),
+    vacantBeds,
   };
 }
 

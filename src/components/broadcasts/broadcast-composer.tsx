@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -31,6 +31,7 @@ export function BroadcastComposer({
   triggerClassName,
   triggerLabel = "Message",
   iconOnly,
+  renderTrigger,
 }: {
   scopeType: BroadcastScopeType;
   scopeId: string | null;
@@ -38,6 +39,8 @@ export function BroadcastComposer({
   triggerClassName?: string;
   triggerLabel?: string;
   iconOnly?: boolean;
+  /** Replaces the default button, e.g. a dashboard quick-action card. */
+  renderTrigger?: (open: () => void) => ReactNode;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -162,15 +165,19 @@ export function BroadcastComposer({
 
   return (
     <>
-      <Button
-        type="button"
-        variant="outline"
-        onClick={() => setOpen(true)}
-        aria-label={iconOnly ? triggerLabel : undefined}
-        className={triggerClassName ?? "gap-1.5"}
-      >
-        <MessageCircle className="size-4" /> {!iconOnly && triggerLabel}
-      </Button>
+      {renderTrigger ? (
+        renderTrigger(() => setOpen(true))
+      ) : (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setOpen(true)}
+          aria-label={iconOnly ? triggerLabel : undefined}
+          className={triggerClassName ?? "gap-1.5"}
+        >
+          <MessageCircle className="size-4" /> {!iconOnly && triggerLabel}
+        </Button>
+      )}
       <Sheet
         open={open}
         onClose={close}

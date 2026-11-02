@@ -56,8 +56,9 @@ export function TenantPanelContent({
             </button>
 
             {!bed.tenant.verified && (
-              <div className="rounded-lg bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-700 dark:text-amber-300">
-                Verification pending — documents haven&apos;t been checked yet.
+              <div className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs text-muted-foreground">
+                <span className="rounded-md bg-amber-500/10 px-2 py-0.5 font-medium text-amber-300">Unverified</span>
+                Documents haven&apos;t been checked yet.
               </div>
             )}
 
@@ -70,9 +71,12 @@ export function TenantPanelContent({
             </div>
 
             {bed.tenancyStatus === "notice" && (
-              <div className="rounded-lg bg-purple-500/10 px-3 py-2 text-xs text-purple-700 dark:text-purple-300">
-                <p className="font-medium">Notice issued, move out by {bed.moveOut && formatDate(bed.moveOut)}</p>
-                {bed.noticeReason && <p className="mt-0.5">{bed.noticeReason}</p>}
+              <div className="rounded-lg border border-border px-3 py-2.5 text-xs">
+                <div className="flex items-center gap-2">
+                  <StatusChip status="notice" />
+                  <span className="font-medium">Move out by {bed.moveOut && formatDate(bed.moveOut)}</span>
+                </div>
+                {bed.noticeReason && <p className="mt-1.5 text-muted-foreground">{bed.noticeReason}</p>}
               </div>
             )}
 

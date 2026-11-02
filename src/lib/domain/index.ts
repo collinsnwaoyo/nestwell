@@ -6,3 +6,4 @@ export * from "./reminders";
 export * from "./templates";
 export * from "./money";
 export * from "./greeting";
+export * from "./series";

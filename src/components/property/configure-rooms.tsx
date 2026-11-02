@@ -67,7 +67,7 @@ export function ConfigureRooms({ propertyId, rooms }: { propertyId: string; room
   );
 }
 
-function AddRoomForm({ propertyId, onDone }: { propertyId: string; onDone: () => void }) {
+export function AddRoomForm({ propertyId, onDone }: { propertyId: string; onDone: () => void }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [name, setName] = useState("");

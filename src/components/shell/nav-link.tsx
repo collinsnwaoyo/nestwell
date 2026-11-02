@@ -27,12 +27,12 @@ export function NavLink({ item, tooltipSide = "right", variant = "sidebar" }: Na
           aria-disabled
           className={cn(
             "flex cursor-not-allowed items-center gap-3 rounded-md text-muted-foreground/60 outline-none",
-            variant === "sidebar" && "w-full px-3 py-2 text-sm font-medium",
+            variant === "sidebar" && "w-full px-3 py-2.5 text-[15px] font-medium",
             variant === "bottom-bar" && "flex-col gap-1 px-2 py-1 text-[11px] font-medium",
           )}
         >
           <span className="relative">
-            <Icon className={variant === "sidebar" ? "size-4.5" : "size-5"} />
+            <Icon className="size-5" strokeWidth={1.75} />
             <Lock className="absolute -right-1.5 -bottom-1 size-2.5 rounded-full bg-background text-muted-foreground/80" />
           </span>
           <span>{item.label}</span>
@@ -59,17 +59,17 @@ export function NavLink({ item, tooltipSide = "right", variant = "sidebar" }: Na
         "flex items-center gap-3 rounded-md font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
         variant === "sidebar" &&
           cn(
-            "w-full px-3 py-2 text-sm",
-            active ? "text-primary" : "text-foreground/80 hover:bg-muted hover:text-foreground",
+            "w-full px-3 py-2.5 text-[15px]",
+            active ? "text-brand" : "text-foreground/80 hover:bg-muted hover:text-foreground",
           ),
         variant === "bottom-bar" &&
           cn(
             "flex-col gap-1 px-2 py-1 text-[11px]",
-            active ? "text-primary" : "text-muted-foreground",
+            active ? "text-brand" : "text-muted-foreground",
           ),
       )}
     >
-      <Icon className={variant === "sidebar" ? "size-4.5" : "size-5"} />
+      <Icon className="size-5" strokeWidth={1.75} />
       <span>{item.label}</span>
     </Link>
   );

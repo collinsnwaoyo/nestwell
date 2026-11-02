@@ -47,7 +47,7 @@ export function CheckOutButton({
 
   if (!open) {
     return (
-      <Button type="button" variant="destructive" onClick={() => setOpen(true)} className="gap-1.5 rounded-md">
+      <Button type="button" variant="outline" onClick={() => setOpen(true)} className="gap-1.5">
         <LogOut className="size-4" /> Check out
       </Button>
     );

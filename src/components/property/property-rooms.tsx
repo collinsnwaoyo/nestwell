@@ -18,12 +18,15 @@ export function PropertyRooms({
   propertyId,
   propertyName,
   rooms,
+  initialBedId,
 }: {
   propertyId: string;
   propertyName: string;
   rooms: RoomDetail[];
+  /** Opens that bed's panel on arrival, e.g. from a dashboard quick action. */
+  initialBedId?: string;
 }) {
-  const [panel, setPanel] = useState<Panel>(null);
+  const [panel, setPanel] = useState<Panel>(initialBedId ? { kind: "bed", bedId: initialBedId } : null);
   const close = useCallback(() => setPanel(null), []);
 
   const tenantCount = rooms.reduce((sum, room) => sum + room.beds.filter((bed) => bed.tenant).length, 0);

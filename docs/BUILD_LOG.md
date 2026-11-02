@@ -65,6 +65,22 @@ How Nestwell was built with Claude Code. One entry per working session, newest a
 - Not done yet: deploy (needs my own GitHub and Vercel accounts — see below). Day 3: reset job and button, demo banner, mobile pass, dark mode, empty states, README.
 - Commits: toasts + sheet, add property/room, storage bucket + seed dedupe, tenant onboarding, record payment, push reminder (+ seed fix), issue notice, check out (+ seed fix), edit tenant/room/property, messages page (+ seed fixes), broadcasts, reminder job.
 
+## Session 3, 2 November 2026: design pivot
+
+- Goal: the Revolut-style UI felt off. Find a direction I'd actually use, starting from the dashboard.
+- What I asked Claude Code to do: three rounds of feedback with reference screenshots (Airtable, then Fireflies and Luma). The Luma dashboard became the reference board for every page.
+- What it built:
+  - Black and white dark theme, Inter (self-hosted, with the ₦ glyph), borderless graphite cards, no shadows. Colour only on status tags, chart lines and a small green brand mark. `PRODUCT.md` and `DESIGN.md` hold the rules; `CLAUDE.md`'s UI section now points at them.
+  - Dashboard: two-tone greeting; "At a glance" with four Luma-style cards (Revenue, Payments due, Vacant beds, Properties), each with a sparkline built from tested helpers in `src/lib/domain/series.ts`; four quick actions (Send message, Add a room, View overdue, Add a tenant) with faded corner icons; properties as a table with free beds first.
+  - A side panel that pushes the page narrower on desktop instead of covering it (bottom sheet on mobile). Tenant details and Configure rooms open in it, and `?bed=` deep links open a tenant from the dashboard.
+  - Property page: no inline edit or address, "Active since", equal-weight Send message / Configure rooms, beds as rows with full names and labelled status tags, a labelled reminders switch. Shared rooms renamed Double.
+- What went wrong and how it was fixed:
+  - First pivot (green-tinted, coloured icon badges) read as too colourful; second still had too much colour. Settled on black and white with colour on tags only.
+  - A dev `.next` cache got corrupted on Windows (ENOENT on `_buildManifest.js.tmp`); clearing `.next` fixed the blank page.
+  - Found that `seed.ts` pins every move-in to July 2026, so the story only holds on one date (Babatunde shows Overdue instead of Due today from 2 Nov). Not fixed yet.
+- Decisions: property editing moves to Settings (not in this demo); the server actions stay for then. Glance Revenue shows money collected in the last 30 days rather than a calendar month, so the line doesn't dip at the start of each month.
+- Commits: dashboard trial, icon pass, side panel + property page, Luma board.
+
 ## Ideas (not in this build)
 
 -

@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { useMediaQuery } from "@/lib/use-media-query";
+import { useIsClient, useMediaQuery } from "@/lib/use-media-query";
 import { Sheet } from "./sheet";
 import { SIDE_PANEL_SLOT_ID } from "./side-panel-slot";
 
@@ -27,6 +27,7 @@ export function SidePanel({
   children: ReactNode;
 }) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const isClient = useIsClient();
 
   useEffect(() => {
     if (!open || !isDesktop) return;
@@ -36,6 +37,9 @@ export function SidePanel({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, isDesktop, onClose]);
+
+  // Wait for hydration so a panel opened from the URL doesn't flash as a bottom sheet on desktop.
+  if (!isClient) return null;
 
   const slot = isDesktop ? document.getElementById(SIDE_PANEL_SLOT_ID) : null;
 

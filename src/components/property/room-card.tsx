@@ -26,7 +26,7 @@ export function RoomCard({
   const tenantCount = room.beds.filter((bed) => bed.tenant).length;
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <div className="overflow-hidden rounded-lg bg-card">
       <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-3">
         <div className="min-w-0">
           <p className="truncate font-semibold">{room.name}</p>
@@ -61,7 +61,7 @@ export function RoomCard({
               {bed.tenant ? (
                 <span className="min-w-0 flex-1 truncate text-sm font-medium">{bed.tenant.fullName}</span>
               ) : (
-                <span className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-medium text-primary">
+                <span className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-medium text-muted-foreground">
                   <Plus className="size-3.5" /> Add tenant
                 </span>
               )}

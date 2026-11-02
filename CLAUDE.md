@@ -65,10 +65,10 @@ docs/                    PRD.md, BUILD_LOG.md
 
 ## UI rules
 
-- The visual system lives in `DESIGN.md` (and `PRODUCT.md` for intent). It supersedes the original Revolut-style direction: flat, dark-mode-first, Envato-style green accent, hairline borders, no shadow glow, 6 to 10px radii, category-coloured icon badges.
+- The visual system lives in `DESIGN.md` (and `PRODUCT.md` for intent). It supersedes the original Revolut-style direction: Luma-style black and white, dark-mode-first, Inter, borderless graphite cards, no shadows. The home dashboard is the reference board for every page.
 - Detail views (tenant, Configure rooms) open in the push-aside side panel on desktop and a bottom sheet on mobile.
 - Status colours only on labelled chips, never on whole tiles or cards.
-- Font: Manrope (self-hosted). Tabular figures for amounts.
+- Font: Inter (self-hosted in `public/fonts`). Tabular figures for amounts.
 - Mobile first. It must work at 375px wide, with a bottom tab bar on mobile and a sidebar on desktop.
 - Sidebar: Home, Properties and Messages are live. Tenants, Payments, Payment history, Reports and Settings are visible but disabled, with a lock icon and a "Not in this demo" tooltip.
 - The welcome screen at `/` has no login fields, just the note and a Continue button. After Continue, the greeting is "Good morning / afternoon / evening, Collins" in Lagos time.

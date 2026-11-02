@@ -1,16 +1,6 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import "./globals.css";
-
-// Self-hosted (not next/font/google) so the build never depends on
-// reaching Google Fonts over the network.
-const manrope = localFont({
-  src: "../fonts/manrope-variable.woff2",
-  variable: "--font-sans",
-  weight: "200 800",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Nestwell",
@@ -24,13 +14,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${manrope.variable} font-sans antialiased`}>
+      <head>
+        <link
+          rel="preload"
+          href="/fonts/inter-latin-wght-normal.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="font-sans antialiased">
         {children}
         <Toaster
           position="top-center"
           toastOptions={{
             classNames: {
-              toast: "rounded-2xl! border! border-border! bg-background! text-foreground! shadow-lg!",
+              toast: "rounded-lg! border! border-border! bg-card! text-foreground!",
             },
           }}
         />
